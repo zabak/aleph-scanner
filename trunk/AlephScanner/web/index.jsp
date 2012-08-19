@@ -42,6 +42,8 @@
                 position: relative;
             }
 
+  
+
             #logo {
                 position: absolute;
                 top: 50px;
@@ -60,7 +62,7 @@
 
             #logo-img {
                 position: absolute;
-                top: 10px;
+                top: 30px;
                 right: 10px;
                 height: 60px;
             }            
@@ -116,7 +118,31 @@
             }
             .output_header {
                 height: 26px;
-            }             
+            }
+
+
+       #menu {
+    width: 1000px;
+    padding-top: 3px; padding-right: 10px; padding-bottom: 0px; padding-left: 10px;
+    text-align: left;
+    font-size: 16px;
+    background-color: #444;
+    color: #c1d5d4;
+}
+
+#export_date {
+    color: #eee;
+}
+
+ 
+
+#menu a {
+    float: right;
+    text-decoration: none;
+    color: #c1d5d4;
+}
+
+
         </style>
 
         <script type="text/javascript">           
@@ -373,6 +399,7 @@
                         var newData = eval("(" + httpRequest.responseText + ")");
                         document.getElementById("output-box").innerHTML=newData.list.join("\n");
                         document.getElementById("status").innerHTML= "Celkem: " + newData.count;
+                        document.getElementById("export_date").innerHTML= newData.export_date;
 
                     }
                     else {
@@ -392,10 +419,14 @@
     <body onload="addCondition(false);">
         <div id="wrapper">
 
+
+            <div id="menu">
+<span>Posledni aktualizace dat: </span><span id="export_date"></span>
+                <a href="https://dl.dropbox.com/u/9409661/aleph_assistant/AlephAssistant.crx">AlephAssistant</a>
+            </div>
             <div id="header">
                 <div id="logo">
                     <h1>Aleph Scanner</h1>                                        
-
                 </div>
                 <div id="logo-img"><img src="http://www.mzk.cz/sites/mzk.cz/themes/mzk/logo.png"/></div>
             </div>
