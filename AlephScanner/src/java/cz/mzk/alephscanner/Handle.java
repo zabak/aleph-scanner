@@ -7,9 +7,12 @@ package cz.mzk.alephscanner;
 import cz.mzk.alephscanner.model.Request;
 import cz.mzk.alephscanner.tools.JsonParser;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,9 +41,7 @@ public class Handle extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-
         request.setCharacterEncoding("UTF-8");
-
         StringBuilder sb = new StringBuilder();
         String line = null;
         try {
@@ -75,16 +76,22 @@ public class Handle extends HttpServlet {
          }
          out.print("\"" + sysno + "\"");
          }
-         out.print("], \"count\":\"" + sysnoList.size() + "\"}");           
+         out.print("], \"count\":\"" + sysnoList.size() + "\"");           
+
+         File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
+         Long lastModified = file.lastModified();
+         Date date = new Date(lastModified);
+         SimpleDateFormat formatedDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+         out.print(", \"export_date\":\"" + formatedDate.format(date) + "\"}");
          System.out.println("ENC:" + response.getCharacterEncoding());
-        
-        out.close();
+         out.close();
 
 
 
 
 
     }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
