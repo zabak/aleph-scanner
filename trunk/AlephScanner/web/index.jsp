@@ -216,12 +216,16 @@
                 var subfield = outputContainer.childNodes[5].value; 
                 var rightSeparator = outputContainer.childNodes[6].value; 
                 var multipleField = outputContainer.childNodes[7].checked; 
+                var type = outputContainer.childNodes[8].options[outputContainer.childNodes[8].selectedIndex].value;     
+                var insideSeparator = outputContainer.childNodes[9].value; 
                 var output = {
                     "left_separator" : leftSeparator,
                     "field": field,
                     "subfield": subfield,
                     "right_separator": rightSeparator,
-                    "multiple": multipleField
+                    "multiple": multipleField,
+                    "type": type,
+                    "inside_separator": insideSeparator
                 };
                 return output;
             }
@@ -277,11 +281,30 @@
                 RightSeparatorInput.type = "text";
                 RightSeparatorInput.size ="4";      
                 
+                
+                var typeSelect= document.createElement('select');
+                var firstOption= document.createElement('option');
+                firstOption.selected="selected";
+                firstOption.value="first";                
+                firstOption.appendChild(document.createTextNode("První výskyt")); 
+                typeSelect.appendChild(firstOption);
+                var singleOption= document.createElement('option');
+                singleOption.value="single";                
+                singleOption.appendChild(document.createTextNode("V jednom sloupci")); 
+                typeSelect.appendChild(singleOption);               
+                var multiOption= document.createElement('option');
+                multiOption.value="multi";                
+                multiOption.appendChild(document.createTextNode("Více sloupců")); 
+                typeSelect.appendChild(multiOption);               
+                
+                
                 var multipleFieldRadio = document.createElement('input');
                 multipleFieldRadio.type = "radio";
                 multipleFieldRadio.name = "group";
                
-                
+                var InsideSeparatorInput = document.createElement('input');
+                InsideSeparatorInput.type = "text";
+                InsideSeparatorInput.size ="4";                  
                 
                 outputContainer.appendChild(removeButton);
                 outputContainer.appendChild(LeftSeparatorInput); 
@@ -291,6 +314,8 @@
                 outputContainer.appendChild(subfieldInput);  
                 outputContainer.appendChild(RightSeparatorInput);  
                 outputContainer.appendChild(multipleFieldRadio);  
+                outputContainer.appendChild(typeSelect);
+                outputContainer.appendChild(InsideSeparatorInput);
                 outputsDiv.appendChild(outputContainer);                                  
             }            
 
@@ -383,8 +408,9 @@
             function makeRequest() {
                 document.getElementById("request_button").disabled=true;
                 var server = "http://localhost:8080/";
-                //var server = "http://iris.mzk.cz:8080/";
                 var url = server + "AlephScanner/Handle";
+                //var server = "http://iris.mzk.cz:8080/";
+                //var url = server + "AlephScanner2/Handle";
 
                 var httpRequest = getHttpRequest();
                 httpRequest.open("POST", url, true);
