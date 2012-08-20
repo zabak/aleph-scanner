@@ -56,7 +56,7 @@ public class Handle extends HttpServlet {
             requestObject = JsonParser.getRequestObject(sb.toString());
         } catch (JSONException ex) {
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
 
         response.setHeader("Content-Disposition", "attachment;filename=response.json");
         response.setHeader("Content-Type", "application/json; charset=UTF-8");
@@ -78,7 +78,9 @@ public class Handle extends HttpServlet {
          }
          out.print("], \"count\":\"" + sysnoList.size() + "\"");           
 
-         File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
+         //File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
+         //File file = new File("/home/tomcat/" + requestObject.getBase() + ".m21");
+         File file = new File("/home/hanis/projects/marc4j/" + requestObject.getBase() + ".m21");
          Long lastModified = file.lastModified();
          Date date = new Date(lastModified);
          SimpleDateFormat formatedDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");

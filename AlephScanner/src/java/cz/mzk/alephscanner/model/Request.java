@@ -107,6 +107,14 @@ public class Request {
     }
     
     
+    public Output getMultipleOutput() {
+        for (Output output : outputs) {
+            if(output.isMultiple()) {
+                return output;
+            }
+        }
+        return null;
+    }
    
     
     

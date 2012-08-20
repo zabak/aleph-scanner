@@ -14,6 +14,7 @@ public class Output {
     private String subfield;
     private String leftSeparator;
     private String rightSeparator;
+    private boolean multiple;
 
     
     public Output() {
@@ -74,6 +75,20 @@ public class Output {
      */
     public void setRightSeparator(String rightSeparator) {
         this.rightSeparator = rightSeparator;
+    }
+
+    /**
+     * @return the multiple
+     */
+    public boolean isMultiple() {
+        return multiple;
+    }
+
+    /**
+     * @param multiple the multiple to set
+     */
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
     }
 
     

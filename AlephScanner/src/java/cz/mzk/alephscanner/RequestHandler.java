@@ -34,19 +34,18 @@ import org.marc4j.marc.Subfield;
 public class RequestHandler {
 
     public static List<String> getResult(Request request) {
-
         List<String> resultList = new ArrayList<String>();
         InputStream in = null;
-        int i = 0;
+        int counter = 0;
         int j = 0;
         int k = 0;
         try {
-            //in = new FileInputStream("/home/hanis/projects/marc4j/" + request.getBase() + ".m21");
-            in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
-            //in = new FileInputStream("/home/tomcat/" + base + ".m21");
+            in = new FileInputStream("/home/hanis/projects/marc4j/" + request.getBase() + ".m21");
+            //in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
+            //in = new FileInputStream("/home/tomcat/" + request.getBase() + ".m21");
             MarcReader reader = new MarcPermissiveStreamReader(in, true, true, "UTF-8");
             while (reader.hasNext()) {
-                i++;
+                counter++;
                 try {
                     Record record = reader.next();
                     boolean check = true;
@@ -56,7 +55,7 @@ public class RequestHandler {
                             break;
                         }
                     }
-                    if(!check) {
+                    if (!check) {
                         continue;
                     }
 
@@ -83,19 +82,33 @@ public class RequestHandler {
                      sysnoList.add(line);
                      }
                      */
-                    String line = "";
-                    for (Output output : request.getOutputs()) {
-                        line += getOutput(record, output);
-                    }
-                    resultList.add(line);
+                    if (request.isMultipleFiledOutput()) {
+                        Output multipleOutput = request.getMultipleOutput();
+                        List<String> outputs = getMultipleOutputs(record, multipleOutput);
+                        for (int i = 0; i < outputs.size(); i++) {
+                            String line = "";
+                            for (Output output : request.getOutputs()) {
+                                if (output.isMultiple()) {
+                                    line += outputs.get(i);
+                                } else {
+                                    line += getOutput(record, output);
+                                }
+                            }
+                            resultList.add(line);
+                        }
 
-
-
+                    } else {
+                        String line = "";
+                        for (Output output : request.getOutputs()) {
+                            line += getOutput(record, output);
+                        }
+                        resultList.add(line);
+                    }                    
 
                 } catch (MarcException e) {
                     j++;
                 } catch (Exception e) {
-                   Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, e);
+                    Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, e);
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -107,9 +120,8 @@ public class RequestHandler {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println(i + ", " + j + ", " + k);
-        
-        if(request.isDistinct()) {
+        System.out.println(counter + ", " + j + ", " + k);
+        if (request.isDistinct()) {
             Set hs = new HashSet();
             hs.addAll(resultList);
             resultList.clear();
@@ -118,10 +130,6 @@ public class RequestHandler {
         return resultList;
     }
 
-    
-    
-    
-    
     public static String getOutput(Record record, Output output) {
         String outputString = output.getLeftSeparator();
         if (!output.getField().isEmpty()) {
@@ -143,13 +151,13 @@ public class RequestHandler {
         return outputString + output.getRightSeparator();
     }
 
-    public static List<String> getMultipleOutputs(Record record, String outField, String outSubfield) {
+    public static List<String> getMultipleOutputs(Record record, Output output) {
         List<String> list = new ArrayList<String>();
-        List outDataFields = record.getVariableFields(outField);
+        List outDataFields = record.getVariableFields(output.getField());
         for (Object object : outDataFields) {
             DataField outDataField = (DataField) object;
             if (outDataField != null) {
-                Subfield outDataSubfield = outDataField.getSubfield(outSubfield.charAt(0));
+                Subfield outDataSubfield = outDataField.getSubfield(output.getSubfield().charAt(0));
                 if (outDataSubfield != null) {
                     list.add(outDataSubfield.getData());
                 }
@@ -164,16 +172,28 @@ public class RequestHandler {
             ControlField cField = (ControlField) record.getVariableField(condition.getField());
             if (cField != null) {
                 content = cField.getData();
+                return checkSingleDataSubfield(condition, content);
             }
         } else {
-            DataField dataField = (DataField) record.getVariableField(condition.getField());
-            if (dataField != null) {
-                Subfield dataSubfield = dataField.getSubfield(condition.getSubfield().charAt(0));
-                if (dataSubfield != null) {
-                    content = dataSubfield.getData();
+            List outDataFields = record.getVariableFields(condition.getField());
+            for (Object object : outDataFields) {
+                DataField outDataField = (DataField) object;
+                if (outDataField != null) {
+                    Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
+                    if (outDataSubfield != null) {
+                        content = outDataSubfield.getData();
+                        if (checkSingleDataSubfield(condition, content)) {
+                            return true;
+                        }
+                    }
                 }
             }
         }
+        return false;
+
+    }
+
+    public static boolean checkSingleDataSubfield(Condition condition, String content) {
         if (content != null) {
             if ("exists".equals(condition.getRelation())) {
                 return !condition.isNegation();
@@ -197,8 +217,5 @@ public class RequestHandler {
             }
         }
         return condition.isNegation();
-    }
-
-    public static void main(String[] args) {
     }
 }
