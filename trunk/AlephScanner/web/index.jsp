@@ -158,7 +158,7 @@
                     "base" : document.getElementById("base").options[document.getElementById("base").selectedIndex].value,
                     "conditions" : createConditionsArrayJson(),
                     "outputs" : createOutputsArrayJson(),
-                    "multiple" : false,//document.getElementById("multiple-output").checked
+                    "multiple" : document.getElementById("multiple-output").checked,
                     "distinct" : document.getElementById("distinct").checked
                 };
                 return resultJson;
@@ -214,12 +214,13 @@
                 var field = outputContainer.childNodes[3].value; 
                 var subfield = outputContainer.childNodes[5].value; 
                 var rightSeparator = outputContainer.childNodes[6].value; 
-       
+                var multipleField = outputContainer.childNodes[7].checked; 
                 var output = {
                     "left_separator" : leftSeparator,
                     "field": field,
                     "subfield": subfield,
-                    "right_separator": rightSeparator
+                    "right_separator": rightSeparator,
+                    "multiple": multipleField
                 };
                 return output;
             }
@@ -275,6 +276,11 @@
                 RightSeparatorInput.type = "text";
                 RightSeparatorInput.size ="4";      
                 
+                var multipleFieldRadio = document.createElement('input');
+                multipleFieldRadio.type = "radio";
+                multipleFieldRadio.name = "group";
+               
+                
                 
                 outputContainer.appendChild(removeButton);
                 outputContainer.appendChild(LeftSeparatorInput); 
@@ -283,8 +289,8 @@
                 outputContainer.appendChild(subfieldLabel);
                 outputContainer.appendChild(subfieldInput);  
                 outputContainer.appendChild(RightSeparatorInput);  
-                outputsDiv.appendChild(outputContainer);                  
-                
+                outputContainer.appendChild(multipleFieldRadio);  
+                outputsDiv.appendChild(outputContainer);                                  
             }            
 
             function addCondition(removable) {
@@ -416,7 +422,7 @@
 
 
     </head>
-    <body onload="addCondition(false);">
+    <body onload="addCondition(true);">
         <div id="wrapper">
 
 
@@ -450,7 +456,8 @@
                     
                    <label>Distinct </label>
                    <input id="distinct" type="checkbox" /> 
-                        
+                   <label> OP </label>
+                   <input id="multiple-output" type="checkbox" /> 
                         
                     <div id="outputs"></div>
                     <button  onclick="addOutput(true)">+</button>    

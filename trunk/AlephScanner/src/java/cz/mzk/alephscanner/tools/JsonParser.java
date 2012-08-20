@@ -42,6 +42,7 @@ public class JsonParser {
             output.setSubfield(outputObject.getString("subfield"));
             output.setLeftSeparator(outputObject.getString("left_separator"));
             output.setRightSeparator(outputObject.getString("right_separator"));
+            output.setMultiple(outputObject.getBoolean("multiple"));
             request.addOutput(output);
         }   
         
