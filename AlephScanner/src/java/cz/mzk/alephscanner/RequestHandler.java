@@ -40,8 +40,8 @@ public class RequestHandler {
         int j = 0;
         int matchedRecordsCounter = 0;
         try {
-            in = new FileInputStream("/home/hanis/projects/marc4j/" + request.getBase() + ".m21");
-            //in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
+            //in = new FileInputStream("/home/hanis/projects/marc4j/" + request.getBase() + ".m21");
+            in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
             //in = new FileInputStream("/home/tomcat/" + request.getBase() + ".m21");
             MarcReader reader = new MarcPermissiveStreamReader(in, true, true, "UTF-8");
             while (reader.hasNext()) {

@@ -66,9 +66,9 @@ public class Handle extends HttpServlet {
         PrintWriter out = response.getWriter();
         List<String> sysnoList = RequestHandler.getResult(requestObject);
 
-        //File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
+        File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
         //File file = new File("/home/tomcat/" + requestObject.getBase() + ".m21");
-        File file = new File("/home/hanis/projects/marc4j/" + requestObject.getBase() + ".m21");
+        //File file = new File("/home/hanis/projects/marc4j/" + requestObject.getBase() + ".m21");
         Long lastModified = file.lastModified();
         Date date = new Date(lastModified);
         SimpleDateFormat formatedDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");
