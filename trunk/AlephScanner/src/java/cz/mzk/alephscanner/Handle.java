@@ -56,7 +56,7 @@ public class Handle extends HttpServlet {
             requestObject = JsonParser.getRequestObject(sb.toString());
         } catch (JSONException ex) {
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
 
         response.setHeader("Content-Disposition", "attachment;filename=response.json");
         response.setHeader("Content-Type", "application/json; charset=UTF-8");
@@ -64,8 +64,35 @@ public class Handle extends HttpServlet {
         System.out.println("ENC:" + response.getCharacterEncoding());
 
         PrintWriter out = response.getWriter();
-           
-         List<String> sysnoList = RequestHandler.getResult(requestObject);
+        List<String> sysnoList = RequestHandler.getResult(requestObject);
+
+        //File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
+        //File file = new File("/home/tomcat/" + requestObject.getBase() + ".m21");
+        File file = new File("/home/hanis/projects/marc4j/" + requestObject.getBase() + ".m21");
+        Long lastModified = file.lastModified();
+        Date date = new Date(lastModified);
+        SimpleDateFormat formatedDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray(sysnoList);
+
+        try {
+            jsonObject.append("list", jsonArray);
+            jsonObject.append("count", sysnoList.size());
+            jsonObject.append("export_date", formatedDate.format(date));
+        } catch (JSONException ex) {
+            Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            jsonObject.write(out);
+        } catch (JSONException ex) {
+            Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+
+        /*         
          out.print("{\"list\": [");
          boolean first = false;            
          for (String sysno : sysnoList) {                
@@ -76,24 +103,18 @@ public class Handle extends HttpServlet {
          }
          out.print("\"" + sysno + "\"");
          }
-         out.print("], \"count\":\"" + sysnoList.size() + "\"");           
+         out.print("], \"count\":\"" + sysnoList.size() + "\"");                    
+         out.print(", \"export_date\":\"" + formatedDate.format(date) + "\"}");        
+         */
 
-         //File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
-         //File file = new File("/home/tomcat/" + requestObject.getBase() + ".m21");
-         File file = new File("/home/hanis/projects/marc4j/" + requestObject.getBase() + ".m21");
-         Long lastModified = file.lastModified();
-         Date date = new Date(lastModified);
-         SimpleDateFormat formatedDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-         out.print(", \"export_date\":\"" + formatedDate.format(date) + "\"}");
-         System.out.println("ENC:" + response.getCharacterEncoding());
-         out.close();
+
+        out.close();
 
 
 
 
 
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
