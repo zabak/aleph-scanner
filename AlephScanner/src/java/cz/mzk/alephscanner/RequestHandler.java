@@ -36,16 +36,16 @@ public class RequestHandler {
     public static List<String> getResult(Request request) {
         List<String> resultList = new ArrayList<String>();
         InputStream in = null;
-        int counter = 0;
+        int allRecordscounter = 0;
         int j = 0;
-        int k = 0;
+        int matchedRecordsCounter = 0;
         try {
             in = new FileInputStream("/home/hanis/projects/marc4j/" + request.getBase() + ".m21");
             //in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
             //in = new FileInputStream("/home/tomcat/" + request.getBase() + ".m21");
             MarcReader reader = new MarcPermissiveStreamReader(in, true, true, "UTF-8");
             while (reader.hasNext()) {
-                counter++;
+                allRecordscounter++;
                 try {
                     Record record = reader.next();
                     boolean check = true;
@@ -59,13 +59,19 @@ public class RequestHandler {
                         continue;
                     }
 
+
+                    for (Output output : request.getOutputs()) {
+                        List<String> list = getMultipleOutputs(record, output);
+                        output.addData(matchedRecordsCounter, list);
+                    }
+                    matchedRecordsCounter++;
                     /*
                      ControlField cField = (ControlField) record.getVariableField("001");
                      if (cField == null) {
                      continue;
                      }
                      */
-                    k++;
+
                     /*
                      if (request.isMultipleFiledOutput()) {
                      List<String> outputs = getMultipleOutputs(record, outField, outSubfield);
@@ -82,28 +88,29 @@ public class RequestHandler {
                      sysnoList.add(line);
                      }
                      */
-                    if (request.isMultipleFiledOutput()) {
-                        Output multipleOutput = request.getMultipleOutput();
-                        List<String> outputs = getMultipleOutputs(record, multipleOutput);
-                        for (int i = 0; i < outputs.size(); i++) {
-                            String line = "";
-                            for (Output output : request.getOutputs()) {
-                                if (output.isMultiple()) {
-                                    line += outputs.get(i);
-                                } else {
-                                    line += getOutput(record, output);
-                                }
-                            }
-                            resultList.add(line);
-                        }
+                    /* if (request.isMultipleFiledOutput()) {
+                     Output multipleOutput = request.getMultipleOutput();
+                     List<String> outputs = getMultipleOutputs(record, multipleOutput);
+                     for (int i = 0; i < outputs.size(); i++) {
+                     String line = "";
+                     for (Output output : request.getOutputs()) {
+                     if (output.isMultiple()) {
+                     line += outputs.get(i);
+                     } else {
+                     line += getOutput(record, output);
+                     }
+                     }
+                     resultList.add(line);
+                     }
 
-                    } else {
-                        String line = "";
-                        for (Output output : request.getOutputs()) {
-                            line += getOutput(record, output);
-                        }
-                        resultList.add(line);
-                    }                    
+                     } else {
+                     String line = "";
+                     for (Output output : request.getOutputs()) {
+                     line += getOutput(record, output);
+                     }
+                     resultList.add(line);
+                     }
+                     */
 
                 } catch (MarcException e) {
                     j++;
@@ -120,7 +127,44 @@ public class RequestHandler {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println(counter + ", " + j + ", " + k);
+        System.out.println(allRecordscounter + ", " + j + ", " + matchedRecordsCounter);
+
+
+        for (int i = 0; i < matchedRecordsCounter; i++) {
+            if (request.isMultipleFiledOutput()) {
+                int count = request.getMultipleOutput().getData(i).size();
+                for (int k = 0; k < count; k++) {
+                    String line = "";
+                    for (Output output : request.getOutputs()) {
+                        if (output.isMultiple()) {
+                            line += output.getData(i).get(k);
+                        } else {
+                            line += output.write(i);
+                        }
+                    }
+                    resultList.add(line);
+                }
+            } else {
+                String line = "";
+                for (Output output : request.getOutputs()) {
+                    line += output.write(i);
+                }
+                resultList.add(line);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         if (request.isDistinct()) {
             Set hs = new HashSet();
             hs.addAll(resultList);
@@ -153,13 +197,22 @@ public class RequestHandler {
 
     public static List<String> getMultipleOutputs(Record record, Output output) {
         List<String> list = new ArrayList<String>();
-        List outDataFields = record.getVariableFields(output.getField());
-        for (Object object : outDataFields) {
-            DataField outDataField = (DataField) object;
-            if (outDataField != null) {
-                Subfield outDataSubfield = outDataField.getSubfield(output.getSubfield().charAt(0));
-                if (outDataSubfield != null) {
-                    list.add(outDataSubfield.getData());
+        if (output.getSubfield().isEmpty()) {
+            if (!output.getField().isEmpty()) {
+                ControlField cField = (ControlField) record.getVariableField(output.getField());
+                if (cField != null) {
+                    list.add(cField.getData());
+                }
+            }
+        } else {
+            List outDataFields = record.getVariableFields(output.getField());
+            for (Object object : outDataFields) {
+                DataField outDataField = (DataField) object;
+                if (outDataField != null) {
+                    Subfield outDataSubfield = outDataField.getSubfield(output.getSubfield().charAt(0));
+                    if (outDataSubfield != null) {
+                        list.add(outDataSubfield.getData());
+                    }
                 }
             }
         }
