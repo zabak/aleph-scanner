@@ -140,6 +140,7 @@
     float: right;
     text-decoration: none;
     color: #c1d5d4;
+    padding-right: 10px;
 }
 
 
@@ -229,11 +230,11 @@
             function switchInputType(conditionContainer) {     
                 if(conditionContainer.childNodes[8].disabled) {
                     conditionContainer.childNodes[8].disabled=false;
-                    conditionContainer.childNodes[9].text="<-";
+                    conditionContainer.childNodes[9].innerHTML="->";
                     conditionContainer.removeChild(conditionContainer.childNodes[10]);
                 } else {        
                     conditionContainer.childNodes[8].disabled=true;
-                    conditionContainer.childNodes[9].text="->";
+                    conditionContainer.childNodes[9].innerHTML="<-";
                     var expressionTextArea = document.createElement('textarea');  
                     expressionTextArea.wrap="off";
                     expressionTextArea.cols="50";
@@ -356,7 +357,7 @@
                     switchInputType(conditionContainer);
                     
                 }, false); 
-                inputTypeButton.appendChild(document.createTextNode("<-"));                                 
+                inputTypeButton.appendChild(document.createTextNode("->"));                                 
                                                
                 conditionContainer.appendChild(removeButton);
                 conditionContainer.appendChild(fieldLabel);
@@ -400,10 +401,12 @@
                 document.getElementById('loader').style.visibility = 'hidden';                                
                 if (httpRequest.readyState == 4) {
                     if(httpRequest.status == 200) {
-                        console.log(httpRequest.getAllResponseHeaders());
-                        console.log(httpRequest.responseText);
+                        //console.log(httpRequest.getAllResponseHeaders());
+                        //console.log(httpRequest.responseText);
                         var newData = eval("(" + httpRequest.responseText + ")");
-                        document.getElementById("output-box").innerHTML=newData.list.join("\n");
+                        //document.getElementById("output-box").innerHTML=newData.list.join("\n");
+                        console.log(newData.list);
+                        document.getElementById("output-box").innerHTML=newData.list[0].join('\n');
                         document.getElementById("status").innerHTML= "Celkem: " + newData.count;
                         document.getElementById("export_date").innerHTML= newData.export_date;
 
@@ -428,6 +431,7 @@
 
             <div id="menu">
 <span>Posledni aktualizace dat: </span><span id="export_date"></span>
+<span><a href="http://code.google.com/p/aleph-scanner/">Vývoj</a></span>
                 <a href="https://dl.dropbox.com/u/9409661/aleph_assistant/AlephAssistant.crx">AlephAssistant</a>
             </div>
             <div id="header">
