@@ -92,7 +92,7 @@ function switchInputType(conditionContainer) {
         conditionContainer.childNodes[9].innerHTML="<-";
         var expressionTextArea = document.createElement('textarea');
         expressionTextArea.wrap="off";
-        expressionTextArea.cols="50";
+        expressionTextArea.cols="59";
         expressionTextArea.rows="5";
         conditionContainer.appendChild(expressionTextArea);
     }
@@ -105,11 +105,12 @@ function addOutput(removable) {
     var outputContainer = document.createElement('div');
     outputContainer.className = 'output-container'
 
-    var removeButton = document.createElement('button');
+    var removeButton = document.createElement('img');
     removeButton.addEventListener("click", function() {
         removeDiv(outputContainer);
     }, false);
-    removeButton.appendChild(document.createTextNode("X"));
+    removeButton.src="delete-icon.png";
+    //removeButton.appendChild(document.createTextNode("X"));
     if(!removable) {
         removeButton.disabled=true;
     }
@@ -177,30 +178,31 @@ function addCondition(removable) {
     var conditionContainer = document.createElement('div');
     conditionContainer.className = 'condition-container'
 
-    var removeButton = document.createElement('button');
+    var removeButton = document.createElement('img');
     removeButton.addEventListener("click", function() {
         removeDiv(conditionContainer);
     }, false);
-    removeButton.appendChild(document.createTextNode("X"));
+    removeButton.src="delete-icon.png";
+    //removeButton.appendChild(document.createTextNode("X"));
     if(!removable) {
         removeButton.disabled=true;
     }
 
     var fieldLabel = document.createElement('label');
-    fieldLabel.appendChild(document.createTextNode(" Pole: "));
+    fieldLabel.appendChild(document.createTextNode("Pole:"));
     var fieldInput = document.createElement('input');
     fieldInput.type = "text";
     fieldInput.size ="3";
 
     var subfieldLabel= document.createElement('label');
-    subfieldLabel.appendChild(document.createTextNode(" $ "));
+    subfieldLabel.appendChild(document.createTextNode("$"));
     var subfieldInput = document.createElement('input');
     subfieldInput.type = "text";
     subfieldInput.size ="1";
 
 
     var negationLabel = document.createElement('label');
-    negationLabel.appendChild(document.createTextNode(" !"));
+    negationLabel.appendChild(document.createTextNode("!"));
 
     var negationCheck = document.createElement('input');
     negationCheck.type = "checkbox";
@@ -229,13 +231,12 @@ function addCondition(removable) {
     relationSelect.appendChild(existsOption);
 
     var expressionInput = document.createElement('input');
-    input.type = "text";
-    input.size = "20";
+    expressionInput.type = "text";
+    expressionInput.size="33";
 
     var inputTypeButton = document.createElement('button');
     inputTypeButton.addEventListener("click", function() {
         switchInputType(conditionContainer);
-
     }, false);
     inputTypeButton.appendChild(document.createTextNode("->"));
 
