@@ -24,7 +24,7 @@
             </div>
             <div id="header">
                 <div id="logo">
-                    <h1>Aleph Scanner</h1>                                        
+                    <h1>Aleph Scanner</h1>Pre-alpha version
                 </div>
                 <!--<div id="logo-img"><img src="http://www.mzk.cz/sites/mzk.cz/themes/mzk/logo.png"/></div>-->
                 <div id="logo-img"><img src="mzk-logo.png"/></div>
@@ -39,8 +39,8 @@
                         </select>
                     </div>
                     <div id="conditions"></div>
-                    <button  onclick="addCondition(true)" >+</button>      
-                    <button style="float: right" onclick="makeRequest();" id="request_button"> <b>VYHLEDAT</b> </button>
+                    <img alt="" src="add-icon.png"  onclick="addCondition(true)"/>
+                    <img style="float: right" src="find-icon.png" onclick="makeRequest();" id="request_button"/>
 
 
                 </div>
@@ -53,19 +53,19 @@
                     <input id="multiple-output" type="checkbox" />
 
                     <div id="outputs"></div>
-                    <button  onclick="addOutput(true)">+</button>    
+                    <img alt="" src="add-icon.png"  onclick="addOutput(true)"/>
+
 
                     <div id="loader"><img src="loader.gif"></div>
 
-                    <textarea id="output-box" readonly wrap="off" name="output" cols="60" rows="35">
+                    <textarea id="output-box" readonly wrap="off" name="output" cols="60" rows="30">
                     </textarea>            
                     <div id="status"></div>
                 </div>
                 <div style="clear: both"></div>
             </div>
             <div id="footer">
-                Hanis' Playground<br/>
-                Pre-alpha version
+                Hanis' Playground
             </div>
         </div>
     </body>

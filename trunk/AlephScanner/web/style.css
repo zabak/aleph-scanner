@@ -10,11 +10,11 @@ body {
 }
 
 body,input {
-    font-family: Kreon, serif;
+    font-family: serif;
 }
 
 #footer {
-    padding: 50px 0 80px 0;
+    padding: 10px 0 10px 0;
     text-align: center;
     text-shadow: 1px 1px 0px rgba(255,255,255,0.7);
     color: #587477;
@@ -22,7 +22,7 @@ body,input {
 
 
 #header {
-    height: 30px;
+    height: 60px;
     padding: 30px;
     position: relative;
 }
@@ -36,6 +36,8 @@ body,input {
     height: 60px;
 
 }
+
+
 
 #loader {
     position: absolute;
@@ -64,30 +66,28 @@ body,input {
 
 
 #page {
-    paddin-bottom: 20px;
-    padding-top: 20px;
-
-    width: 1000px;
-    color: #587477;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    background-color: #4d4f60;
+    width: 1020px;
+    color: #eee;
 }
 
 #input {
     position: relative;
     float: left;
-    width: 490px;
+    width: 500px;
     padding-left: 5px;
     padding-right: 5px;
-    background: #EEF5F6;
     margin: 0 0 0 0;
 }
 
 #output {
     position: relative;
     float: left;
-    width: 490px;
+    width: 500px;
     padding-left: 5px;
     padding-right: 5px;
-    background: #EEF5F6;
     margin: 0 0 0 0;
 }
 
@@ -103,16 +103,18 @@ body,input {
 }
 
 .input_header {
+    padding-top:10px;
     height: 30px;
 }
 .output_header {
+    padding-top:10px;
     height: 26px;
 }
 
 
 #menu {
     width: 1000px;
-    padding-top: 3px; padding-right: 10px; padding-bottom: 0px; padding-left: 10px;
+    padding-top: 3px; padding-right: 10px; padding-bottom: 3px; padding-left: 10px;
     text-align: left;
     font-size: 16px;
     background-color: #444;
@@ -131,3 +133,70 @@ body,input {
     color: #c1d5d4;
     padding-right: 10px;
 }
+
+#conditions {
+    padding:2px;
+    margin-bottom: 3px;
+}
+
+#conditions .condition-container {
+    background-color: #e2e5fe;
+    color: #0d1b0b;
+    border: #aaa solid 2px;
+    padding:2px;
+}
+
+
+#conditions input {
+    margin-left:2px;
+    margin-right:2px;
+}
+
+#conditions label {
+    margin-left:2px;
+    margin-right:2px;
+}
+
+#conditions textarea {
+    margin-top:2px;
+    
+}
+
+img {
+    margin-bottom: -3px;
+}
+
+#outputs {
+    margin-bottom: 3px;
+    padding:2px;
+}
+
+
+
+#outputs .output-container {
+    background-color: #e2e5fe;
+    color: #0d1b0b;
+    border: #aaa solid 2px;
+    padding:2px;
+}
+
+  input {
+    margin-left:2px;
+    margin-right:2px;
+    background-color: #eaf1fe;
+}
+
+#outputs label {
+    margin-left:2px;
+    margin-right:2px;
+}
+
+textarea {
+    margin-top:2px;
+    background-color: #eaf1fe;
+}
+
+#output-box {
+    background-color: #fff;
+}
+
