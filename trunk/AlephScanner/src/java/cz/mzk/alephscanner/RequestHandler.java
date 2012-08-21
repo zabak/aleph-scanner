@@ -160,13 +160,6 @@ public class RequestHandler {
 
 
 
-
-
-
-
-
-
-
         if (request.isDistinct()) {
             Set hs = new HashSet();
             hs.addAll(resultList);
@@ -231,6 +224,9 @@ public class RequestHandler {
             }
         } else {
             List outDataFields = record.getVariableFields(condition.getField());
+            if("exists".equals(condition.getRelation())){
+                return outDataFields.isEmpty() == condition.isNegation();
+            }
             for (Object object : outDataFields) {
                 DataField outDataField = (DataField) object;
                 if (outDataField != null) {

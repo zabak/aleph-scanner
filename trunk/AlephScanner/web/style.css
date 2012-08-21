@@ -155,6 +155,11 @@ body,input {
     margin-right:2px;
 }
 
+#conditions select {
+    margin-left:2px;
+    margin-right:2px;
+}
+
 #conditions label {
     margin-left:2px;
     margin-right:2px;

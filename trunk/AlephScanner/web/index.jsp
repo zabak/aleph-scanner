@@ -65,7 +65,7 @@
                     </textarea>  
                 </div>
                     <div id="status"></div>
-                    <button type="button"  onclick ="downloadOutput();">Export</button>
+                    <img src="export-icon.png"  onclick ="downloadOutput();"/>
                 </div>
                 <div style="clear: both"></div>
             </div>
