@@ -41,7 +41,7 @@ body,input {
 
 #loader {
     position: absolute;
-    top: 230px;
+    top: 300px;
     left: 215px;
     height: 100px;
     visibility: hidden;
@@ -85,7 +85,8 @@ body,input {
 #output {
     position: relative;
     float: left;
-    width: 500px;
+    width: 499px;
+    border-left: #c1d5d4 solid 1px;
     padding-left: 5px;
     padding-right: 5px;
     margin: 0 0 0 0;
@@ -103,12 +104,13 @@ body,input {
 }
 
 .input_header {
-    padding-top:10px;
-    height: 30px;
+    padding-bottom: 3px;
+    border-bottom: #c1d5d4 solid 1px;
+    
 }
 .output_header {
-    padding-top:10px;
-    height: 26px;
+    padding-bottom: 3px;
+    border-bottom: #c1d5d4 solid 1px;
 }
 
 
@@ -135,6 +137,7 @@ body,input {
 }
 
 #conditions {
+    margin-top: 3px;
     padding:2px;
     margin-bottom: 3px;
 }
@@ -167,11 +170,10 @@ img {
 }
 
 #outputs {
+    margin-top: 3px;
     margin-bottom: 3px;
     padding:2px;
 }
-
-
 
 #outputs .output-container {
     background-color: #e2e5fe;
@@ -180,13 +182,13 @@ img {
     padding:2px;
 }
 
-  input {
-    margin-left:2px;
-    margin-right:2px;
-    background-color: #eaf1fe;
-}
 
 #outputs label {
+    margin-left:2px;
+    margin-right:2px;
+}
+
+#outputs input {
     margin-left:2px;
     margin-right:2px;
 }
@@ -200,3 +202,6 @@ textarea {
     background-color: #fff;
 }
 
+.field {
+    background-color: #cdfffd;
+}
