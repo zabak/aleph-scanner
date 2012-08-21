@@ -12,13 +12,14 @@ import java.util.List;
  * @author hanis
  */
 public class Request {
-    
+
     private String base;
     private List<Condition> conditions;
     private List<Output> outputs;
     private boolean multipleFiledOutput;
     private boolean distinct;
-    
+    private boolean header;
+
     public Request() {
         this.conditions = new ArrayList<Condition>();
         this.outputs = new ArrayList<Output>();
@@ -51,10 +52,10 @@ public class Request {
     public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
-    
+
     public void addCondition(Condition condition) {
         this.conditions.add(condition);
-    }    
+    }
 
     /**
      * @return the outputs
@@ -69,15 +70,11 @@ public class Request {
     public void setOutputs(List<Output> outputs) {
         this.outputs = outputs;
     }
-    
-    
-    
+
     public void addOutput(Output output) {
         this.outputs.add(output);
-    }  
-    
-    
-    
+    }
+
     /**
      * @return the multipleFiledOutput
      */
@@ -105,17 +102,46 @@ public class Request {
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
-    
-    
+
     public Output getMultipleOutput() {
         for (Output output : outputs) {
-            if(output.isMultiple()) {
+            if (output.isMultiple()) {
                 return output;
             }
         }
         return null;
     }
-   
-    
-    
+
+    public String writeOutputHeader() {
+        StringBuilder sb = new StringBuilder();
+        for (Output output : outputs) {
+            sb.append(output.getLeftSeparator());
+            if (!output.isMultiple() && Output.TYPE_MULTI_CELL.equals(output.getType())) {
+                for (int i = 0; i < output.getMaxOccurencies(); i++) {
+                    sb.append(output.getHeader()).append("[").append(i+1).append("]");
+                    if(output.getMaxOccurencies()- i > 1) { 
+                        sb.append(output.getInsideSeparator());
+                    }
+                }                
+            } else {
+                sb.append(output.getHeader());
+            }
+            sb.append(output.getRightSeparator());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * @return the header
+     */
+    public boolean isHeader() {
+        return header;
+    }
+
+    /**
+     * @param header the header to set
+     */
+    public void setHeader(boolean header) {
+        this.header = header;
+    }
 }

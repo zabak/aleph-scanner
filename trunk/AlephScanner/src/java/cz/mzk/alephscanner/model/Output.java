@@ -208,6 +208,14 @@ public class Output {
     public void setInsideSeparator(String insideSeparator) {
         this.insideSeparator = insideSeparator;
     }
+    
+    public String getHeader() {        
+        String header = field;
+        if(!subfield.isEmpty()) {
+            header += "$" + subfield;
+        }
+        return header;
+    }
 
     
 }

@@ -50,6 +50,7 @@ public class JsonParser {
         
         request.setMultipleFiledOutput(requestObject.getBoolean("multiple"));
         request.setDistinct(requestObject.getBoolean("distinct"));
+        request.setHeader(requestObject.getBoolean("header"));
         return request;
     }
 

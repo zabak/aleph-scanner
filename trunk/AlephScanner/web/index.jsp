@@ -51,6 +51,8 @@
                         <input id="distinct" type="checkbox" />
                         <label> OP </label>
                         <input id="multiple-output" type="checkbox" />
+                        <label> Header </label>
+                        <input id="output_header" type="checkbox" />
                     </div>
 
                     <div id="outputs"></div>

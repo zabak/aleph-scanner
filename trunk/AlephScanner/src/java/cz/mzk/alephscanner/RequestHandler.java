@@ -151,7 +151,9 @@ public class RequestHandler {
                 }
                 resultList.add(line);
             }
-
+        }
+        if(request.isHeader()) {
+            resultList.add(0, request.writeOutputHeader());
         }
 
 

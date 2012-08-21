@@ -11,7 +11,8 @@ function createJson() {
         "conditions" : createConditionsArrayJson(),
         "outputs" : createOutputsArrayJson(),
         "multiple" : document.getElementById("multiple-output").checked,
-        "distinct" : document.getElementById("distinct").checked
+        "distinct" : document.getElementById("distinct").checked,
+        "header" : document.getElementById("output_header").checked
     };
     return resultJson;
 }
