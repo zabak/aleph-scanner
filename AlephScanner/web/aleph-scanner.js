@@ -32,12 +32,12 @@ function createConditionsArrayJson() {
 function createConditionJson(conditionContainer) {
     var field = conditionContainer.childNodes[2].value;
     var subfield = conditionContainer.childNodes[4].value;
-    var negation = conditionContainer.childNodes[6].checked;
-    var relation = conditionContainer.childNodes[7].options[conditionContainer.childNodes[7].selectedIndex].value;
+    var negation = conditionContainer.childNodes[5].alt == "yes";
+    var relation = conditionContainer.childNodes[6].options[conditionContainer.childNodes[6].selectedIndex].value;
 
-    var expression = conditionContainer.childNodes[8].value;
-    if(conditionContainer.childNodes[8].disabled) {
-        expression = conditionContainer.childNodes[10].value.split('\n').join('@@');
+    var expression = conditionContainer.childNodes[7].value;
+    if(conditionContainer.childNodes[7].disabled) {
+        expression = conditionContainer.childNodes[9].value.split('\n').join('@@');
     }
 
     var condition = {
@@ -84,13 +84,13 @@ function createOutputJson(outputContainer) {
 
 
 function switchInputType(conditionContainer) {
-    if(conditionContainer.childNodes[8].disabled) {
-        conditionContainer.childNodes[8].disabled=false;
-        conditionContainer.childNodes[9].innerHTML="->";
-        conditionContainer.removeChild(conditionContainer.childNodes[10]);
+    if(conditionContainer.childNodes[7].disabled) {
+        conditionContainer.childNodes[7].disabled=false;
+        conditionContainer.childNodes[8].src="right_arrow-icon.png";
+        conditionContainer.removeChild(conditionContainer.childNodes[9]);
     } else {
-        conditionContainer.childNodes[8].disabled=true;
-        conditionContainer.childNodes[9].innerHTML="<-";
+        conditionContainer.childNodes[7].disabled=true;
+        conditionContainer.childNodes[8].src="left_arrow-icon.png";
         var expressionTextArea = document.createElement('textarea');
         expressionTextArea.wrap="off";
         expressionTextArea.cols="58";
@@ -98,6 +98,19 @@ function switchInputType(conditionContainer) {
         conditionContainer.appendChild(expressionTextArea);
     }
 }
+
+
+function switchNegation(conditionContainer) {
+    if(conditionContainer.childNodes[5].alt == "no") {
+        conditionContainer.childNodes[5].alt = "yes"
+        conditionContainer.childNodes[5].src="minus-icon.png";
+    } else {
+        conditionContainer.childNodes[5].alt = "no"
+        conditionContainer.childNodes[5].src="ok-icon.png";
+    }
+}
+
+
 
 
 
@@ -127,8 +140,11 @@ function addOutput(removable) {
     fieldInput.size ="3";
     fieldInput.className = 'field';
 
-    var subfieldLabel= document.createElement('label');
-    subfieldLabel.appendChild(document.createTextNode(" $ "));
+    //var subfieldLabel= document.createElement('label');
+    //subfieldLabel.appendChild(document.createTextNode(" $ "));
+    
+    var subfieldLabel= document.createElement('img');
+    subfieldLabel.src="dollar-icon2.png";
     var subfieldInput = document.createElement('input');
     subfieldInput.type = "text";
     subfieldInput.size ="1";
@@ -198,19 +214,25 @@ function addCondition(removable) {
     fieldInput.size ="3";
     fieldInput.className = 'field';
 
-    var subfieldLabel= document.createElement('label');
-    subfieldLabel.appendChild(document.createTextNode("$"));
+    //var subfieldLabel= document.createElement('label');
+    //subfieldLabel.appendChild(document.createTextNode("$"));
+    var subfieldLabel= document.createElement('img');
+    subfieldLabel.src="dollar-icon2.png";    
     var subfieldInput = document.createElement('input');
     subfieldInput.type = "text";
     subfieldInput.size ="1";
     subfieldInput.className = 'field';
 
 
-    var negationLabel = document.createElement('label');
-    negationLabel.appendChild(document.createTextNode("!"));
-
-    var negationCheck = document.createElement('input');
-    negationCheck.type = "checkbox";
+    //var negationLabel = document.createElement('label');
+    //negationLabel.appendChild(document.createTextNode("!"));
+    
+    var negationLabel= document.createElement('img');
+    negationLabel.src="ok-icon.png";    
+    negationLabel.alt="no";
+    negationLabel.addEventListener("click", function() {
+        switchNegation(conditionContainer);
+    }, false);
 
     var relationSelect= document.createElement('select');
     var equalsOption= document.createElement('option');
@@ -237,13 +259,15 @@ function addCondition(removable) {
 
     var expressionInput = document.createElement('input');
     expressionInput.type = "text";
-    expressionInput.size="26";
+    expressionInput.size="27";
 
-    var inputTypeButton = document.createElement('button');
+    //var inputTypeButton = document.createElement('button');
+    inputTypeButton = document.createElement('img');
     inputTypeButton.addEventListener("click", function() {
         switchInputType(conditionContainer);
     }, false);
-    inputTypeButton.appendChild(document.createTextNode("->"));
+    inputTypeButton.src="right_arrow-icon.png";
+    //inputTypeButton.appendChild(document.createTextNode("->"));
 
     conditionContainer.appendChild(removeButton);
     conditionContainer.appendChild(fieldLabel);
@@ -251,7 +275,6 @@ function addCondition(removable) {
     conditionContainer.appendChild(subfieldLabel);
     conditionContainer.appendChild(subfieldInput);
     conditionContainer.appendChild(negationLabel);
-    conditionContainer.appendChild(negationCheck);
     conditionContainer.appendChild(relationSelect);
     conditionContainer.appendChild(expressionInput);
     conditionContainer.appendChild(inputTypeButton);
@@ -298,7 +321,6 @@ function showResults(httpRequest) {
             document.getElementById("output-box").innerHTML=newData.list[0].join('\n');
             document.getElementById("status").innerHTML= "Celkem: " + newData.count;
             document.getElementById("export_date").innerHTML= newData.export_date;
-
         }
         else {
     //alert("error");
