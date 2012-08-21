@@ -20,7 +20,7 @@
             <div id="menu">
                 <span>Posledni aktualizace dat: </span><span id="export_date"></span>
                 <span><a href="http://code.google.com/p/aleph-scanner/">Vývoj</a></span>
-                <a href="https://dl.dropbox.com/u/9409661/aleph_assistant/AlephAssistant.crx">AlephAssistant</a>
+                <a href="https://chrome.google.com/webstore/detail/iokpaflegjgfiohcpdaggbfnlpmndmel">AlephAssistant</a>
             </div>
             <div id="header">
                 <div id="logo">
@@ -30,8 +30,8 @@
                 <div id="logo-img"><img src="mzk-logo.png"/></div>
             </div>
             <div id="page">
-                <div id="input">
-                    <div class="input_header">
+                <div id="input">                    
+                    <div class="input_header">    
                         <label>Báze: </label>
                         <select id="base" name="base">
                             <option value="mzk01">MZK01</option>
@@ -46,26 +46,29 @@
                 </div>
                 <div id="output">
 
-
-                    <label>Distinct </label>
-                    <input id="distinct" type="checkbox" />
-                    <label> OP </label>
-                    <input id="multiple-output" type="checkbox" />
+                    <div class="output_header">
+                        <label>Distinct </label>
+                        <input id="distinct" type="checkbox" />
+                        <label> OP </label>
+                        <input id="multiple-output" type="checkbox" />
+                    </div>
 
                     <div id="outputs"></div>
                     <img alt="" src="add-icon.png"  onclick="addOutput(true)"/>
 
-
+                    <div>
                     <div id="loader"><img src="loader.gif"></div>
 
                     <textarea id="output-box" readonly wrap="off" name="output" cols="60" rows="30">
-                    </textarea>            
+                    </textarea>  
+                </div>
                     <div id="status"></div>
+                    <button type="button"  onclick ="downloadOutput();">Export</button>
                 </div>
                 <div style="clear: both"></div>
             </div>
             <div id="footer">
-                Hanis' Playground
+                ©2012. Developed by <a href="http://www.mzk.cz">MZK</a>
             </div>
         </div>
     </body>

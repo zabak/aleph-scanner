@@ -92,7 +92,7 @@ function switchInputType(conditionContainer) {
         conditionContainer.childNodes[9].innerHTML="<-";
         var expressionTextArea = document.createElement('textarea');
         expressionTextArea.wrap="off";
-        expressionTextArea.cols="59";
+        expressionTextArea.cols="58";
         expressionTextArea.rows="5";
         conditionContainer.appendChild(expressionTextArea);
     }
@@ -124,12 +124,14 @@ function addOutput(removable) {
     var fieldInput = document.createElement('input');
     fieldInput.type = "text";
     fieldInput.size ="3";
+    fieldInput.className = 'field';
 
     var subfieldLabel= document.createElement('label');
     subfieldLabel.appendChild(document.createTextNode(" $ "));
     var subfieldInput = document.createElement('input');
     subfieldInput.type = "text";
     subfieldInput.size ="1";
+    subfieldInput.className = 'field';
 
     var RightSeparatorInput = document.createElement('input');
     RightSeparatorInput.type = "text";
@@ -193,12 +195,14 @@ function addCondition(removable) {
     var fieldInput = document.createElement('input');
     fieldInput.type = "text";
     fieldInput.size ="3";
+    fieldInput.className = 'field';
 
     var subfieldLabel= document.createElement('label');
     subfieldLabel.appendChild(document.createTextNode("$"));
     var subfieldInput = document.createElement('input');
     subfieldInput.type = "text";
     subfieldInput.size ="1";
+    subfieldInput.className = 'field';
 
 
     var negationLabel = document.createElement('label');
@@ -232,7 +236,7 @@ function addCondition(removable) {
 
     var expressionInput = document.createElement('input');
     expressionInput.type = "text";
-    expressionInput.size="33";
+    expressionInput.size="26";
 
     var inputTypeButton = document.createElement('button');
     inputTypeButton.addEventListener("click", function() {
@@ -305,3 +309,7 @@ function showResults(httpRequest) {
 
 
 
+function downloadOutput() {
+    var data = document.getElementById("output-box").value;
+    location.href='data:application/download,' + encodeURIComponent(data);
+}

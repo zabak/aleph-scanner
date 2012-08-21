@@ -82,9 +82,9 @@ public class Output {
                 if(list.isEmpty()) {
                     dif--;
                 }
-                System.out.println("inside separator: " + getInsideSeparator());
-                System.out.println("s: " + s);
-                System.out.println("dif: " + dif);
+                //System.out.println("inside separator: " + getInsideSeparator());
+                //System.out.println("s: " + s);
+                //System.out.println("dif: " + dif);
                 
                 for (int i = 0; i < dif; i++) {                 
                     s+=getInsideSeparator();
