@@ -15,9 +15,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.PatternSyntaxException;
 import org.marc4j.MarcException;
 import org.marc4j.MarcPermissiveStreamReader;
 import org.marc4j.MarcReader;
@@ -157,11 +160,8 @@ public class RequestHandler {
         }
 
 
-
-
-
         if (request.isDistinct()) {
-            Set hs = new HashSet();
+            SortedSet hs = new TreeSet();
             hs.addAll(resultList);
             resultList.clear();
             resultList.addAll(hs);
@@ -261,6 +261,14 @@ public class RequestHandler {
                     match = content.contains(singleExpression);
                 } else if ("equals".equals(condition.getRelation())) {
                     match = content.equals(singleExpression);
+                } else if ("regex".equals(condition.getRelation())) {
+                    try {
+                        match = content.matches(singleExpression);
+                    } catch (PatternSyntaxException ex) {
+                        //TODO: warn user
+                        return false;
+                    }
+                    
                 }
                 if (match) {
                     return !condition.isNegation();
