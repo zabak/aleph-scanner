@@ -257,6 +257,11 @@ function addCondition(removable) {
     existsOption.appendChild(document.createTextNode("Existuje"));
     relationSelect.appendChild(existsOption);
 
+    var regexOption= document.createElement('option');
+    regexOption.value="regex";
+    regexOption.appendChild(document.createTextNode("RegEx"));
+    relationSelect.appendChild(regexOption);
+
     var expressionInput = document.createElement('input');
     expressionInput.type = "text";
     expressionInput.size="27";
