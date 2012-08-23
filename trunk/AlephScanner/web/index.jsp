@@ -40,6 +40,7 @@
                     </div>
                     <div id="conditions"></div>
                     <img alt="" src="add-icon.png"  onclick="addCondition(true)"/>
+                    <img alt="" src="control-icon.png"  onclick="addConditionCF(true)"/>
                     <img style="float: right" src="find-icon.png" onclick="makeRequest();" id="request_button"/>
 
 

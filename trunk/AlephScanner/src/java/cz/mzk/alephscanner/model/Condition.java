@@ -10,43 +10,12 @@ package cz.mzk.alephscanner.model;
  */
 public class Condition {
     
-    private String field;
-    private String subfield;
     private boolean negation;
     private String relation;
-    private String expression;
-            
-            
+    private String expression;  
+    
     public Condition() {
         
-    }
-
-    /**
-     * @return the field
-     */
-    public String getField() {
-        return field;
-    }
-
-    /**
-     * @param field the field to set
-     */
-    public void setField(String field) {
-        this.field = field;
-    }
-
-    /**
-     * @return the subfield
-     */
-    public String getSubfield() {
-        return subfield;
-    }
-
-    /**
-     * @param subfield the subfield to set
-     */
-    public void setSubfield(String subfield) {
-        this.subfield = subfield;
     }
 
     /**
@@ -56,15 +25,6 @@ public class Condition {
         return negation;
     }
 
-    
-    public void setNegationFromString(String negationString) {
-        if("true".equals(negationString)) {
-            this.negation = true;
-        } else {
-            this.negation = false;
-        }
-    }    
-    
     /**
      * @param negation the negation to set
      */
@@ -99,5 +59,4 @@ public class Condition {
     public void setExpression(String expression) {
         this.expression = expression;
     }
-    
 }
