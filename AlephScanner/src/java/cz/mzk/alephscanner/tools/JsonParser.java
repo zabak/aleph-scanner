@@ -4,7 +4,8 @@
  */
 package cz.mzk.alephscanner.tools;
 
-import cz.mzk.alephscanner.model.Condition;
+import cz.mzk.alephscanner.model.ConditionCF;
+import cz.mzk.alephscanner.model.ConditionDF;
 import cz.mzk.alephscanner.model.Output;
 import cz.mzk.alephscanner.model.Request;
 import org.json.JSONArray;
@@ -23,17 +24,31 @@ public class JsonParser {
         
         JSONObject requestObject = new JSONObject(json);
         request.setBase(requestObject.getString("base"));
-        JSONArray conditionsArray = requestObject.getJSONArray("conditions");
+        JSONArray conditionsArray = requestObject.getJSONArray("df_conditions");
         for (int i = 0; i < conditionsArray.length(); i++) {
             JSONObject conditionObject = (JSONObject) conditionsArray.get(i);
-            Condition condition = new Condition();
+            ConditionDF condition = new ConditionDF();
             condition.setField(conditionObject.getString("field"));
             condition.setSubfield(conditionObject.getString("subfield"));
+            System.out.println(conditionObject.getBoolean("negation"));
             condition.setNegation(conditionObject.getBoolean("negation"));
             condition.setRelation(conditionObject.getString("relation"));
             condition.setExpression(conditionObject.getString("expression"));            
-            request.addCondition(condition);
+            request.addDataFieldCondition(condition);
         }   
+        JSONArray conditionsCFArray = requestObject.getJSONArray("cf_conditions");
+        for (int i = 0; i < conditionsCFArray.length(); i++) {
+            JSONObject conditionObject = (JSONObject) conditionsCFArray.get(i);
+            ConditionCF condition = new ConditionCF();
+            condition.setField(conditionObject.getString("field"));
+            condition.setNegation(conditionObject.getBoolean("negation"));
+            condition.setRelation(conditionObject.getString("relation"));
+            condition.setExpression(conditionObject.getString("expression"));
+            condition.setFrom(conditionObject.getInt("from"));
+            condition.setTo(conditionObject.getInt("to"));
+            request.addControlFieldCondition(condition);
+        }           
+        
         JSONArray outputsArray = requestObject.getJSONArray("outputs");
         for (int i = 0; i < outputsArray.length(); i++) {
             JSONObject outputObject = (JSONObject) outputsArray.get(i);

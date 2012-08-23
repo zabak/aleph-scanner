@@ -14,14 +14,16 @@ import java.util.List;
 public class Request {
 
     private String base;
-    private List<Condition> conditions;
+    private List<ConditionDF> dataFieldConditions;
+    private List<ConditionCF> controlFieldConditions;
     private List<Output> outputs;
     private boolean multipleFiledOutput;
     private boolean distinct;
     private boolean header;
 
     public Request() {
-        this.conditions = new ArrayList<Condition>();
+        this.dataFieldConditions = new ArrayList<ConditionDF>();
+        this.controlFieldConditions = new ArrayList<ConditionCF>();
         this.outputs = new ArrayList<Output>();
     }
 
@@ -39,23 +41,32 @@ public class Request {
         this.base = base;
     }
 
-    /**
-     * @return the conditions
-     */
-    public List<Condition> getConditions() {
-        return conditions;
+
+    public List<ConditionDF> getDataFiledConditions() {
+        return dataFieldConditions;
     }
 
-    /**
-     * @param conditions the conditions to set
-     */
-    public void setConditions(List<Condition> conditions) {
-        this.conditions = conditions;
+    public void setDataFieldConditions(List<ConditionDF> conditions) {
+        this.dataFieldConditions = conditions;
     }
 
-    public void addCondition(Condition condition) {
-        this.conditions.add(condition);
+    public void addDataFieldCondition(ConditionDF condition) {
+        this.dataFieldConditions.add(condition);
     }
+    
+    
+    public List<ConditionCF> getControlFieldConditions() {
+        return controlFieldConditions;
+    }
+
+    public void setControlFieldConditions(List<ConditionCF> conditions) {
+        this.controlFieldConditions = conditions;
+    }
+
+    public void addControlFieldCondition(ConditionCF condition) {
+        this.controlFieldConditions.add(condition);
+    }    
+    
 
     /**
      * @return the outputs

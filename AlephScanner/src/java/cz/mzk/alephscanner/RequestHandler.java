@@ -5,6 +5,8 @@
 package cz.mzk.alephscanner;
 
 import cz.mzk.alephscanner.model.Condition;
+import cz.mzk.alephscanner.model.ConditionCF;
+import cz.mzk.alephscanner.model.ConditionDF;
 import cz.mzk.alephscanner.model.Output;
 import cz.mzk.alephscanner.model.Request;
 import java.io.FileInputStream;
@@ -52,8 +54,18 @@ public class RequestHandler {
                 try {
                     Record record = reader.next();
                     boolean check = true;
-                    for (Condition condition : request.getConditions()) {
-                        if (!checkCondition(record, condition)) {
+                    for (ConditionDF condition : request.getDataFiledConditions()) {
+                        if (!checkDataFieldCondition(record, condition)) {
+                            check = false;
+                            break;
+                        }
+                    }
+                    if (!check) {
+                        continue;
+                    }
+
+                    for (ConditionCF condition : request.getControlFieldConditions()) {
+                        if (!checkControlFieldCondition(record, condition)) {
                             check = false;
                             break;
                         }
@@ -68,52 +80,8 @@ public class RequestHandler {
                         output.addData(matchedRecordsCounter, list);
                     }
                     matchedRecordsCounter++;
-                    /*
-                     ControlField cField = (ControlField) record.getVariableField("001");
-                     if (cField == null) {
-                     continue;
-                     }
-                     */
 
-                    /*
-                     if (request.isMultipleFiledOutput()) {
-                     List<String> outputs = getMultipleOutputs(record, outField, outSubfield);
-                     for (String string : outputs) {
-                     String line = cField.getData() + separator
-                     + string;
-                     sysnoList.add(line);
-                     }
-                     } else {
-                     String line = cField.getData() + separator
-                     + getOutput(record, outField, outSubfield)
-                     + separator2
-                     + getOutput(record, outField2, outSubfield2);
-                     sysnoList.add(line);
-                     }
-                     */
-                    /* if (request.isMultipleFiledOutput()) {
-                     Output multipleOutput = request.getMultipleOutput();
-                     List<String> outputs = getMultipleOutputs(record, multipleOutput);
-                     for (int i = 0; i < outputs.size(); i++) {
-                     String line = "";
-                     for (Output output : request.getOutputs()) {
-                     if (output.isMultiple()) {
-                     line += outputs.get(i);
-                     } else {
-                     line += getOutput(record, output);
-                     }
-                     }
-                     resultList.add(line);
-                     }
 
-                     } else {
-                     String line = "";
-                     for (Output output : request.getOutputs()) {
-                     line += getOutput(record, output);
-                     }
-                     resultList.add(line);
-                     }
-                     */
 
                 } catch (MarcException e) {
                     j++;
@@ -155,7 +123,7 @@ public class RequestHandler {
                 resultList.add(line);
             }
         }
-        if(request.isHeader()) {
+        if (request.isHeader()) {
             resultList.add(0, request.writeOutputHeader());
         }
 
@@ -214,35 +182,38 @@ public class RequestHandler {
         return list;
     }
 
-    public static boolean checkCondition(Record record, Condition condition) {
-        String content = null;
-        if (condition.getSubfield() == null || condition.getSubfield().isEmpty()) {
-            ControlField cField = (ControlField) record.getVariableField(condition.getField());
-            if (cField != null) {
-                content = cField.getData();
-                return checkSingleDataSubfield(condition, content);
-            }
-        } else {
-            List outDataFields = record.getVariableFields(condition.getField());
-            if("exists".equals(condition.getRelation())){
-                return outDataFields.isEmpty() == condition.isNegation();
-            }
-            for (Object object : outDataFields) {
-                DataField outDataField = (DataField) object;
-                if (outDataField != null) {
-                    Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
-                    if (outDataSubfield != null) {
-                        content = outDataSubfield.getData();
-                        if (checkSingleDataSubfield(condition, content)) {
-                            return true;
-                        }
+    public static boolean checkDataFieldCondition(Record record, ConditionDF condition) {
+        List outDataFields = record.getVariableFields(condition.getField());
+        if ("exists".equals(condition.getRelation())) {
+            return outDataFields.isEmpty() == condition.isNegation();
+        }
+        for (Object object : outDataFields) {
+            DataField outDataField = (DataField) object;
+            if (outDataField != null) {
+                Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
+                if (outDataSubfield != null) {
+                    String content = outDataSubfield.getData();
+                    if (checkSingleDataSubfield(condition, content)) {
+                        return true;
                     }
                 }
             }
         }
         return false;
-
     }
+
+    public static boolean checkControlFieldCondition(Record record, ConditionCF condition) {
+        ControlField cField = (ControlField) record.getVariableField(condition.getField());
+        if (cField != null) {
+            String content = cField.getData();
+            if(content.length() >= condition.getTo()) {
+                return checkSingleDataSubfield(condition, content.substring(condition.getFrom(), condition.getTo() + 1));
+            }
+        }
+        return !condition.isNegation();
+    }
+
+
 
     public static boolean checkSingleDataSubfield(Condition condition, String content) {
         if (content != null) {
@@ -268,7 +239,7 @@ public class RequestHandler {
                         //TODO: warn user
                         return false;
                     }
-                    
+
                 }
                 if (match) {
                     return !condition.isNegation();
