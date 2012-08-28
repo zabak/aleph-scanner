@@ -27,6 +27,7 @@ function createDFConditionsArrayJson() {
         var conditionContainer = conditionsDiv.childNodes[i];
         if(conditionContainer.fieldType == 'DF') {
             conditions[index] = createDFConditionJson(conditionContainer);
+            index++;
         }
     }
     return conditions;
@@ -40,6 +41,7 @@ function createCFConditionsArrayJson() {
         var conditionContainer = conditionsDiv.childNodes[i];
         if(conditionContainer.fieldType == 'CF') {
             conditions[index] = createCFConditionJson(conditionContainer);
+            index++;
         }
     }
     return conditions;

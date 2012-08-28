@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -68,7 +67,7 @@ public class Handle extends HttpServlet {
 
        // File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
         //File file = new File("/home/tomcat/" + requestObject.getBase() + ".m21");
-        File file = new File("/home/hanis/projects/marc4j/" + requestObject.getBase() + ".m21");
+        File file = new File("/home/hanis/NetBeansProjects/AlephScanner/data/exports/" + requestObject.getBase() + ".m21");
         Long lastModified = file.lastModified();
         Date date = new Date(lastModified);
         SimpleDateFormat formatedDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -90,29 +89,7 @@ public class Handle extends HttpServlet {
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
-
-        /*         
-         out.print("{\"list\": [");
-         boolean first = false;            
-         for (String sysno : sysnoList) {                
-         if(!first) {
-         first=true;                    
-         } else {
-         out.print(",\n");
-         }
-         out.print("\"" + sysno + "\"");
-         }
-         out.print("], \"count\":\"" + sysnoList.size() + "\"");                    
-         out.print(", \"export_date\":\"" + formatedDate.format(date) + "\"}");        
-         */
-
-
         out.close();
-
-
-
-
 
     }
 
