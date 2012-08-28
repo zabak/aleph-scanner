@@ -45,9 +45,9 @@ public class RequestHandler {
         int j = 0;
         int matchedRecordsCounter = 0;
         try {
-            in = new FileInputStream("/home/hanis/projects/marc4j/" + request.getBase() + ".m21");
             //in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
             //in = new FileInputStream("/home/tomcat/" + request.getBase() + ".m21");
+            in = new FileInputStream("/home/hanis/NetBeansProjects/AlephScanner/data/exports/" + request.getBase() + ".m21");
             MarcReader reader = new MarcPermissiveStreamReader(in, true, true, "UTF-8");
             while (reader.hasNext()) {
                 allRecordscounter++;
@@ -181,17 +181,17 @@ public class RequestHandler {
         }
         return list;
     }
+    
 
     public static boolean checkDataFieldCondition(Record record, ConditionDF condition) {
         List outDataFields = record.getVariableFields(condition.getField());
-        if ("exists".equals(condition.getRelation())) {
-            return outDataFields.isEmpty() == condition.isNegation();
-        }
+        boolean exists = false;
         for (Object object : outDataFields) {
             DataField outDataField = (DataField) object;
             if (outDataField != null) {
                 Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
                 if (outDataSubfield != null) {
+                    exists = true;
                     String content = outDataSubfield.getData();
                     if (checkSingleDataSubfield(condition, content)) {
                         return true;
@@ -199,51 +199,53 @@ public class RequestHandler {
                 }
             }
         }
-        return false;
+        if(exists) {
+            return false;
+        } else {
+            return condition.isNegation();
+
+        }
+        
     }
 
     public static boolean checkControlFieldCondition(Record record, ConditionCF condition) {
         ControlField cField = (ControlField) record.getVariableField(condition.getField());
         if (cField != null) {
             String content = cField.getData();
-            if(content.length() >= condition.getTo()) {
+            if (content.length() >= condition.getTo()) {
                 return checkSingleDataSubfield(condition, content.substring(condition.getFrom(), condition.getTo() + 1));
             }
         }
-        return !condition.isNegation();
+        return condition.isNegation();
     }
 
-
-
     public static boolean checkSingleDataSubfield(Condition condition, String content) {
-        if (content != null) {
-            if ("exists".equals(condition.getRelation())) {
-                return !condition.isNegation();
-            }
-            StringTokenizer st = new StringTokenizer(condition.getExpression(), "@@");
-            boolean match = false;
-            while (st.hasMoreTokens()) {
-                String singleExpression = st.nextToken();
-                if ("starts".equals(condition.getRelation())) {
-                    match = content.startsWith(singleExpression);
-                } else if ("ends".equals(condition.getRelation())) {
-                    match = content.endsWith(singleExpression);
-                } else if ("contains".equals(condition.getRelation())) {
-                    match = content.contains(singleExpression);
-                } else if ("equals".equals(condition.getRelation())) {
-                    match = content.equals(singleExpression);
-                } else if ("regex".equals(condition.getRelation())) {
-                    try {
-                        match = content.matches(singleExpression);
-                    } catch (PatternSyntaxException ex) {
-                        //TODO: warn user
-                        return false;
-                    }
+        if ("exists".equals(condition.getRelation())) {
+            return !condition.isNegation();
+        }
+        StringTokenizer st = new StringTokenizer(condition.getExpression(), "@@");
+        boolean match = false;
+        while (st.hasMoreTokens()) {
+            String singleExpression = st.nextToken();
+            if ("starts".equals(condition.getRelation())) {
+                match = content.startsWith(singleExpression);
+            } else if ("ends".equals(condition.getRelation())) {            
+                match = content.endsWith(singleExpression);
+            } else if ("contains".equals(condition.getRelation())) {
+                match = content.contains(singleExpression);
+            } else if ("equals".equals(condition.getRelation())) {
+                match = content.equals(singleExpression);
+            } else if ("regex".equals(condition.getRelation())) {
+                try {
+                    match = content.matches(singleExpression);
+                } catch (PatternSyntaxException ex) {
+                    //TODO: warn user 
+                    return false;
+                }
 
-                }
-                if (match) {
-                    return !condition.isNegation();
-                }
+            }
+            if (match) {
+                return !condition.isNegation();
             }
         }
         return condition.isNegation();
