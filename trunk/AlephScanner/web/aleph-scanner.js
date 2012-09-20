@@ -208,8 +208,7 @@ function switchInputType(conditionContainer) {
         conditionContainer.appendChild(expressionTextArea); 
         if(getConditionRelation(conditionContainer) == "exists") {
             getConditionExpression(conditionContainer).disabled=true;
-        }
-        
+        }        
     }
 }
 

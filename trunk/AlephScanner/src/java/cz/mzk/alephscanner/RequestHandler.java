@@ -204,9 +204,10 @@ public class RequestHandler {
         } else {
             return condition.isNegation();
 
-        }
-        
+        }        
     }
+    
+    
 
     public static boolean checkControlFieldCondition(Record record, ConditionCF condition) {
         ControlField cField = (ControlField) record.getVariableField(condition.getField());
