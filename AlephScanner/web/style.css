@@ -37,8 +37,6 @@ body,input {
 
 }
 
-
-
 #loader {
     position: absolute;
     top: 300px;
@@ -73,25 +71,6 @@ body,input {
     color: #eee;
 }
 
-#input {
-    position: relative;
-    float: left;
-    width: 500px;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin: 0 0 0 0;
-}
-
-#output {
-    position: relative;
-    float: left;
-    width: 499px;
-    border-left: #c1d5d4 solid 1px;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin: 0 0 0 0;
-}
-
 
 #wrapper {
     width: 1020px;
@@ -102,17 +81,6 @@ body,input {
     border: solid 1px #82A7AD;
     border-top: 0;
 }
-
-.input_header {
-    padding-bottom: 3px;
-    border-bottom: #c1d5d4 solid 1px;
-    
-}
-.output_header {
-    padding-bottom: 3px;
-    border-bottom: #c1d5d4 solid 1px;
-}
-
 
 #menu {
     width: 1000px;
@@ -128,7 +96,6 @@ body,input {
 }
 
 
-
 #menu a {
     float: right;
     text-decoration: none;
@@ -136,77 +103,173 @@ body,input {
     padding-right: 10px;
 }
 
-#conditions {
-    margin-top: 3px;
-    padding:2px;
-    margin-bottom: 3px;
+
+.output-header-panel {
+    height:20px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: #C1D5D4 solid 1px;
 }
 
-#conditions .condition-container {
+
+
+.output-item-container {    
     background-color: #e2e5fe;
     color: #0d1b0b;
     border: #aaa solid 2px;
-    padding:2px;
+    padding: 0px 0px 1px 3px;        
 }
 
 
-#conditions input {
-    margin-left:2px;
-    margin-right:2px;
+
+.output-item-container .field-input{
+    background-color: #cdfffd;  
+    width: 40px;
 }
 
-#conditions select {
-    margin-left:2px;
-    margin-right:2px;
+.output-item-container .subfield-input{
+    background-color: #cdfffd;  
+    width: 20px;
 }
 
-#conditions label {
-    margin-left:2px;
-    margin-right:2px;
+
+.output-panel .output-text-area {
+    height: 500px;
+    width: 490px;
+    margin: 5px; 
 }
 
-#conditions textarea {
-    margin-top:2px;
-    
+
+.output-separator {
+    width: 20px;
 }
 
-img {
-    margin-bottom: -3px;
+#output-panel {
+    position: relative;
+    float: left;
+    width: 499px;
+    border-left: #c1d5d4 solid 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0 0 0 0;
 }
 
-#outputs {
-    margin-top: 3px;
-    margin-bottom: 3px;
-    padding:2px;
+#input-panel {
+    position: relative;
+    float: left;
+    width: 500px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0 0 0 0;
 }
 
-#outputs .output-container {
+
+.base-chooser {
+    height:20px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: #C1D5D4 solid 1px;
+}
+
+
+
+select {
+    font-size: 12px;
+    margin: 0 2px 0 2px;
+    padding: 0px;  
+    border-width: 1px;
+    height: 18px;    
+}
+.input-condition-container {
     background-color: #e2e5fe;
     color: #0d1b0b;
     border: #aaa solid 2px;
-    padding:2px;
+    padding: 0px 0px 1px 3px; 
+}
+
+input {
+    margin: 0 2px 0 2px;
+    padding: 0px;  
+    border-width: 1px;
+    height: 15px;
+}
+
+.input-condition-container .field-input{
+    background-color: #cdfffd;  
+    width: 40px;
+}
+
+.input-condition-container .subfield-input{
+    background-color: #cdfffd;  
+    width: 20px;
 }
 
 
-#outputs label {
-    margin-left:2px;
-    margin-right:2px;
+.input-condition-container .expression-input {
+    width: 237px;
 }
 
-#outputs input {
-    margin-left:2px;
-    margin-right:2px;
+.image-button16 {
+      height: 16px;
+      width: 16px;
+      margin-right: 5px;
+      background-repeat: no-repeat;
+      vertical-align: middle;
+      display: inline-block;   
+}
+.remove-button {
+      background-image: url(delete-icon.png);
 }
 
-textarea {
-    margin-top:2px;
-    background-color: #eaf1fe;
+.input-condition-container .value-type-button {
+     background-image: url(right_arrow-icon.png);
 }
 
-#output-box {
-    background-color: #fff;
+.input-condition-container .list-type-button {
+     background-image: url(left_arrow-icon.png);
 }
 
-.field {
-    background-color: #cdfffd;
+
+.add-df-button {
+     background-image: url(add-icon.png);
+}
+
+.add-cf-button {
+     background-image: url(control-icon.png);
+}
+
+.search-button {
+     background-image: url(find-icon.png);
+     float: right;     
+      height: 32px;
+      width: 32px;
+      margin-right: 5px;
+      background-repeat: no-repeat;
+      vertical-align: middle;
+      display: inline-block;        
+}
+
+
+
+
+.add-output-button {
+     background-image: url(add-icon.png);
+}
+
+.input-condition-container .input-text-area {
+    height: 150px;
+    width: 475px;
+    margin: 5px; 
+}
+
+.input-condition-container .input-text-area-hidden {
+    display: none;
+}
+
+.input-controll-panel {
+    margin-top: 5px;
+}
+
+.output-controll-panel {
+    margin-top: 5px;
 }
