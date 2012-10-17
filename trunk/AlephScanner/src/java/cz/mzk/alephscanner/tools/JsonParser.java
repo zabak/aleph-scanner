@@ -17,11 +17,10 @@ import org.json.JSONObject;
  * @author hanis
  */
 public class JsonParser {
-    
-    
+
     public static Request getRequestObject(String json) throws JSONException {
         Request request = new Request();
-        
+
         JSONObject requestObject = new JSONObject(json);
         request.setBase(requestObject.getString("base"));
         JSONArray conditionsArray = requestObject.getJSONArray("df_conditions");
@@ -29,13 +28,20 @@ public class JsonParser {
             JSONObject conditionObject = (JSONObject) conditionsArray.get(i);
             ConditionDF condition = new ConditionDF();
             condition.setField(conditionObject.getString("field"));
-            condition.setSubfield(conditionObject.getString("subfield"));
-            System.out.println(conditionObject.getBoolean("negation"));
-            condition.setNegation(conditionObject.getBoolean("negation"));
-            condition.setRelation(conditionObject.getString("relation"));
-            condition.setExpression(conditionObject.getString("expression"));            
+            condition.setSubfield(conditionObject.getString("subfield"));            
+            String relation = conditionObject.getString("relation");
+            if(relation.startsWith("not")) {
+                condition.setRelation(relation.replaceFirst("not", ""));
+                condition.setNegation(true);
+            } else {
+                condition.setRelation(relation);
+                condition.setNegation(false);                
+            }
+            condition.setExpression(conditionObject.getString("expression"));
+            condition.setQuantifier(conditionObject.getString("quantifier"));
+            condition.setQuantity(conditionObject.getInt("quantity"));
             request.addDataFieldCondition(condition);
-        }   
+        }
         JSONArray conditionsCFArray = requestObject.getJSONArray("cf_conditions");
         for (int i = 0; i < conditionsCFArray.length(); i++) {
             JSONObject conditionObject = (JSONObject) conditionsCFArray.get(i);
@@ -47,8 +53,8 @@ public class JsonParser {
             condition.setFrom(conditionObject.getInt("from"));
             condition.setTo(conditionObject.getInt("to"));
             request.addControlFieldCondition(condition);
-        }           
-        
+        }
+
         JSONArray outputsArray = requestObject.getJSONArray("outputs");
         for (int i = 0; i < outputsArray.length(); i++) {
             JSONObject outputObject = (JSONObject) outputsArray.get(i);
@@ -61,12 +67,11 @@ public class JsonParser {
             output.setType(outputObject.getString("type"));
             output.setInsideSeparator(outputObject.getString("inside_separator"));
             request.addOutput(output);
-        }   
-        
+        }
+
         request.setMultipleFiledOutput(requestObject.getBoolean("multiple"));
         request.setDistinct(requestObject.getBoolean("distinct"));
         request.setHeader(requestObject.getBoolean("header"));
         return request;
     }
-
 }

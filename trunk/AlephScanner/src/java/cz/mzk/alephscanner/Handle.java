@@ -51,11 +51,14 @@ public class Handle extends HttpServlet {
         } catch (Exception e) {
         }
         Request requestObject = null;
+        System.out.println(sb.toString());
         try {
             requestObject = JsonParser.getRequestObject(sb.toString());
-        } catch (JSONException ex) {
+        } catch (JSONException ex) {            
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        System.out.println(requestObject.toString());
 
         response.setHeader("Content-Disposition", "attachment;filename=response.json");
         response.setHeader("Content-Type", "application/json; charset=UTF-8");

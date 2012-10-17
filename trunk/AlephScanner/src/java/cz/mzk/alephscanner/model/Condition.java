@@ -10,6 +10,15 @@ package cz.mzk.alephscanner.model;
  */
 public class Condition {
     
+    
+    public static final String AT_LEAST_ONE = "ex";
+    public static final String ALL = "all";
+    public static final String LESS_THAN = "lt";
+    public static final String MORE_THAN = "gt";
+    public static final String EXACTLY = "eq";
+    
+    
+    
     private boolean negation;
     private String relation;
     private String expression;  

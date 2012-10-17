@@ -14,9 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -42,8 +40,9 @@ public class RequestHandler {
         List<String> resultList = new ArrayList<String>();
         InputStream in = null;
         int allRecordscounter = 0;
-        int j = 0;
+        int exceptionCounter = 0;
         int matchedRecordsCounter = 0;
+        
         try {
             //in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
             //in = new FileInputStream("/home/tomcat/" + request.getBase() + ".m21");
@@ -80,11 +79,8 @@ public class RequestHandler {
                         output.addData(matchedRecordsCounter, list);
                     }
                     matchedRecordsCounter++;
-
-
-
                 } catch (MarcException e) {
-                    j++;
+                    exceptionCounter++;
                 } catch (Exception e) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, e);
                 }
@@ -98,7 +94,7 @@ public class RequestHandler {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println(allRecordscounter + ", " + j + ", " + matchedRecordsCounter);
+        System.out.println(allRecordscounter + ", " + exceptionCounter + ", " + matchedRecordsCounter);
 
 
         for (int i = 0; i < matchedRecordsCounter; i++) {
@@ -181,10 +177,11 @@ public class RequestHandler {
         }
         return list;
     }
-    
 
     public static boolean checkDataFieldCondition(Record record, ConditionDF condition) {
         List outDataFields = record.getVariableFields(condition.getField());
+        int correct = 0;
+        int all = 0;
         boolean exists = false;
         for (Object object : outDataFields) {
             DataField outDataField = (DataField) object;
@@ -192,22 +189,31 @@ public class RequestHandler {
                 Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
                 if (outDataSubfield != null) {
                     exists = true;
-                    String content = outDataSubfield.getData();
-                    if (checkSingleDataSubfield(condition, content)) {
-                        return true;
-                    }
+                    all++;
+                    if ("exists".equals(condition.getRelation())){
+                        if(!condition.isNegation()) {
+                            correct++;                   
+                        }
+                    } else if (checkSingleDataSubfield(condition, outDataSubfield.getData())) {
+                        correct++;                        
+                    } 
                 }
             }
         }
-        if(exists) {
-            return false;
-        } else {
-            return condition.isNegation();
-
-        }        
+        
+        if(condition.getQuantifier().equals(Condition.AT_LEAST_ONE)) {
+            return correct > 0 ;
+        } else if(condition.getQuantifier().equals(Condition.ALL)) {
+            return correct == all;
+        } else if(condition.getQuantifier().equals(Condition.EXACTLY)) {
+            return correct == condition.getQuantity();
+        } else if(condition.getQuantifier().equals(Condition.LESS_THAN)) {
+            return correct < condition.getQuantity();
+        } else if(condition.getQuantifier().equals(Condition.MORE_THAN)) {
+            return correct > condition.getQuantity();
+        }
+        return false;        
     }
-    
-    
 
     public static boolean checkControlFieldCondition(Record record, ConditionCF condition) {
         ControlField cField = (ControlField) record.getVariableField(condition.getField());
@@ -221,16 +227,13 @@ public class RequestHandler {
     }
 
     public static boolean checkSingleDataSubfield(Condition condition, String content) {
-        if ("exists".equals(condition.getRelation())) {
-            return !condition.isNegation();
-        }
         StringTokenizer st = new StringTokenizer(condition.getExpression(), "@@");
         boolean match = false;
         while (st.hasMoreTokens()) {
             String singleExpression = st.nextToken();
             if ("starts".equals(condition.getRelation())) {
                 match = content.startsWith(singleExpression);
-            } else if ("ends".equals(condition.getRelation())) {            
+            } else if ("ends".equals(condition.getRelation())) {
                 match = content.endsWith(singleExpression);
             } else if ("contains".equals(condition.getRelation())) {
                 match = content.contains(singleExpression);
@@ -248,7 +251,7 @@ public class RequestHandler {
             if (match) {
                 return !condition.isNegation();
             }
-        }
+        }        
         return condition.isNegation();
     }
 }

@@ -12,6 +12,8 @@ public class ConditionDF extends Condition {
     
     private String field;
     private String subfield;
+    private String quantifier;
+    private int quantity;
             
             
     public ConditionDF() {
@@ -44,6 +46,34 @@ public class ConditionDF extends Condition {
      */
     public void setSubfield(String subfield) {
         this.subfield = subfield;
+    }
+
+    /**
+     * @return the quantifier
+     */
+    public String getQuantifier() {
+        return quantifier;
+    }
+
+    /**
+     * @param quantifier the quantifier to set
+     */
+    public void setQuantifier(String quantifier) {
+        this.quantifier = quantifier;
+    }
+
+    /**
+     * @return the quantity
+     */
+    public int getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
 }
