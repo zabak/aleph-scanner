@@ -45,6 +45,11 @@ body,input {
     visibility: hidden;
 }
 
+.quantity-selector-hidden {
+        visibility: hidden;
+}
+
+
 #logo-img {
     position: absolute;
     top: 10px;
@@ -196,17 +201,17 @@ input {
 
 .input-condition-container .field-input{
     background-color: #cdfffd;  
-    width: 40px;
+    width: 30px;
 }
 
 .input-condition-container .subfield-input{
     background-color: #cdfffd;  
-    width: 20px;
+    width: 15px;
 }
 
 
 .input-condition-container .expression-input {
-    width: 237px;
+    width: 105px;
 }
 
 .image-button16 {
@@ -265,6 +270,7 @@ input {
 .input-condition-container .input-text-area-hidden {
     display: none;
 }
+
 
 .input-controll-panel {
     margin-top: 5px;

@@ -28,10 +28,16 @@ public class Output {
     private boolean multiple;
     private String type;
     
+    private int recordCounter;
+    private int dataCounter;
+    
+    
     private int maxOccurencies;
     
     public Output() {
         maxOccurencies = 0;
+        recordCounter++;
+        dataCounter++;
         data = new HashMap<Integer, List<String>>();
     }
     

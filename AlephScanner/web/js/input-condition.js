@@ -6,12 +6,16 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.ui.ComboBox');
 goog.require('goog.dom.classes');
+goog.require('goog.ui.ComboBox');
 
 
 alephscanner.InputCondition = function() {
     this.active_ = true;
     this.container_ = null;
-    this.field_ = null;    
+    this.quantifierSelect_ = null;
+    this.quantitySelect_ = null;
+    this.field_ = null;  
+    this.fieldLabel_ = null;
     this.subfield_ = null;    
     this.asInputList_ = false;
     this.negation_ = false;
@@ -60,10 +64,12 @@ alephscanner.InputCondition.prototype.createContainer_ = function() {
         'class' : 'input-condition-container'
     });          
     this.createRemoveButton_();
-    this.createLabel_("Pole:");
+    this.createQuantifierComboBox_();
+    this.createQuantityComboBox_();
+    this.createFiledLabel_();
     this.createFieldInput_();
     this.createSubfieldInput_();
-    this.createNegationButton_();
+    //this.createNegationButton_();
     this.createRelationComboBox_();
     this.createExpressionInput_();
     this.createSwitchInputTypeButton_();
@@ -96,13 +102,13 @@ alephscanner.InputCondition.prototype.createFieldInput_ = function() {
 };
 
 
-alephscanner.InputCondition.prototype.createLabel_ = function(caption) {
+alephscanner.InputCondition.prototype.createFiledLabel_ = function() {
     var fieldAttributes = {
         'class' : "label"
     };  
-    var label = goog.dom.createDom("label", fieldAttributes);   
-    label.appendChild(document.createTextNode(caption));
-    goog.dom.appendChild(this.container_, label);
+    this.fieldLabel_ = goog.dom.createDom("label", fieldAttributes);   
+    this.fieldLabel_.appendChild(document.createTextNode("pole"));
+    goog.dom.appendChild(this.container_, this.fieldLabel_);
 };
 
 
@@ -143,6 +149,21 @@ alephscanner.InputCondition.prototype.createRelationComboBox_ = function() {
     var existsOption = goog.dom.createDom('option', {
         'value':'exists'
     },"Existuje");    
+    var notEqualsOption = goog.dom.createDom('option', {
+        'value':'notequals'
+    },"Není rovno");
+    var notContainsOption = goog.dom.createDom('option', {
+        'value':'notcontains'
+    },"Neobsahuje");
+    var notStartsOption = goog.dom.createDom('option', {
+        'value':'notstarts'
+    },"Nezačíná na");
+    var notEndsOption = goog.dom.createDom('option', {
+        'value':'notends'
+    },"Nekončí na");    
+    var notExistsOption = goog.dom.createDom('option', {
+        'value':'notexists'
+    },"Neexistuje"); 
     var regexOption = goog.dom.createDom('option', {
         'value':'regex'
     },"RegEx");
@@ -152,10 +173,85 @@ alephscanner.InputCondition.prototype.createRelationComboBox_ = function() {
     this.relationSelect_.appendChild(startsOption);
     this.relationSelect_.appendChild(endsOption);
     this.relationSelect_.appendChild(existsOption);
+    
+    this.relationSelect_.appendChild(notEqualsOption);
+    this.relationSelect_.appendChild(notContainsOption);
+    this.relationSelect_.appendChild(notStartsOption);
+    this.relationSelect_.appendChild(notEndsOption);
+    this.relationSelect_.appendChild(notExistsOption);    
+    
     this.relationSelect_.appendChild(regexOption);        
     //goog.events.listen(this.negationButton_, goog.events.EventType.CHANGE, this.changeNegation_, false, this);
     goog.dom.appendChild(this.container_, this.relationSelect_);
 };
+
+
+alephscanner.InputCondition.prototype.createQuantifierComboBox_ = function() {
+    this.quantifierSelect_ = goog.dom.createDom('select');
+    var exOption = goog.dom.createDom('option', {
+        'selected':'selected',
+        'value':'ex'
+    },"Alespoň jedno");
+    var allOption = goog.dom.createDom('option', {
+        'value':'all'
+    },"Všechna");
+    var gtOption = goog.dom.createDom('option', {
+        'value':'gt'
+    },"Více než");
+    var ltOption = goog.dom.createDom('option', {
+        'value':'lt'
+    },"Méně než");
+    var eqOption = goog.dom.createDom('option', {
+        'value':'eq'
+    },"Právě");    
+
+    this.quantifierSelect_.appendChild(exOption);
+    this.quantifierSelect_.appendChild(allOption);
+    this.quantifierSelect_.appendChild(gtOption);
+    this.quantifierSelect_.appendChild(ltOption);
+    this.quantifierSelect_.appendChild(eqOption);
+    goog.events.listen(this.quantifierSelect_, goog.events.EventType.CHANGE, this.onQuantifierChange_, false, this);
+    goog.dom.appendChild(this.container_, this.quantifierSelect_);
+};
+
+
+alephscanner.InputCondition.prototype.createQuantityComboBox_ = function() {
+    this.quantitySelect_ = goog.dom.createDom('select', {'class' : 'quantity-selector-hidden'});
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'1',
+        'selected':'selected'
+    },"1"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'2'
+    },"2"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'3'
+    },"3"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'4'
+    },"4"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'5'
+    },"5"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'6'
+    },"6"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'7'
+    },"7"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'8'
+    },"8"));
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'9'
+    },"9"));
+
+    goog.events.listen(this.quantitySelect_, goog.events.EventType.CHANGE, this.onQuantityChange_, false, this);
+    goog.dom.appendChild(this.container_, this.quantitySelect_);
+};
+
+
+
 
 alephscanner.InputCondition.prototype.createExpressionInput_ = function() {
     var attributes = {
@@ -203,16 +299,27 @@ alephscanner.InputCondition.prototype.getRelationValue = function() {
     return this.relationSelect_.options[this.relationSelect_.selectedIndex].value;
 };
 
+alephscanner.InputCondition.prototype.getQuantifierValue = function() {
+    return this.quantifierSelect_.options[this.quantifierSelect_.selectedIndex].value;
+};
+
+alephscanner.InputCondition.prototype.getQuantityValue = function() {
+    return parseInt(this.quantitySelect_.options[this.quantitySelect_.selectedIndex].value);
+};
+
 alephscanner.InputCondition.prototype.isActive = function() {
     return this.active_;
 };
 
 alephscanner.InputCondition.prototype.getExpressionValue = function() {
+    var expression;
     if(this.asInputList_) {
-        return this.expressionList_.value;
+        expression = this.expressionList_.value;
     } else {
-        return this.expression_.value;
+        expression = this.expression_.value;
     }
+    return expression.split('\n').join('@@');
+    
 };
 
 
@@ -222,7 +329,38 @@ alephscanner.InputCondition.prototype.getJsonObject = function() {
         "subfield": this.getSubfieldValue(),
         "negation": this.negation_,
         "relation": this.getRelationValue(),
-        "expression": this.getExpressionValue()
+        "expression" : this.getExpressionValue(),
+        "quantifier" : this.getQuantifierValue(),   
+        "quantity" : this.getQuantityValue()
     };
     return condition;
 };
+
+
+
+
+
+alephscanner.InputCondition.prototype.onQuantifierChange_ = function() {
+    var q = this.getQuantifierValue();
+    if(q == 'all' || q == 'ex') {
+        goog.dom.classes.add(this.quantitySelect_, 'quantity-selector-hidden');
+        this.setFiledLabelValue_("pole");    
+    } else {
+        goog.dom.classes.remove(this.quantitySelect_, 'quantity-selector-hidden');
+        this.onQuantityChange_();
+    }
+}
+
+alephscanner.InputCondition.prototype.onQuantityChange_ = function() {
+    var q = this.getQuantityValue();
+    if(q > 4) {
+        this.setFiledLabelValue_("polí");    
+    } else {
+        this.setFiledLabelValue_("pole");    
+    }
+}
+
+alephscanner.InputCondition.prototype.setFiledLabelValue_ = function(value) {
+    goog.dom.removeChildren(this.fieldLabel_);
+    this.fieldLabel_.appendChild(document.createTextNode(value));
+}
