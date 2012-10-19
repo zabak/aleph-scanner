@@ -8,6 +8,9 @@ import cz.mzk.alephscanner.model.ConditionCF;
 import cz.mzk.alephscanner.model.ConditionDF;
 import cz.mzk.alephscanner.model.Output;
 import cz.mzk.alephscanner.model.Request;
+import cz.mzk.alephscanner.model.Response;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,5 +76,25 @@ public class JsonParser {
         request.setDistinct(requestObject.getBoolean("distinct"));
         request.setHeader(requestObject.getBoolean("header"));
         return request;
+    }
+    
+    
+    
+    
+    public static JSONObject getResponseJson(Response response)  {                
+        JSONObject jsonObject = new JSONObject();
+        JSONArray resultListArray = new JSONArray(response.getResultList());
+        try {
+            jsonObject.append("results", resultListArray);
+            jsonObject.append("header", response.getRequest().writeOutputHeader());
+            jsonObject.append("record_count", response.getMatchedRecordsCount());
+            jsonObject.append("result_count", resultListArray.length());
+            jsonObject.append("export_count", response.getAllRecordsCount());
+            jsonObject.append("exception_count", response.getWrongRecordsCount());
+            jsonObject.append("export_date", response.getDate());
+        } catch (JSONException ex) {
+            Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return jsonObject;
     }
 }

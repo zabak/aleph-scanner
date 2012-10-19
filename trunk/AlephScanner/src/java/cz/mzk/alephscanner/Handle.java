@@ -5,14 +5,11 @@
 package cz.mzk.alephscanner;
 
 import cz.mzk.alephscanner.model.Request;
+import cz.mzk.alephscanner.model.Response;
 import cz.mzk.alephscanner.tools.JsonParser;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -51,47 +48,31 @@ public class Handle extends HttpServlet {
         } catch (Exception e) {
         }
         Request requestObject = null;
-        System.out.println(sb.toString());
         try {
             requestObject = JsonParser.getRequestObject(sb.toString());
         } catch (JSONException ex) {            
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        System.out.println(requestObject.toString());
+        }                
 
         response.setHeader("Content-Disposition", "attachment;filename=response.json");
         response.setHeader("Content-Type", "application/json; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        System.out.println("ENC:" + response.getCharacterEncoding());
 
         PrintWriter out = response.getWriter();
-        List<String> sysnoList = RequestHandler.getResult(requestObject);
+        Response responseObject = RequestHandler.getResponse(requestObject);
 
-       // File file = new File("/home/hanis/prace/alephScanner/mzk03.m21");
-        //File file = new File("/home/tomcat/" + requestObject.getBase() + ".m21");
-        File file = new File("/home/hanis/NetBeansProjects/AlephScanner/data/exports/" + requestObject.getBase() + ".m21");
-        Long lastModified = file.lastModified();
-        Date date = new Date(lastModified);
-        SimpleDateFormat formatedDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-
-
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray(sysnoList);
-
-        try {
-            jsonObject.append("list", jsonArray);
-            jsonObject.append("count", sysnoList.size());
-            jsonObject.append("export_date", formatedDate.format(date));
-        } catch (JSONException ex) {
-            Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        JSONObject jsonObject = JsonParser.getResponseJson(responseObject);
+        
         try {
             jsonObject.write(out);
         } catch (JSONException ex) {
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        try {
+            System.out.println(jsonObject.toString(3));
+        } catch (JSONException ex) {
+            Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
+        }
         out.close();
 
     }

@@ -21,6 +21,9 @@ body,input {
 }
 
 
+
+
+
 #header {
     height: 60px;
     padding: 30px;
@@ -41,7 +44,7 @@ body,input {
     position: absolute;
     top: 300px;
     left: 215px;
-    height: 100px;
+    height: 66px;
     visibility: hidden;
 }
 
@@ -222,6 +225,22 @@ input {
       vertical-align: middle;
       display: inline-block;   
 }
+
+
+.image-button24 {
+      height: 24px;
+      width: 24px;
+      margin-right: 5px;
+      background-repeat: no-repeat;
+      vertical-align: middle;
+      display: inline-block;   
+}
+
+
+.download-button {
+      background-image: url(download-icon.png);
+}
+
 .remove-button {
       background-image: url(delete-icon.png);
 }
@@ -278,4 +297,11 @@ input {
 
 .output-controll-panel {
     margin-top: 5px;
+}
+
+
+
+.output-footer-panel .result-counter {
+    color: #fff;
+    font-weight: bold;
 }

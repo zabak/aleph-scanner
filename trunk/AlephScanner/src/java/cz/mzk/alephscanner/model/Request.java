@@ -13,13 +13,17 @@ import java.util.List;
  */
 public class Request {
 
+    public static final String EXPORT_BASE_PATH = "/home/hanis/NetBeansProjects/AlephScanner/data/exports/";
+    public static final String EXPORT_EXTENSION = "m21";
+    
+    
     private String base;
     private List<ConditionDF> dataFieldConditions;
     private List<ConditionCF> controlFieldConditions;
     private List<Output> outputs;
     private boolean multipleFiledOutput;
     private boolean distinct;
-    private boolean header;
+    private boolean header;   
 
     public Request() {
         this.dataFieldConditions = new ArrayList<ConditionDF>();
@@ -155,4 +159,15 @@ public class Request {
     public void setHeader(boolean header) {
         this.header = header;
     }
+
+    /**
+     * @return the exportPath
+     */
+    public String getExportPath() {
+        return EXPORT_BASE_PATH +  getBase() + "." + EXPORT_EXTENSION;
+    }
+    
+    
+    
+
 }
