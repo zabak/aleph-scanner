@@ -72,14 +72,24 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
     var headerDiv = goog.dom.createDom("div", {
         'class' : 'output-header-panel'
     });  
-                   
+   
+   
+   
+    this.repeatableCheckBox_ = goog.dom.createDom('input', {'id' : 'repeat-field'});  
+    this.repeatableCheckBox_.type="checkbox";
+    goog.events.listen(this.repeatableCheckBox_, goog.events.EventType.CLICK, this.onRepeatFieldChange_, false, this);      
+      
     var downloadButton = goog.dom.createDom('div',{
         "class" : 'download-button image-button24'
     });
-    goog.events.listen(downloadButton, goog.events.EventType.CLICK, this.downloadOutput_, false, this);
+    goog.events.listen(downloadButton, goog.events.EventType.CLICK, this.downloadOutput_, false, this);    
 
     
+    
+    goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Opakovat pole")));
+    goog.dom.appendChild(headerDiv, this.repeatableCheckBox_);
     goog.dom.appendChild(headerDiv, downloadButton);
+
     
     
     //goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Distinct")));
@@ -127,12 +137,10 @@ alephscanner.OutputHolder.prototype.insert = function(container) {
 
 alephscanner.OutputHolder.prototype.showResult = function(response) {   
     this.outputTextArea_.innerHTML=response.results[0].join('\n');
-    document.getElementById("export_date").innerHTML= response.export_date;
-    document.getElementById("result_count").innerHTML= response.result_count;
-    document.getElementById("record_count").innerHTML= response.record_count;
-    document.getElementById("all_count").innerHTML= response.export_count;
-
-    
+    goog.dom.getElement("export_date").innerHTML= response.export_date;
+    goog.dom.getElement("result_count").innerHTML= response.result_count;
+    goog.dom.getElement("record_count").innerHTML= response.record_count;
+    goog.dom.getElement("all_count").innerHTML= response.export_count;    
 };
     
  
@@ -165,3 +173,28 @@ alephscanner.OutputHolder.prototype.downloadOutput_ = function() {
     var data = this.outputTextArea_.value;
     location.href='data:application/download,' + encodeURIComponent(data);
 }
+
+
+alephscanner.OutputHolder.prototype.setRepeatableRadioVisibility_ = function(visible) {
+    goog.array.forEach(this.outputItems_,
+        function(output) {
+            if(visible) {
+                output.showRepeatableRadio();
+            } else {
+                output.hideRepeatableRadio();
+            }
+        });
+    return outputs;   
+};  
+
+
+alephscanner.OutputHolder.prototype.repeatField = function() {
+    return goog.dom.getElement("repeat-field").checked;
+};
+
+
+
+
+alephscanner.OutputHolder.prototype.onRepeatFieldChange_ = function() {
+    this.setRepeatableRadioVisibility_(this.repeatField);
+};
