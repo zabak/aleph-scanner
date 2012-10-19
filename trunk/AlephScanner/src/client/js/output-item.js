@@ -15,7 +15,7 @@ alephscanner.OutputItem = function() {
     //this.insideSeparator_ = null;
     this.field_ = null;    
     this.subfield_ = null;    
-
+    this.repeatableRadio_ = null;  
     this.createContainer_();    
 
 };
@@ -36,7 +36,9 @@ alephscanner.OutputItem.prototype.createContainer_ = function() {
     this.createLabel_("Pole:");
     this.createFieldInput_();
     this.createSubfieldInput_();
-    this.createRightSeparatorInput_();        
+    this.createRightSeparatorInput_();    
+    this.createRepeatableRadio_();    
+    
 };
 
 alephscanner.OutputItem.prototype.createRemoveButton_ = function() {
@@ -97,6 +99,17 @@ alephscanner.OutputItem.prototype.createRightSeparatorInput_ = function() {
 
 
 
+alephscanner.OutputItem.prototype.createRepeatableRadio_ = function() {
+    this.repeatableRadio_ = goog.dom.createDom('input');
+    this.repeatableRadio_.type = 'radio';
+    this.repeatableRadio_.name = 'repeatable-group';
+    this.repeatableRadio_.style.visibility = 'hidden';
+    goog.dom.appendChild(this.container_, this.repeatableRadio_);
+};
+
+
+
+
 
 alephscanner.OutputItem.prototype.insert = function(container) {
     goog.dom.appendChild(container, this.container_);
@@ -145,10 +158,26 @@ alephscanner.OutputItem.prototype.getJsonObject = function() {
         "subfield": this.getSubfieldValue(),
         "left_separator" : this.getLeftSeparatorValue(),
         "right_separator" : this.getRightSeparatorValue(),
-        "multiple": false,
+        "multiple": this.isRepeatable_(),
         "type": 'first',
         "inside_separator": ''
     };
     return output;
 };
 
+
+
+alephscanner.OutputItem.prototype.hideRepeatableRadio = function() {
+    this.repeatableRadio_.style.visibility = 'hidden';
+};
+
+
+alephscanner.OutputItem.prototype.showRepeatableRadio = function() {
+    this.repeatableRadio_.style.visibility = 'visible';
+};
+
+
+
+alephscanner.OutputItem.prototype.isRepeatable_ = function() {
+    return this.repeatableRadio_.checked;
+};
