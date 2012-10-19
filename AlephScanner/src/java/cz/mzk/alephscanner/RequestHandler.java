@@ -9,21 +9,22 @@ import cz.mzk.alephscanner.model.ConditionCF;
 import cz.mzk.alephscanner.model.ConditionDF;
 import cz.mzk.alephscanner.model.Output;
 import cz.mzk.alephscanner.model.Request;
+import cz.mzk.alephscanner.model.Response;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
 import org.marc4j.MarcException;
 import org.marc4j.MarcPermissiveStreamReader;
 import org.marc4j.MarcReader;
+import org.marc4j.MarcStreamWriter;
+import org.marc4j.MarcWriter;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
@@ -36,18 +37,18 @@ import org.marc4j.marc.Subfield;
  */
 public class RequestHandler {
 
-    public static List<String> getResult(Request request) {
-        List<String> resultList = new ArrayList<String>();
+    public static Response getResponse(Request request) {        
+        Response response = new Response();
+        response.setRequest(request);        
         InputStream in = null;
         int allRecordscounter = 0;
         int exceptionCounter = 0;
-        int matchedRecordsCounter = 0;
-        
+        int matchedRecordsCounter = 0;        
         try {
-            //in = new FileInputStream("/home/hanis/prace/alephScanner/" + request.getBase() + ".m21");
-            //in = new FileInputStream("/home/tomcat/" + request.getBase() + ".m21");
-            in = new FileInputStream("/home/hanis/NetBeansProjects/AlephScanner/data/exports/" + request.getBase() + ".m21");
+            in = new FileInputStream(request.getExportPath());
             MarcReader reader = new MarcPermissiveStreamReader(in, true, true, "UTF-8");
+            //MarcWriter m = new MarcStreamWriter(null);
+            //m.
             while (reader.hasNext()) {
                 allRecordscounter++;
                 try {
@@ -62,7 +63,6 @@ public class RequestHandler {
                     if (!check) {
                         continue;
                     }
-
                     for (ConditionCF condition : request.getControlFieldConditions()) {
                         if (!checkControlFieldCondition(record, condition)) {
                             check = false;
@@ -72,8 +72,6 @@ public class RequestHandler {
                     if (!check) {
                         continue;
                     }
-
-
                     for (Output output : request.getOutputs()) {
                         List<String> list = getMultipleOutputs(record, output);
                         output.addData(matchedRecordsCounter, list);
@@ -94,67 +92,14 @@ public class RequestHandler {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println(allRecordscounter + ", " + exceptionCounter + ", " + matchedRecordsCounter);
-
-
-        for (int i = 0; i < matchedRecordsCounter; i++) {
-            if (request.isMultipleFiledOutput()) {
-                int count = request.getMultipleOutput().getData(i).size();
-                for (int k = 0; k < count; k++) {
-                    String line = "";
-                    for (Output output : request.getOutputs()) {
-                        if (output.isMultiple()) {
-                            line += output.getData(i).get(k);
-                        } else {
-                            line += output.write(i);
-                        }
-                    }
-                    resultList.add(line);
-                }
-            } else {
-                String line = "";
-                for (Output output : request.getOutputs()) {
-                    line += output.write(i);
-                }
-                resultList.add(line);
-            }
-        }
-        if (request.isHeader()) {
-            resultList.add(0, request.writeOutputHeader());
-        }
-
-
-        if (request.isDistinct()) {
-            SortedSet hs = new TreeSet();
-            hs.addAll(resultList);
-            resultList.clear();
-            resultList.addAll(hs);
-        }
-        return resultList;
+        response.setMatchedRecordsCount(matchedRecordsCounter);
+        response.setAllRecordsCount(allRecordscounter);
+        response.setWrongRecordsCount(exceptionCounter);
+        return response;
     }
+    
 
-    public static String getOutput(Record record, Output output) {
-        String outputString = output.getLeftSeparator();
-        if (!output.getField().isEmpty()) {
-            if (output.getSubfield().isEmpty()) {
-                ControlField cField = (ControlField) record.getVariableField(output.getField());
-                if (cField != null) {
-                    outputString += cField.getData();
-                }
-            } else {
-                DataField outDataField = (DataField) record.getVariableField(output.getField());
-                if (outDataField != null) {
-                    Subfield outDataSubfield = outDataField.getSubfield(output.getSubfield().charAt(0));
-                    if (outDataSubfield != null) {
-                        outputString += outDataSubfield.getData();
-                    }
-                }
-            }
-        }
-        return outputString + output.getRightSeparator();
-    }
-
-    public static List<String> getMultipleOutputs(Record record, Output output) {
+    private static List<String> getMultipleOutputs(Record record, Output output) {
         List<String> list = new ArrayList<String>();
         if (output.getSubfield().isEmpty()) {
             if (!output.getField().isEmpty()) {
@@ -178,17 +123,15 @@ public class RequestHandler {
         return list;
     }
 
-    public static boolean checkDataFieldCondition(Record record, ConditionDF condition) {
+    private static boolean checkDataFieldCondition(Record record, ConditionDF condition) {
         List outDataFields = record.getVariableFields(condition.getField());
         int correct = 0;
         int all = 0;
-        boolean exists = false;
         for (Object object : outDataFields) {
             DataField outDataField = (DataField) object;
             if (outDataField != null) {
                 Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
                 if (outDataSubfield != null) {
-                    exists = true;
                     all++;
                     if ("exists".equals(condition.getRelation())){
                         if(!condition.isNegation()) {
@@ -199,8 +142,7 @@ public class RequestHandler {
                     } 
                 }
             }
-        }
-        
+        }        
         if(condition.getQuantifier().equals(Condition.AT_LEAST_ONE)) {
             return correct > 0 ;
         } else if(condition.getQuantifier().equals(Condition.ALL)) {
@@ -215,7 +157,7 @@ public class RequestHandler {
         return false;        
     }
 
-    public static boolean checkControlFieldCondition(Record record, ConditionCF condition) {
+    private static boolean checkControlFieldCondition(Record record, ConditionCF condition) {
         ControlField cField = (ControlField) record.getVariableField(condition.getField());
         if (cField != null) {
             String content = cField.getData();
@@ -226,7 +168,7 @@ public class RequestHandler {
         return condition.isNegation();
     }
 
-    public static boolean checkSingleDataSubfield(Condition condition, String content) {
+    private static boolean checkSingleDataSubfield(Condition condition, String content) {
         StringTokenizer st = new StringTokenizer(condition.getExpression(), "@@");
         boolean match = false;
         while (st.hasMoreTokens()) {
@@ -246,7 +188,6 @@ public class RequestHandler {
                     //TODO: warn user 
                     return false;
                 }
-
             }
             if (match) {
                 return !condition.isNegation();
