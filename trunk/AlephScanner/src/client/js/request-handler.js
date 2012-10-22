@@ -28,6 +28,7 @@ alephscanner.RequestHandler.prototype.createJsonObject_ = function() {
         "cf_conditions" : [],
         "outputs" : this.outputHolder_.getOutputSpecArray(),
         "multiple" :this.outputHolder_.repeatField(),
+        "result_mode" : this.outputHolder_.getResultModeValue(),
         "distinct" : false,
         "header" : false
     };
