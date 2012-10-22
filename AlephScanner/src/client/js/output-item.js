@@ -7,16 +7,17 @@ goog.require('goog.events.EventType');
 goog.require('goog.dom.classes');
 
 
-alephscanner.OutputItem = function() {
+alephscanner.OutputItem = function(showRepeatedRadio) {
     this.active_ = true;
     this.container_ = null;    
     this.leftSeparator_ = null;
     this.rightSeparator_ = null;
-    //this.insideSeparator_ = null;
+    this.insideSeparator_ = null;
     this.field_ = null;    
     this.subfield_ = null;    
     this.repeatableRadio_ = null;  
-    this.createContainer_();    
+    this.multipleFieldMode_ = null;  
+    this.createContainer_(showRepeatedRadio);    
 
 };
 
@@ -27,7 +28,7 @@ alephscanner.OutputItem.prototype.removeContainer_ = function() {
 
 
 
-alephscanner.OutputItem.prototype.createContainer_ = function() {
+alephscanner.OutputItem.prototype.createContainer_ = function(showRepeatedRadio) {
     this.container_ = goog.dom.createDom("div", {
         'class' : 'output-item-container'
     });          
@@ -37,8 +38,10 @@ alephscanner.OutputItem.prototype.createContainer_ = function() {
     this.createFieldInput_();
     this.createSubfieldInput_();
     this.createRightSeparatorInput_();    
-    this.createRepeatableRadio_();    
+    this.createMultipleFieldMode_();
+    this.createInsideSeparatorInput_();
     
+    this.createRepeatableRadio_(showRepeatedRadio);                   
 };
 
 alephscanner.OutputItem.prototype.createRemoveButton_ = function() {
@@ -88,6 +91,19 @@ alephscanner.OutputItem.prototype.createLeftSeparatorInput_ = function() {
     goog.dom.appendChild(this.container_, this.leftSeparator_);
 };
 
+
+alephscanner.OutputItem.prototype.createInsideSeparatorInput_ = function() {
+    this.insideSeparator_ = goog.dom.createDom("input", {'class' : 'output-separator'});
+    this.insideSeparator_.style.visibility = 'hidden';
+    goog.dom.appendChild(this.container_, this.insideSeparator_);
+};
+
+
+
+
+
+
+
 alephscanner.OutputItem.prototype.createRightSeparatorInput_ = function() {
     var attributes = {
      //   'type' : "text",
@@ -99,11 +115,13 @@ alephscanner.OutputItem.prototype.createRightSeparatorInput_ = function() {
 
 
 
-alephscanner.OutputItem.prototype.createRepeatableRadio_ = function() {
+alephscanner.OutputItem.prototype.createRepeatableRadio_ = function(showRepeatedRadio) {
     this.repeatableRadio_ = goog.dom.createDom('input');
     this.repeatableRadio_.type = 'radio';
     this.repeatableRadio_.name = 'repeatable-group';
-    this.repeatableRadio_.style.visibility = 'hidden';
+    if(!showRepeatedRadio) {
+        this.repeatableRadio_.style.visibility = 'hidden';
+    }
     goog.dom.appendChild(this.container_, this.repeatableRadio_);
 };
 
@@ -148,6 +166,18 @@ alephscanner.OutputItem.prototype.getRightSeparatorValue = function() {
     return this.rightSeparator_.value
 }
 
+alephscanner.OutputItem.prototype.setInsideSeparatorValue = function(value) {
+    this.insideSeparator_.value = value;
+}
+
+alephscanner.OutputItem.prototype.getInsideSeparatorValue = function() {
+    return this.insideSeparator_.value
+}
+
+alephscanner.OutputItem.prototype.getMultipleFieldModeValue_ = function() {
+    return this.multipleFieldMode_.options[this.multipleFieldMode_.selectedIndex].value;
+};
+
 alephscanner.OutputItem.prototype.isActive = function() {
     return this.active_;
 };
@@ -159,11 +189,41 @@ alephscanner.OutputItem.prototype.getJsonObject = function() {
         "left_separator" : this.getLeftSeparatorValue(),
         "right_separator" : this.getRightSeparatorValue(),
         "multiple": this.isRepeatable_(),
-        "type": 'first',
-        "inside_separator": ''
+        "type": this.getMultipleFieldModeValue_(),
+        "inside_separator": this.getInsideSeparatorValue()
     };
     return output;
 };
+
+
+alephscanner.OutputItem.prototype.createMultipleFieldMode_ = function() {
+    this.multipleFieldMode_ = goog.dom.createDom('select');
+    var firstOption = goog.dom.createDom('option', {
+        'selected':'selected',
+        'value':'first'
+    },"První výskyt");    
+    var singleOption = goog.dom.createDom('option', {
+        'value':'single'
+    },"V jednom sloupci");
+    var multiOption = goog.dom.createDom('option', {
+        'value':'multi'
+    },"Více sloupců");    
+
+    this.multipleFieldMode_.appendChild(firstOption);
+    this.multipleFieldMode_.appendChild(singleOption);
+    this.multipleFieldMode_.appendChild(multiOption);
+    goog.events.listen(this.multipleFieldMode_, goog.events.EventType.CHANGE, this.onMultipleFieldModeChange_, false, this);
+    goog.dom.appendChild(this.container_, this.multipleFieldMode_);
+};
+
+alephscanner.OutputItem.prototype.onMultipleFieldModeChange_ = function() {
+    var q = this.getMultipleFieldModeValue_();
+    if(q == 'first') {
+        this.insideSeparator_.style.visibility = 'hidden';       
+    } else {
+        this.insideSeparator_.style.visibility = 'visible'; 
+    }
+}
 
 
 

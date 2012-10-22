@@ -11,7 +11,9 @@ alephscanner.OutputHolder = function() {
     this.outputTextArea_ = null;
     this.centrolPanel_ = null; 
    // this.footerPanel_ = null; 
+    this.resultMode_ = null;
     this.loader_ = null;
+    this.repeatableCheckBox_ = null;
     this.createContainer_();   
       
 };
@@ -75,27 +77,57 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
    
    
    
-    this.repeatableCheckBox_ = goog.dom.createDom('input', {'id' : 'repeat-field'});  
+    this.repeatableCheckBox_ = goog.dom.createDom('input');  
     this.repeatableCheckBox_.type="checkbox";
     goog.events.listen(this.repeatableCheckBox_, goog.events.EventType.CLICK, this.onRepeatFieldChange_, false, this);      
       
     var downloadButton = goog.dom.createDom('div',{
-        "class" : 'download-button image-button24'
+        "class" : 'download-button image-button16'
     });
     goog.events.listen(downloadButton, goog.events.EventType.CLICK, this.downloadOutput_, false, this);    
 
+
     
+    this.resultMode_ = goog.dom.createDom('select');
+    var allOption = goog.dom.createDom('option', {
+        'selected':'selected',
+        'value':'all'
+    },"Všechny");    
+    var distinctOption = goog.dom.createDom('option', {
+        'value':'distinct'
+    },"Jen různé");
+    var frequencyOption = goog.dom.createDom('option', {
+        'value':'frequency'
+    },"Četnosti");    
+
+    this.resultMode_.appendChild(allOption);
+    this.resultMode_.appendChild(distinctOption);
+    this.resultMode_.appendChild(frequencyOption);
+    goog.events.listen(this.resultMode_, goog.events.EventType.CHANGE, this.onResultModeChange_, false, this);
     
+
     goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Opakovat pole")));
     goog.dom.appendChild(headerDiv, this.repeatableCheckBox_);
+    goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Výsledky")));
+    goog.dom.appendChild(headerDiv, this.resultMode_);
     goog.dom.appendChild(headerDiv, downloadButton);
-
+    
     
     
     //goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Distinct")));
     //goog.dom.appendChild(headerDiv, goog.dom.createDom("input", {'type' : 'checkbox', 'id' : 'output-distinct'}));
     goog.dom.appendChild(this.container_, headerDiv);
 };
+
+
+alephscanner.OutputHolder.prototype.onResultModeChange_ = function() {
+//    var q = this.getMultipleFieldModeValue_();
+//    if(q == 'first') {
+//        this.insideSeparator_.style.visibility = 'hidden';       
+//    } else {
+//        this.insideSeparator_.style.visibility = 'visible'; 
+//    }
+}
 
 
 alephscanner.OutputHolder.prototype.createOutputPanel_ = function() {
@@ -123,8 +155,9 @@ alephscanner.OutputHolder.prototype.createOutputPanel_ = function() {
 
 
 
+
 alephscanner.OutputHolder.prototype.addOutputItem_ = function() {  
-    var output = new alephscanner.OutputItem();
+    var output = new alephscanner.OutputItem(this.repeatField());
     output.insert(this.outputItemsPanel_);
     goog.array.insert(this.outputItems_, output);
 };
@@ -143,6 +176,11 @@ alephscanner.OutputHolder.prototype.showResult = function(response) {
     goog.dom.getElement("all_count").innerHTML= response.export_count;    
 };
     
+    
+    
+alephscanner.OutputHolder.prototype.getResultModeValue = function() {
+    return this.resultMode_.options[this.resultMode_.selectedIndex].value;
+};    
  
 
 alephscanner.OutputHolder.prototype.getOutputSpecArray = function() {
@@ -168,7 +206,6 @@ alephscanner.OutputHolder.prototype.showLoader = function() {
 };
 
 
-
 alephscanner.OutputHolder.prototype.downloadOutput_ = function() {
     var data = this.outputTextArea_.value;
     location.href='data:application/download,' + encodeURIComponent(data);
@@ -183,18 +220,15 @@ alephscanner.OutputHolder.prototype.setRepeatableRadioVisibility_ = function(vis
             } else {
                 output.hideRepeatableRadio();
             }
-        });
-    return outputs;   
+        });   
 };  
 
 
 alephscanner.OutputHolder.prototype.repeatField = function() {
-    return goog.dom.getElement("repeat-field").checked;
+    return this.repeatableCheckBox_.checked;
 };
 
 
-
-
 alephscanner.OutputHolder.prototype.onRepeatFieldChange_ = function() {
-    this.setRepeatableRadioVisibility_(this.repeatField);
+    this.setRepeatableRadioVisibility_(this.repeatField());
 };

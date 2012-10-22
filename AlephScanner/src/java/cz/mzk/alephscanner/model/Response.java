@@ -6,7 +6,9 @@ package cz.mzk.alephscanner.model;
 
 import cz.mzk.alephscanner.tools.Tools;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -22,12 +24,9 @@ public class Response {
     private int matchedRecordsCount;
     
     
-    public Response() {
-        
+    public Response() {        
     }
-    
-    
-    
+
     public List<String> getResultList() {    
         List<String> resultList = new ArrayList<String>();    
         for (int i = 0; i < matchedRecordsCount; i++) {
@@ -55,18 +54,27 @@ public class Response {
         if (request.isHeader()) {
             resultList.add(0, request.writeOutputHeader());
         }
-        if (request.isDistinct()) {
+        if (request.getMode().equals(Request.MODE_DISTINCT)) {
             SortedSet hs = new TreeSet();
             hs.addAll(resultList);
             resultList.clear();
             resultList.addAll(hs);
-        }    
+        } else if (request.getMode().equals(Request.MODE_FREQUENCY)) {
+            Map<String, Integer> map = new HashMap<String, Integer>();
+            for (String string : resultList) {
+                int oldValue = 0;
+                if(map.containsKey(string)) {
+                    oldValue = map.get(string);                    
+                }
+                map.put(string, oldValue + 1);                
+            }   
+            resultList.clear();
+            for (String string : map.keySet()) {
+                resultList.add("#:" + map.get(string) + ", " + string);
+            }
+        }
     return resultList;
     }
-    
-    
-    
-    
 
     /**
      * @return the request

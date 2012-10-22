@@ -16,6 +16,10 @@ public class Request {
     public static final String EXPORT_BASE_PATH = "/home/hanis/NetBeansProjects/AlephScanner/data/exports/";
     public static final String EXPORT_EXTENSION = "m21";
     
+    public static final String MODE_ALL = "all";
+    public static final String MODE_DISTINCT = "distinct";
+    public static final String MODE_FREQUENCY = "frequency";
+    
     
     private String base;
     private List<ConditionDF> dataFieldConditions;
@@ -23,7 +27,8 @@ public class Request {
     private List<Output> outputs;
     private boolean multipleFiledOutput;
     private boolean distinct;
-    private boolean header;   
+    private boolean header;  
+    private String mode;
 
     public Request() {
         this.dataFieldConditions = new ArrayList<ConditionDF>();
@@ -165,6 +170,20 @@ public class Request {
      */
     public String getExportPath() {
         return EXPORT_BASE_PATH +  getBase() + "." + EXPORT_EXTENSION;
+    }
+
+    /**
+     * @return the mode
+     */
+    public String getMode() {
+        return mode;
+    }
+
+    /**
+     * @param mode the mode to set
+     */
+    public void setMode(String mode) {
+        this.mode = mode;
     }
     
     
