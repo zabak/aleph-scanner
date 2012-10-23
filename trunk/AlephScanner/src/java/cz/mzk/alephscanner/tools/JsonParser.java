@@ -66,13 +66,13 @@ public class JsonParser {
             output.setSubfield(outputObject.getString("subfield"));
             output.setLeftSeparator(outputObject.getString("left_separator"));
             output.setRightSeparator(outputObject.getString("right_separator"));
-            output.setMultiple(outputObject.getBoolean("multiple"));
+            //output.setMultiple(outputObject.getBoolean("multiple"));
             output.setType(outputObject.getString("type"));
             output.setInsideSeparator(outputObject.getString("inside_separator"));
             request.addOutput(output);
         }
 
-        request.setMultipleFiledOutput(requestObject.getBoolean("multiple"));
+        //request.setMultipleFiledOutput(requestObject.getBoolean("multiple"));
         request.setDistinct(requestObject.getBoolean("distinct"));
         request.setMode(requestObject.getString("result_mode"));
         request.setHeader(requestObject.getBoolean("header"));
