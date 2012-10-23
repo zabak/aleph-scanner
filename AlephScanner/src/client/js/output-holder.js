@@ -13,7 +13,7 @@ alephscanner.OutputHolder = function() {
    // this.footerPanel_ = null; 
     this.resultMode_ = null;
     this.loader_ = null;
-    this.repeatableCheckBox_ = null;
+    //this.repeatableCheckBox_ = null;
     this.createContainer_();   
       
 };
@@ -65,7 +65,7 @@ alephscanner.OutputHolder.prototype.createFooterPanel_ = function() {
     goog.dom.appendChild(footerPanel, goog.dom.createDom("span", null, document.createTextNode("Vyhovující záznamy: ")));
     goog.dom.appendChild(footerPanel, goog.dom.createDom("span", {"id" : "record_count", "class" : "result-counter"}));
     goog.dom.appendChild(footerPanel, goog.dom.createDom("br"));
-    goog.dom.appendChild(footerPanel, goog.dom.createDom("span", null, document.createTextNode("Vsechny záznamy: ")));
+    goog.dom.appendChild(footerPanel, goog.dom.createDom("span", null, document.createTextNode("Všechny záznamy: ")));
     goog.dom.appendChild(footerPanel, goog.dom.createDom("span", {"id" : "all_count", "class" : "result-counter"}));
     goog.dom.appendChild(this.container_, footerPanel);
 };
@@ -77,10 +77,10 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
    
    
    
-    this.repeatableCheckBox_ = goog.dom.createDom('input');  
-    this.repeatableCheckBox_.type="checkbox";
-    goog.events.listen(this.repeatableCheckBox_, goog.events.EventType.CLICK, this.onRepeatFieldChange_, false, this);      
-      
+//    this.repeatableCheckBox_ = goog.dom.createDom('input');  
+//    this.repeatableCheckBox_.type="checkbox";
+//    goog.events.listen(this.repeatableCheckBox_, goog.events.EventType.CLICK, this.onRepeatFieldChange_, false, this);      
+//      
     var downloadButton = goog.dom.createDom('div',{
         "class" : 'download-button image-button16'
     });
@@ -106,8 +106,8 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
     goog.events.listen(this.resultMode_, goog.events.EventType.CHANGE, this.onResultModeChange_, false, this);
     
 
-    goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Opakovat pole")));
-    goog.dom.appendChild(headerDiv, this.repeatableCheckBox_);
+   // goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Opakovat pole")));
+   // goog.dom.appendChild(headerDiv, this.repeatableCheckBox_);
     goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Výsledky")));
     goog.dom.appendChild(headerDiv, this.resultMode_);
     goog.dom.appendChild(headerDiv, downloadButton);
@@ -157,7 +157,7 @@ alephscanner.OutputHolder.prototype.createOutputPanel_ = function() {
 
 
 alephscanner.OutputHolder.prototype.addOutputItem_ = function() {  
-    var output = new alephscanner.OutputItem(this.repeatField());
+    var output = new alephscanner.OutputItem();//this.repeatField());
     output.insert(this.outputItemsPanel_);
     goog.array.insert(this.outputItems_, output);
 };
@@ -212,23 +212,24 @@ alephscanner.OutputHolder.prototype.downloadOutput_ = function() {
 }
 
 
-alephscanner.OutputHolder.prototype.setRepeatableRadioVisibility_ = function(visible) {
-    goog.array.forEach(this.outputItems_,
-        function(output) {
-            if(visible) {
-                output.showRepeatableRadio();
-            } else {
-                output.hideRepeatableRadio();
-            }
-        });   
-};  
+//alephscanner.OutputHolder.prototype.setRepeatableRadioVisibility_ = function(visible) {
+//    goog.array.forEach(this.outputItems_,
+//        function(output) {
+//            if(visible) {
+//                output.showRepeatableRadio();
+//            } else {
+//                output.hideRepeatableRadio();
+//            }
+//        });   
+//};  
 
 
-alephscanner.OutputHolder.prototype.repeatField = function() {
-    return this.repeatableCheckBox_.checked;
-};
+//alephscanner.OutputHolder.prototype.repeatField = function() {
+//    return this.repeatableCheckBox_.checked;
+//};
 
-
+/*
 alephscanner.OutputHolder.prototype.onRepeatFieldChange_ = function() {
     this.setRepeatableRadioVisibility_(this.repeatField());
 };
+*/

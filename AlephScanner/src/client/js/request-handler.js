@@ -27,7 +27,7 @@ alephscanner.RequestHandler.prototype.createJsonObject_ = function() {
         "df_conditions" : this.conditionsHolder_.getConditionSpecArray(),
         "cf_conditions" : [],
         "outputs" : this.outputHolder_.getOutputSpecArray(),
-        "multiple" :this.outputHolder_.repeatField(),
+        //"multiple" :this.outputHolder_.repeatField(),
         "result_mode" : this.outputHolder_.getResultModeValue(),
         "distinct" : false,
         "header" : false

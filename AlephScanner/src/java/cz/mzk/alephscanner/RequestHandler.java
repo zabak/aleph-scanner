@@ -23,8 +23,6 @@ import java.util.regex.PatternSyntaxException;
 import org.marc4j.MarcException;
 import org.marc4j.MarcPermissiveStreamReader;
 import org.marc4j.MarcReader;
-import org.marc4j.MarcStreamWriter;
-import org.marc4j.MarcWriter;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;

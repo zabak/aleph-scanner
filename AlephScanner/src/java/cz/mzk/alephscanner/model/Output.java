@@ -17,7 +17,8 @@ public class Output {
     public static final String TYPE_FIRST_ONLY = "first";
     public static final String TYPE_SINGLE_CELL = "single";
     public static final String TYPE_MULTI_CELL = "multi";
-           
+    public static final String TYPE_MULTI_ROW = "multiRow";    
+   
     private Map<Integer, List<String>> data;
     
     private String field;
@@ -25,7 +26,7 @@ public class Output {
     private String leftSeparator;
     private String rightSeparator;
     private String insideSeparator;
-    private boolean multiple;
+    //private boolean multiple;
     private String type;
     
     private int recordCounter;
@@ -61,9 +62,12 @@ public class Output {
         return leftSeparator + writeData(index) + rightSeparator;
     }
     
+    public String writeMultiRowCell(int index, int i) {
+        return leftSeparator + getData(index).get(i) + rightSeparator;
+    }    
+    
     private String writeData(int index) {
         List<String> list = getData(index);
-        if(!isMultiple()) {
             if(TYPE_FIRST_ONLY.equals(getType())) {
                 if(!list.isEmpty()) {
                     return list.get(0);
@@ -76,7 +80,7 @@ public class Output {
                 for (String string : list) {
                     sb.append(string).append(getInsideSeparator());
                 }
-                return sb.length() == 0 ? "" : sb.substring(0, sb.length() - 1);
+                return sb.length() == 0 ? "" : sb.substring(0, sb.length() - getInsideSeparator().length());
             } 
             if(TYPE_MULTI_CELL.equals(getType())) {
                 StringBuilder sb = new StringBuilder();
@@ -96,9 +100,7 @@ public class Output {
                     s+=getInsideSeparator();
                 }
                 return s;
-            }             
-            
-        }
+            }                                 
         return "";
     }
     
@@ -162,16 +164,16 @@ public class Output {
     /**
      * @return the multiple
      */
-    public boolean isMultiple() {
-        return multiple;
-    }
-
-    /**
-     * @param multiple the multiple to set
-     */
-    public void setMultiple(boolean multiple) {
-        this.multiple = multiple;
-    }
+//    public boolean isMultiple() {
+//        return multiple;
+//    }
+//
+//    /**
+//     * @param multiple the multiple to set
+//     */
+//    public void setMultiple(boolean multiple) {
+//        this.multiple = multiple;
+//    }
 
     /**
      * @return the type
@@ -223,5 +225,8 @@ public class Output {
         return header;
     }
 
+    public boolean isMultirowOutput() {
+        return TYPE_MULTI_ROW.equals(type);
+    }
     
 }

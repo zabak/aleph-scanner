@@ -25,7 +25,7 @@ public class Request {
     private List<ConditionDF> dataFieldConditions;
     private List<ConditionCF> controlFieldConditions;
     private List<Output> outputs;
-    private boolean multipleFiledOutput;
+   // private boolean multipleFiledOutput;
     private boolean distinct;
     private boolean header;  
     private String mode;
@@ -98,16 +98,16 @@ public class Request {
     /**
      * @return the multipleFiledOutput
      */
-    public boolean isMultipleFiledOutput() {
-        return multipleFiledOutput;
-    }
-
-    /**
-     * @param multipleFiledOutput the multipleFiledOutput to set
-     */
-    public void setMultipleFiledOutput(boolean multipleFiledOutput) {
-        this.multipleFiledOutput = multipleFiledOutput;
-    }
+//    public boolean isMultipleFiledOutput() {
+//        return multipleFiledOutput;
+//    }
+//
+//    /**
+//     * @param multipleFiledOutput the multipleFiledOutput to set
+//     */
+//    public void setMultipleFiledOutput(boolean multipleFiledOutput) {
+//        this.multipleFiledOutput = multipleFiledOutput;
+//    }
 
     /**
      * @return the distinct
@@ -123,9 +123,9 @@ public class Request {
         this.distinct = distinct;
     }
 
-    public Output getMultipleOutput() {
+    public Output getMultirowOutput() {
         for (Output output : outputs) {
-            if (output.isMultiple()) {
+            if (output.isMultirowOutput()) {
                 return output;
             }
         }
@@ -136,7 +136,7 @@ public class Request {
         StringBuilder sb = new StringBuilder();
         for (Output output : outputs) {
             sb.append(output.getLeftSeparator());
-            if (!output.isMultiple() && Output.TYPE_MULTI_CELL.equals(output.getType())) {
+            if (Output.TYPE_MULTI_CELL.equals(output.getType())) {
                 for (int i = 0; i < output.getMaxOccurencies(); i++) {
                     sb.append(output.getHeader()).append("[").append(i+1).append("]");
                     if(output.getMaxOccurencies()- i > 1) { 

@@ -30,13 +30,14 @@ public class Response {
     public List<String> getResultList() {    
         List<String> resultList = new ArrayList<String>();    
         for (int i = 0; i < matchedRecordsCount; i++) {
-            if (request.isMultipleFiledOutput()) {
-                int count = request.getMultipleOutput().getData(i).size();
+            Output multipleOutput = request.getMultirowOutput();
+            if (multipleOutput != null) {
+                int count = multipleOutput.getData(i).size();
                 for (int k = 0; k < count; k++) {
                     String line = "";
                     for (Output output : request.getOutputs()) {
-                        if (output.isMultiple()) {
-                            line += output.getData(i).get(k);
+                        if (output.isMultirowOutput()) {
+                            line += output.writeMultiRowCell(i, k);
                         } else {
                             line += output.write(i);
                         }

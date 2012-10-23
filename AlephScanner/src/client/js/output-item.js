@@ -7,7 +7,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.dom.classes');
 
 
-alephscanner.OutputItem = function(showRepeatedRadio) {
+alephscanner.OutputItem = function() {
     this.active_ = true;
     this.container_ = null;    
     this.leftSeparator_ = null;
@@ -15,9 +15,9 @@ alephscanner.OutputItem = function(showRepeatedRadio) {
     this.insideSeparator_ = null;
     this.field_ = null;    
     this.subfield_ = null;    
-    this.repeatableRadio_ = null;  
+    //this.repeatableRadio_ = null;  
     this.multipleFieldMode_ = null;  
-    this.createContainer_(showRepeatedRadio);    
+    this.createContainer_();    
 
 };
 
@@ -28,7 +28,7 @@ alephscanner.OutputItem.prototype.removeContainer_ = function() {
 
 
 
-alephscanner.OutputItem.prototype.createContainer_ = function(showRepeatedRadio) {
+alephscanner.OutputItem.prototype.createContainer_ = function() {
     this.container_ = goog.dom.createDom("div", {
         'class' : 'output-item-container'
     });          
@@ -41,7 +41,7 @@ alephscanner.OutputItem.prototype.createContainer_ = function(showRepeatedRadio)
     this.createMultipleFieldMode_();
     this.createInsideSeparatorInput_();
     
-    this.createRepeatableRadio_(showRepeatedRadio);                   
+  //  this.createRepeatableRadio_();                   
 };
 
 alephscanner.OutputItem.prototype.createRemoveButton_ = function() {
@@ -115,15 +115,15 @@ alephscanner.OutputItem.prototype.createRightSeparatorInput_ = function() {
 
 
 
-alephscanner.OutputItem.prototype.createRepeatableRadio_ = function(showRepeatedRadio) {
-    this.repeatableRadio_ = goog.dom.createDom('input');
-    this.repeatableRadio_.type = 'radio';
-    this.repeatableRadio_.name = 'repeatable-group';
-    if(!showRepeatedRadio) {
-        this.repeatableRadio_.style.visibility = 'hidden';
-    }
-    goog.dom.appendChild(this.container_, this.repeatableRadio_);
-};
+//alephscanner.OutputItem.prototype.createRepeatableRadio_ = function(showRepeatedRadio) {
+//    this.repeatableRadio_ = goog.dom.createDom('input');
+//    this.repeatableRadio_.type = 'radio';
+//    this.repeatableRadio_.name = 'repeatable-group';
+//    if(!showRepeatedRadio) {
+//        this.repeatableRadio_.style.visibility = 'hidden';
+//    }
+//    goog.dom.appendChild(this.container_, this.repeatableRadio_);
+//};
 
 
 
@@ -188,7 +188,7 @@ alephscanner.OutputItem.prototype.getJsonObject = function() {
         "subfield": this.getSubfieldValue(),
         "left_separator" : this.getLeftSeparatorValue(),
         "right_separator" : this.getRightSeparatorValue(),
-        "multiple": this.isRepeatable_(),
+        //"multiple": this.isRepeatable_(),
         "type": this.getMultipleFieldModeValue_(),
         "inside_separator": this.getInsideSeparatorValue()
     };
@@ -208,17 +208,20 @@ alephscanner.OutputItem.prototype.createMultipleFieldMode_ = function() {
     var multiOption = goog.dom.createDom('option', {
         'value':'multi'
     },"Více sloupců");    
-
+    var multiRowOption = goog.dom.createDom('option', {
+        'value':'multiRow'
+    },"Více řádků"); 
     this.multipleFieldMode_.appendChild(firstOption);
     this.multipleFieldMode_.appendChild(singleOption);
     this.multipleFieldMode_.appendChild(multiOption);
+    this.multipleFieldMode_.appendChild(multiRowOption);
     goog.events.listen(this.multipleFieldMode_, goog.events.EventType.CHANGE, this.onMultipleFieldModeChange_, false, this);
     goog.dom.appendChild(this.container_, this.multipleFieldMode_);
 };
 
 alephscanner.OutputItem.prototype.onMultipleFieldModeChange_ = function() {
     var q = this.getMultipleFieldModeValue_();
-    if(q == 'first') {
+    if(q == 'first' || q == 'multiRow') {
         this.insideSeparator_.style.visibility = 'hidden';       
     } else {
         this.insideSeparator_.style.visibility = 'visible'; 
@@ -227,17 +230,17 @@ alephscanner.OutputItem.prototype.onMultipleFieldModeChange_ = function() {
 
 
 
-alephscanner.OutputItem.prototype.hideRepeatableRadio = function() {
-    this.repeatableRadio_.style.visibility = 'hidden';
-};
-
-
-alephscanner.OutputItem.prototype.showRepeatableRadio = function() {
-    this.repeatableRadio_.style.visibility = 'visible';
-};
-
-
-
-alephscanner.OutputItem.prototype.isRepeatable_ = function() {
-    return this.repeatableRadio_.checked;
-};
+//alephscanner.OutputItem.prototype.hideRepeatableRadio = function() {
+//    this.repeatableRadio_.style.visibility = 'hidden';
+//};
+//
+//
+//alephscanner.OutputItem.prototype.showRepeatableRadio = function() {
+//    this.repeatableRadio_.style.visibility = 'visible';
+//};
+//
+//
+//
+//alephscanner.OutputItem.prototype.isRepeatable_ = function() {
+//    return this.repeatableRadio_.checked;
+//};
