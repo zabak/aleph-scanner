@@ -5,6 +5,7 @@
 package cz.mzk.alephscanner.model;
 
 import cz.mzk.alephscanner.tools.PropertiesReader;
+import cz.mzk.alephscanner.tools.XmlParser;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class Request {
     private boolean distinct;
     private boolean header;  
     private String mode;
+    private String newExportName;
+    
 
     public Request() {
         this.dataFieldConditions = new ArrayList<ConditionDF>();
@@ -156,8 +159,7 @@ public class Request {
      * @return the exportPath
      */
     public String getExportPath() {
-        PropertiesReader reader = new PropertiesReader();
-        return reader.getPathOfBase(getBase());
+        return XmlParser.getExportPath(getBase());
     }
 
     /**
@@ -173,7 +175,25 @@ public class Request {
     public void setMode(String mode) {
         this.mode = mode;
     }
+
+    /**
+     * @return the newExportName
+     */
+    public String getNewExportName() {
+        return newExportName;
+    }
+
+    /**
+     * @param newExportName the newExportName to set
+     */
+    public void setNewExportName(String newExportName) {
+        this.newExportName = newExportName;
+    }
     
+    
+    public boolean createNewExport() {
+        return !"".equals(newExportName);
+    }
     
     
 

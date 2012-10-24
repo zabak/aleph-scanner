@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<exports> 
+  <default> 
+    <export> 
+      <name>MZK03</name>  
+      <path>/home/hanis/NetBeansProjects/AlephScanner/data/exports/mzk03.m21</path> 
+    </export>  
+    <export> 
+      <name>MZK01</name>  
+      <path>/home/hanis/NetBeansProjects/AlephScanner/data/exports/mzk01.m21</path> 
+    </export>  
+    <export> 
+      <name>MZK04</name>  
+      <path>/home/hanis/NetBeansProjects/AlephScanner/data/exports/mzk04.m21</path> 
+    </export> 
+  </default>  
+  <created> 
+    <export> 
+      <name>Mpa</name>  
+      <path>/home/hanis/NetBeansProjects/AlephScanner/data/exports/Mpa.m21</path> 
+    </export>  
+    <export> 
+      <name>Moll</name>  
+      <path>/home/hanis/NetBeansProjects/AlephScanner/data/exports/Moll.m21</path> 
+    </export>  
+    <export> 
+      <name>Schram-veduty</name>  
+      <path>/home/hanis/NetBeansProjects/AlephScanner/data/exports/Schram-veduty.m21</path> 
+    </export>  
+    <export>
+      <name>Rajhrad</name>
+      <path>/home/hanis/NetBeansProjects/AlephScanner/data/exports/Rajhrad.m21</path>
+    </export>
+  </created> 
+</exports>

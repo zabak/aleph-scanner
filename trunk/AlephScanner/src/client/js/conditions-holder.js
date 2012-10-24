@@ -1,16 +1,17 @@
 goog.provide('alephscanner.ConditionsHolder');
 
 goog.require('alephscanner.InputCondition');
+goog.require('goog.ui.Prompt');
 
-
-alephscanner.ConditionsHolder = function() {
+alephscanner.ConditionsHolder = function(requestHandler) {
+    this.requestHandler_ = requestHandler;
     this.conditions_ = []; 
     this.container_ = null;
     this.baseChooser_ = null; 
-    this.conditionsList_ = null;
-    this.searchButton_ = null;
-    this.createContainer_();              
+    this.conditionsList_ = null;  
+    this.createContainer_();
 };
+
 
 alephscanner.ConditionsHolder.prototype.createContainer_ = function() {    
     this.container_ = goog.dom.createDom("div", {
@@ -50,11 +51,20 @@ alephscanner.ConditionsHolder.prototype.createControllPanel_ = function() {
     //goog.events.listen(addDataFieldButton, goog.events.EventType.CLICK, this.removeContainer_, false, this);
     goog.dom.appendChild(controllPanelDiv, addControlFieldButton);
 
-    this.searchButton_ = goog.dom.createDom('div',{
+
+    var createExportButton = goog.dom.createDom('div',{
+        "class" : 'create-export-button'
+    });
+    goog.dom.appendChild(controllPanelDiv, createExportButton);
+    goog.events.listen(createExportButton, goog.events.EventType.CLICK, this.onCreateExport_, false, this);
+
+
+    var searchButton = goog.dom.createDom('div',{
         "class" : 'search-button'
     });
-    //goog.events.listen(addDataFieldButton, goog.events.EventType.CLICK, this.removeContainer_, false, this);
-    goog.dom.appendChild(controllPanelDiv, this.searchButton_);      
+    goog.events.listen(searchButton, goog.events.EventType.CLICK, 
+        this.requestHandler_.handleRequest, false, this.requestHandler_);
+    goog.dom.appendChild(controllPanelDiv, searchButton);      
                    
     goog.dom.appendChild(this.container_, controllPanelDiv);
 };
@@ -68,6 +78,14 @@ alephscanner.ConditionsHolder.prototype.setBasis_ = function(basis) {
             },base);
             this.baseChooser_.appendChild(baseOption);                       
         }, this);
+};
+
+alephscanner.ConditionsHolder.prototype.addNewBase = function(base) {       
+    var baseOption = goog.dom.createDom('option', {
+        'value' : base
+    }, base);
+    baseOption.selected="selected";
+    this.baseChooser_.appendChild(baseOption);                              
 };
 
 
@@ -94,7 +112,31 @@ alephscanner.ConditionsHolder.prototype.addConditionDF_ = function() {
     inputCondition.insert(this.conditionsList_);    
     goog.array.insert(this.conditions_, inputCondition);
 };
-  
+
+
+alephscanner.ConditionsHolder.prototype.onCreateExport_ = function() {  
+    var context = this;
+    var prompt = new goog.ui.Prompt(
+        'Název',
+        'Zadejte název pro nový export.', function(response) {
+            if (response != null && response != '') {
+                context.requestHandler_.handleRequestWithNewExport(response);
+            }
+        }
+    );
+prompt.setVisible(true);
+};
+
+
+
+//alephscanner.ConditionsHolder.prototype.createExport_ = function(response) {  
+//    console.log(this.requestHandler_);
+//    if (response != null && response != '') {
+//        this.requestHandler_.handleRequestWithNewExport(response);
+//    }
+//};
+
+
   
 alephscanner.ConditionsHolder.prototype.insert = function(container) {
     goog.dom.appendChild(container, this.container_);
@@ -116,8 +158,5 @@ alephscanner.ConditionsHolder.prototype.getBaseValue = function() {
     return this.baseChooser_.options[this.baseChooser_.selectedIndex].value;
 };  
 
-alephscanner.ConditionsHolder.prototype.getSearchButton = function() {
-    return this.searchButton_;
-};  
 
 

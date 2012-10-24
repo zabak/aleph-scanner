@@ -9,9 +9,9 @@ import cz.mzk.alephscanner.model.ConditionDF;
 import cz.mzk.alephscanner.model.Output;
 import cz.mzk.alephscanner.model.Request;
 import cz.mzk.alephscanner.model.Response;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.dom4j.DocumentException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,16 +67,14 @@ public class JsonParser {
             output.setSubfield(outputObject.getString("subfield"));
             output.setLeftSeparator(outputObject.getString("left_separator"));
             output.setRightSeparator(outputObject.getString("right_separator"));
-            //output.setMultiple(outputObject.getBoolean("multiple"));
             output.setType(outputObject.getString("type"));
             output.setInsideSeparator(outputObject.getString("inside_separator"));
             request.addOutput(output);
-        }
-
-        //request.setMultipleFiledOutput(requestObject.getBoolean("multiple"));
+        }        
         request.setDistinct(requestObject.getBoolean("distinct"));
         request.setMode(requestObject.getString("result_mode"));
         request.setHeader(requestObject.getBoolean("header"));
+        request.setNewExportName(requestObject.getString("new_export_name"));
         return request;
     }
 
@@ -91,6 +89,7 @@ public class JsonParser {
             jsonObject.append("export_count", response.getAllRecordsCount());
             jsonObject.append("exception_count", response.getWrongRecordsCount());
             jsonObject.append("export_date", response.getDate());
+            jsonObject.put("new_export", response.getRequest().getNewExportName());
         } catch (JSONException ex) {
             Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -98,16 +97,12 @@ public class JsonParser {
     }
 
     public static JSONObject getInitialData() {
-        JSONObject jsonObject = new JSONObject();
-        PropertiesReader reader = new PropertiesReader();
-            try {               
-                jsonObject.put("basis", reader.getBasis());
+        JSONObject jsonObject = new JSONObject();         
+            try {
+                jsonObject.put("basis", XmlParser.getExportNames());
             } catch (JSONException ex) {
-                Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
-
-        } catch (IOException ex) {
-            Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);  
+            }
         return jsonObject;
     }
 }
