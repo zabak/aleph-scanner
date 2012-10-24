@@ -15,6 +15,7 @@ alephscanner.RequestHandler = function(conditionsHolder, outputHolder, url) {
     this.conditionsHolder_ = conditionsHolder;  
     this.url_ = url;
     goog.events.listen(this.conditionsHolder_.getSearchButton(), goog.events.EventType.CLICK, this.handleRequest_, false, this);
+    this.setInitialData_("GetInfo");
 
 };
 
@@ -58,4 +59,15 @@ alephscanner.RequestHandler.prototype.handleRequest_ = function() {
     // start the request by setting POST method and passing
     // the data object converted to a queryString
     request.send(this.url_, "POST", data);                
+};
+
+
+alephscanner.RequestHandler.prototype.setInitialData_ = function(url) {    
+  var context = this;
+  goog.net.XhrIo.send(url, function(e) {
+      var xhr = e.target;
+      response = xhr.getResponseJson();      
+      console.log(response.basis);
+      context.conditionsHolder_.setBasis_(response.basis);
+  });     
 };

@@ -4,10 +4,7 @@
  */
 package cz.mzk.alephscanner;
 
-import cz.mzk.alephscanner.model.Request;
-import cz.mzk.alephscanner.model.Response;
 import cz.mzk.alephscanner.tools.JsonParser;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -16,13 +13,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.json.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
  * @author hanis
  */
-public class Handle extends HttpServlet {
+public class GetInfo extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -35,43 +33,20 @@ public class Handle extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        request.setCharacterEncoding("UTF-8");
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            BufferedReader reader = request.getReader();
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Logger.getLogger(Handle.class.getName()).log(Level.INFO, sb.toString());
-        Request requestObject = null;
-        try {
-            requestObject = JsonParser.getRequestObject(sb.toString());
-        } catch (JSONException ex) {            
-            Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
-        }                
+            throws ServletException, IOException {                      
 
         response.setHeader("Content-Disposition", "attachment;filename=response.json");
         response.setHeader("Content-Type", "application/json; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        
-        
         PrintWriter out = response.getWriter();
-        Response responseObject = RequestHandler.getResponse(requestObject);
-        JSONObject jsonObject = JsonParser.getResponseJson(responseObject);        
+        JSONObject jsonObject = JsonParser.getInitialData();
         try {
             jsonObject.write(out);
         } catch (JSONException ex) {
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
         }
         out.close();
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

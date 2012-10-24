@@ -50,6 +50,7 @@ body,input {
 
 .quantity-selector-hidden {
         visibility: hidden;
+        display: none;
 }
 
 
@@ -131,12 +132,12 @@ body,input {
 
 
 .output-item-container .field-input{
-    background-color: #cdfffd;  
+    background-color: #adfffd;  
     width: 40px;
 }
 
 .output-item-container .subfield-input{
-    background-color: #cdfffd;  
+    background-color: #adfffd;  
     width: 20px;
 }
 
@@ -203,24 +204,23 @@ input {
 }
 
 .input-condition-container .field-input{
-    background-color: #cdfffd;  
+    background-color: #adfffd;  
     width: 30px;
 }
 
 .input-condition-container .subfield-input{
-    background-color: #cdfffd;  
+    background-color: #adfffd;  
     width: 15px;
 }
 
 
 .input-condition-container .expression-input {
-    width: 105px;
+    width: 104px;
 }
 
 .image-button16 {
       height: 16px;
-      width: 16px;
-      margin-right: 5px;
+      width: 16px;     
       background-repeat: no-repeat;
       vertical-align: middle;
       display: inline-block;   
@@ -238,19 +238,25 @@ input {
 
 
 .download-button {
+      float:right;
       background-image: url(download-icon.png);      
 }
 
 .remove-button {
+      margin-right: 5px;
       background-image: url(delete-icon.png);
 }
 
 .input-condition-container .value-type-button {
+     margin-top:2px;
+     float:right;
      background-image: url(right_arrow-icon.png);
 }
 
 .input-condition-container .list-type-button {
-     background-image: url(left_arrow-icon.png);
+    margin-top:2px;
+    float:right; 
+    background-image: url(left_arrow-icon.png);
 }
 
 
@@ -274,7 +280,9 @@ input {
 }
 
 
-
+.dollar-icon {
+     background-image: url(dollar-icon.png);
+}
 
 .add-output-button {
      background-image: url(add-icon.png);

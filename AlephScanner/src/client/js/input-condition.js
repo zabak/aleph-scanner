@@ -98,8 +98,13 @@ alephscanner.InputCondition.prototype.createFieldInput_ = function() {
         'class' : "field-input"
     };  
     this.field_ = goog.dom.createDom("input", fieldAttributes);
-    //this.field_ = document.createElement("input");
+
+    var dollar = goog.dom.createDom('div',{
+        "class" : 'dollar-icon image-button16'
+    });
     goog.dom.appendChild(this.container_, this.field_);
+    goog.dom.appendChild(this.container_, dollar);
+    
 };
 
 

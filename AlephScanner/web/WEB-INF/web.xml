@@ -8,6 +8,10 @@
         <servlet-name>Handle2</servlet-name>
         <servlet-class>cz.mzk.alephscanner.Handle2</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetInfo</servlet-name>
+        <servlet-class>cz.mzk.alephscanner.GetInfo</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Handle</servlet-name>
         <url-pattern>/Handle</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>Handle2</servlet-name>
         <url-pattern>/Handle2</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetInfo</servlet-name>
+        <url-pattern>/GetInfo</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

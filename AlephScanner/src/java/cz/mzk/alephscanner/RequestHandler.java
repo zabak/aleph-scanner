@@ -45,8 +45,6 @@ public class RequestHandler {
         try {
             in = new FileInputStream(request.getExportPath());
             MarcReader reader = new MarcPermissiveStreamReader(in, true, true, "UTF-8");
-            //MarcWriter m = new MarcStreamWriter(null);
-            //m.
             while (reader.hasNext()) {
                 allRecordscounter++;
                 try {
