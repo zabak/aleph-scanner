@@ -15,7 +15,8 @@ alephscanner.handler.main = function() {
   var outputHolder = new alephscanner.OutputHolder();
   outputHolder.insert(output);  
   
-  var url = "http://localhost:8080/AlephScanner/Handle"
+  //var url = "http://localhost:8080/AlephScanner/Handle";
+  var url = "Handle";
   var requestHandler = new alephscanner.RequestHandler(conditionsHolder, outputHolder, url);
   
 };

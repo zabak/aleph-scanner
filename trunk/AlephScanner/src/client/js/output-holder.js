@@ -108,7 +108,7 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
 
    // goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Opakovat pole")));
    // goog.dom.appendChild(headerDiv, this.repeatableCheckBox_);
-    goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Výsledky")));
+    goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Výsledky: ")));
     goog.dom.appendChild(headerDiv, this.resultMode_);
     goog.dom.appendChild(headerDiv, downloadButton);
     

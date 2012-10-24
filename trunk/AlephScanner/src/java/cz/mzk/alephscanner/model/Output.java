@@ -26,7 +26,6 @@ public class Output {
     private String leftSeparator;
     private String rightSeparator;
     private String insideSeparator;
-    //private boolean multiple;
     private String type;
     
     private int recordCounter;
@@ -92,10 +91,6 @@ public class Output {
                 if(list.isEmpty()) {
                     dif--;
                 }
-                //System.out.println("inside separator: " + getInsideSeparator());
-                //System.out.println("s: " + s);
-                //System.out.println("dif: " + dif);
-                
                 for (int i = 0; i < dif; i++) {                 
                     s+=getInsideSeparator();
                 }
@@ -160,20 +155,6 @@ public class Output {
     public void setRightSeparator(String rightSeparator) {
         this.rightSeparator = rightSeparator;
     }
-
-    /**
-     * @return the multiple
-     */
-//    public boolean isMultiple() {
-//        return multiple;
-//    }
-//
-//    /**
-//     * @param multiple the multiple to set
-//     */
-//    public void setMultiple(boolean multiple) {
-//        this.multiple = multiple;
-//    }
 
     /**
      * @return the type

@@ -4,6 +4,7 @@
  */
 package cz.mzk.alephscanner.model;
 
+import cz.mzk.alephscanner.tools.PropertiesReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,8 @@ import java.util.List;
  */
 public class Request {
 
-    public static final String EXPORT_BASE_PATH = "/home/hanis/NetBeansProjects/AlephScanner/data/exports/";
-    public static final String EXPORT_EXTENSION = "m21";
+   // public static final String EXPORT_BASE_PATH = "/home/hanis/NetBeansProjects/AlephScanner/data/exports/";
+   // public static final String EXPORT_EXTENSION = "m21";
     
     public static final String MODE_ALL = "all";
     public static final String MODE_DISTINCT = "distinct";
@@ -96,20 +97,6 @@ public class Request {
     }
 
     /**
-     * @return the multipleFiledOutput
-     */
-//    public boolean isMultipleFiledOutput() {
-//        return multipleFiledOutput;
-//    }
-//
-//    /**
-//     * @param multipleFiledOutput the multipleFiledOutput to set
-//     */
-//    public void setMultipleFiledOutput(boolean multipleFiledOutput) {
-//        this.multipleFiledOutput = multipleFiledOutput;
-//    }
-
-    /**
      * @return the distinct
      */
     public boolean isDistinct() {
@@ -169,7 +156,8 @@ public class Request {
      * @return the exportPath
      */
     public String getExportPath() {
-        return EXPORT_BASE_PATH +  getBase() + "." + EXPORT_EXTENSION;
+        PropertiesReader reader = new PropertiesReader();
+        return reader.getPathOfBase(getBase());
     }
 
     /**

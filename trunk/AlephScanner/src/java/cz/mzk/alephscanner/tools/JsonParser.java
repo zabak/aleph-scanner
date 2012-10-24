@@ -9,6 +9,7 @@ import cz.mzk.alephscanner.model.ConditionDF;
 import cz.mzk.alephscanner.model.Output;
 import cz.mzk.alephscanner.model.Request;
 import cz.mzk.alephscanner.model.Response;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONArray;
@@ -31,14 +32,14 @@ public class JsonParser {
             JSONObject conditionObject = (JSONObject) conditionsArray.get(i);
             ConditionDF condition = new ConditionDF();
             condition.setField(conditionObject.getString("field"));
-            condition.setSubfield(conditionObject.getString("subfield"));            
+            condition.setSubfield(conditionObject.getString("subfield"));
             String relation = conditionObject.getString("relation");
-            if(relation.startsWith("not")) {
+            if (relation.startsWith("not")) {
                 condition.setRelation(relation.replaceFirst("not", ""));
                 condition.setNegation(true);
             } else {
                 condition.setRelation(relation);
-                condition.setNegation(false);                
+                condition.setNegation(false);
             }
             condition.setExpression(conditionObject.getString("expression"));
             condition.setQuantifier(conditionObject.getString("quantifier"));
@@ -78,11 +79,8 @@ public class JsonParser {
         request.setHeader(requestObject.getBoolean("header"));
         return request;
     }
-    
-    
-    
-    
-    public static JSONObject getResponseJson(Response response)  {                
+
+    public static JSONObject getResponseJson(Response response) {
         JSONObject jsonObject = new JSONObject();
         JSONArray resultListArray = new JSONArray(response.getResultList());
         try {
@@ -94,6 +92,20 @@ public class JsonParser {
             jsonObject.append("exception_count", response.getWrongRecordsCount());
             jsonObject.append("export_date", response.getDate());
         } catch (JSONException ex) {
+            Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return jsonObject;
+    }
+
+    public static JSONObject getInitialData() {
+        JSONObject jsonObject = new JSONObject();
+        PropertiesReader reader = new PropertiesReader();
+            try {               
+                jsonObject.put("basis", reader.getBasis());
+            } catch (JSONException ex) {
+                Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (IOException ex) {
             Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return jsonObject;

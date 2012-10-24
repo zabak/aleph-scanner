@@ -59,8 +59,23 @@ alephscanner.ConditionsHolder.prototype.createControllPanel_ = function() {
     goog.dom.appendChild(this.container_, controllPanelDiv);
 };
 
+
+alephscanner.ConditionsHolder.prototype.setBasis_ = function(basis) {    
+    goog.array.forEach(basis,
+        function(base) {
+            var baseOption = goog.dom.createDom('option', {
+                'value' : base
+            },base);
+            this.baseChooser_.appendChild(baseOption);                       
+        }, this);
+};
+
+
+
 alephscanner.ConditionsHolder.prototype.createBaseChooser_ = function() {
-    var baseDiv = goog.dom.createDom("div", { 'class' : 'base-chooser' });  
+    var baseDiv = goog.dom.createDom("div", {
+        'class' : 'base-chooser'
+    });  
 
     var label = goog.dom.createDom("label", {
         'class' : 'label'
@@ -68,21 +83,8 @@ alephscanner.ConditionsHolder.prototype.createBaseChooser_ = function() {
     label.appendChild(document.createTextNode("Báze: "));
     goog.dom.appendChild(baseDiv, label);    
     
-    this.baseChooser_ = goog.dom.createDom('select');
-    var mzk01 = goog.dom.createDom('option', {
-        'value' : 'mzk01'
-    },"MZK01");
-    var mzk03 = goog.dom.createDom('option', {
-        'selected':'selected',
-        'value' : 'mzk03'
-    },"MZK03");
-    var mzk04 = goog.dom.createDom('option', {
-        'value' : 'mzk04'
-    },"MZK04");    
-                
-    this.baseChooser_.appendChild(mzk01);
-    this.baseChooser_.appendChild(mzk03);
-    this.baseChooser_.appendChild(mzk04);       
+
+    this.baseChooser_ = goog.dom.createDom('select');    
     goog.dom.appendChild(baseDiv, this.baseChooser_);
     goog.dom.appendChild(this.container_, baseDiv);
 };
