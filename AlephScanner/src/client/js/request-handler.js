@@ -10,11 +10,15 @@ goog.require('goog.net.XhrIo');
 
 
 
-alephscanner.RequestHandler = function(conditionsHolder, outputHolder, url) {    
-    this.outputHolder_ = outputHolder;
-    this.conditionsHolder_ = conditionsHolder;  
-    this.url_ = url;
-    goog.events.listen(this.conditionsHolder_.getSearchButton(), goog.events.EventType.CLICK, this.handleRequest_, false, this);
+alephscanner.RequestHandler = function(url) {    
+    var input = goog.dom.getElement('input-panel');
+    var output = goog.dom.getElement('output-panel');
+    this.conditionsHolder_ = new alephscanner.ConditionsHolder(this);
+    this.conditionsHolder_.insert(input);
+  
+    this.outputHolder_ = new alephscanner.OutputHolder();
+    this.outputHolder_.insert(output); 
+    this.url_ = url;    
     this.setInitialData_("GetInfo");
 
 };
@@ -22,32 +26,48 @@ alephscanner.RequestHandler = function(conditionsHolder, outputHolder, url) {
 
 
 
-alephscanner.RequestHandler.prototype.createJsonObject_ = function() {
+alephscanner.RequestHandler.prototype.createJsonObject_ = function(exportName) {
     var resultJson = {
         "base" : this.conditionsHolder_.getBaseValue(),
         "df_conditions" : this.conditionsHolder_.getConditionSpecArray(),
         "cf_conditions" : [],
         "outputs" : this.outputHolder_.getOutputSpecArray(),
-        //"multiple" :this.outputHolder_.repeatField(),
         "result_mode" : this.outputHolder_.getResultModeValue(),
         "distinct" : false,
-        "header" : false
+        "header" : false,
+        "new_export_name": exportName
     };
     return resultJson;
 }
 
 
-alephscanner.RequestHandler.prototype.handleRequest_ = function() {    
+alephscanner.RequestHandler.prototype.handleRequest= function() {  
+    console.log(this);
+    var data = goog.json.serialize(this.createJsonObject_(""));
+    this.request_(data);
+}
+
+alephscanner.RequestHandler.prototype.handleRequestWithNewExport= function(name) {    
+    var data = goog.json.serialize(this.createJsonObject_(name));
+    this.request_(data);
+}
+
+
+
+alephscanner.RequestHandler.prototype.request_ = function(data) {    
     this.outputHolder_.showLoader();
     var context = this;
-    var request = new goog.net.XhrIo();
-    var data = goog.json.serialize(this.createJsonObject_());               
+    var request = new goog.net.XhrIo();              
     goog.events.listen(request, "complete",function(){                    
         if (request.isSuccess()) {                                    
-            // print confirm to the console
             console.log("Satus code: ", request.getStatus(), " - ", request.getStatusText());                                                
             context.outputHolder_.showResult(request.getResponseJson());               
             context.outputHolder_.hideLoader();
+            var new_export_name = request.getResponseJson().new_export;
+            console.log(new_export_name);
+            if(new_export_name != '') {
+                context.conditionsHolder_.addNewBase(new_export_name);
+            }
         } else {                        
             context.outputHolder_.hideLoader();
             console.log(
@@ -56,8 +76,6 @@ alephscanner.RequestHandler.prototype.handleRequest_ = function() {
             );               
         }                    
     });                
-    // start the request by setting POST method and passing
-    // the data object converted to a queryString
     request.send(this.url_, "POST", data);                
 };
 
@@ -67,7 +85,6 @@ alephscanner.RequestHandler.prototype.setInitialData_ = function(url) {
   goog.net.XhrIo.send(url, function(e) {
       var xhr = e.target;
       response = xhr.getResponseJson();      
-      console.log(response.basis);
       context.conditionsHolder_.setBasis_(response.basis);
   });     
 };

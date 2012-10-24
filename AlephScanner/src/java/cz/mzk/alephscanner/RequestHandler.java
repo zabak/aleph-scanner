@@ -10,19 +10,25 @@ import cz.mzk.alephscanner.model.ConditionDF;
 import cz.mzk.alephscanner.model.Output;
 import cz.mzk.alephscanner.model.Request;
 import cz.mzk.alephscanner.model.Response;
+import cz.mzk.alephscanner.tools.PropertiesReader;
+import cz.mzk.alephscanner.tools.XmlParser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
+import org.dom4j.DocumentException;
 import org.marc4j.MarcException;
 import org.marc4j.MarcPermissiveStreamReader;
 import org.marc4j.MarcReader;
+import org.marc4j.MarcWriter;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
@@ -39,12 +45,20 @@ public class RequestHandler {
         Response response = new Response();
         response.setRequest(request);        
         InputStream in = null;
+        OutputStream os = null;
         int allRecordscounter = 0;
         int exceptionCounter = 0;
         int matchedRecordsCounter = 0;        
         try {
             in = new FileInputStream(request.getExportPath());
             MarcReader reader = new MarcPermissiveStreamReader(in, true, true, "UTF-8");
+            
+            MarcWriter writer = null;
+            if(request.createNewExport()) {
+                String path = PropertiesReader.getInstance().getTemporaryExportDirectory() + request.getNewExportName() + ".m21";
+                os = new FileOutputStream(path);            
+                writer = new org.marc4j.MarcStreamWriter(os, "UTF-8");
+            }
             while (reader.hasNext()) {
                 allRecordscounter++;
                 try {
@@ -72,6 +86,10 @@ public class RequestHandler {
                         List<String> list = getMultipleOutputs(record, output);
                         output.addData(matchedRecordsCounter, list);
                     }
+                    if(request.createNewExport()) {
+                        writer.write(record);
+                    }
+                    
                     matchedRecordsCounter++;
                 } catch (MarcException e) {
                     exceptionCounter++;
@@ -83,10 +101,22 @@ public class RequestHandler {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
+                if(request.createNewExport()) {
+                    os.close();
+                }            
                 in.close();
             } catch (IOException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        try {
+            if(request.createNewExport()) {
+                XmlParser.addNewExport(request.getNewExportName());
+            }
+        } catch (DocumentException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         response.setMatchedRecordsCount(matchedRecordsCounter);
         response.setAllRecordsCount(allRecordscounter);

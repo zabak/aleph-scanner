@@ -125,7 +125,7 @@ body,input {
 .output-item-container {    
     background-color: #e2e5fe;
     color: #0d1b0b;
-    border: #aaa solid 2px;
+    border: #666 solid 2px;
     padding: 0px 0px 1px 3px;        
 }
 
@@ -192,7 +192,7 @@ select {
 .input-condition-container {
     background-color: #e2e5fe;
     color: #0d1b0b;
-    border: #aaa solid 2px;
+    border: #666 solid 2px;
     padding: 0px 0px 1px 3px; 
 }
 
@@ -279,6 +279,17 @@ input {
       display: inline-block;        
 }
 
+.create-export-button {
+      background-image: url(plus-green-icon.png);
+      float: right;     
+      height: 16px;
+      width: 16px;
+      margin-right: 5px;
+      background-repeat: no-repeat;
+      vertical-align: middle;
+      display: inline-block;        
+}
+
 
 .dollar-icon {
      background-image: url(dollar-icon.png);
@@ -313,3 +324,71 @@ input {
     color: #fff;
     font-weight: bold;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .modal-dialog-bg {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #FFF;
+  }
+
+  .modal-dialog {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px;
+    background-color: #AAF;
+    border: 2px solid #99c0ff;
+  }
+
+  .modal-dialog-title {
+    position:relative;
+    background: #C3D9FF;
+    padding: 4px;
+    font: bold 11px verdana;
+    cursor: default;
+  }
+
+  .modal-dialog-content {
+    background: #E8EEF7;
+    padding: 12px 18px 12px 18px;  font: normal 12px verdana;
+    font: normal 12px verdana;
+  }
+
+  .modal-dialog-userInput {
+    font: normal 12px verdana;
+    width: 90%;
+  }
+
+  .modal-dialog-buttons {
+    background: #E8EEF7;
+    padding: 4px;
+    font: normal 12px verdana;
+    text-align: right;
+  }
+
+  .modal-dialog-buttons button {
+    margin: 5px;
+  }

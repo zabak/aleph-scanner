@@ -64,7 +64,7 @@ public class Handle extends HttpServlet {
         
         PrintWriter out = response.getWriter();
         Response responseObject = RequestHandler.getResponse(requestObject);
-        JSONObject jsonObject = JsonParser.getResponseJson(responseObject);        
+        JSONObject jsonObject = JsonParser.getResponseJson(responseObject);
         try {
             jsonObject.write(out);
         } catch (JSONException ex) {
