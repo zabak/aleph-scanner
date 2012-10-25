@@ -30,7 +30,7 @@ alephscanner.RequestHandler.prototype.createJsonObject_ = function(exportName) {
     var resultJson = {
         "base" : this.conditionsHolder_.getBaseValue(),
         "df_conditions" : this.conditionsHolder_.getConditionSpecArray(),
-        "cf_conditions" : [],
+        "cf_conditions" : this.conditionsHolder_.getConditionCFSpecArray(),
         "outputs" : this.outputHolder_.getOutputSpecArray(),
         "result_mode" : this.outputHolder_.getResultModeValue(),
         "distinct" : false,

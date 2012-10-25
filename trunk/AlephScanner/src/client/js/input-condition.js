@@ -62,18 +62,24 @@ alephscanner.InputCondition.prototype.changeNegation_ = function() {
 alephscanner.InputCondition.prototype.createContainer_ = function() {
     this.container_ = goog.dom.createDom("div", {
         'class' : 'input-condition-container'
-    });          
-    this.createRemoveButton_();
-    this.createQuantifierComboBox_();
-    this.createQuantityComboBox_();
-    this.createFiledLabel_();
-    this.createFieldInput_();
-    this.createSubfieldInput_();
-    //this.createNegationButton_();
-    this.createRelationComboBox_();
-    this.createExpressionInput_();
-    this.createSwitchInputTypeButton_();
-    this.createListInputTextArea_()  
+    });      
+
+
+    
+    var noExpressionContainer = goog.dom.createDom("div", {'class' : 'no-expression-container'});    
+    goog.dom.appendChild(this.container_, noExpressionContainer);
+    
+    goog.dom.appendChild(noExpressionContainer, this.createRemoveButton_());
+    goog.dom.appendChild(noExpressionContainer, this.createQuantifierComboBox_());
+    goog.dom.appendChild(noExpressionContainer, this.createQuantityComboBox_());
+    goog.dom.appendChild(noExpressionContainer, this.createFieldBox_());
+    goog.dom.appendChild(noExpressionContainer, this.createRelationComboBox_());
+    goog.dom.appendChild(noExpressionContainer, this.createSwitchInputTypeButton_());  
+    
+    goog.dom.appendChild(this.container_, this.createExpressionInput_());    
+        
+    goog.dom.appendChild(this.container_, this.createListInputTextArea_());  
+  //  this.createListInputTextArea_()  
 };
 
 alephscanner.InputCondition.prototype.createSwitchInputTypeButton_ = function() {
@@ -81,7 +87,7 @@ alephscanner.InputCondition.prototype.createSwitchInputTypeButton_ = function() 
         "class" : 'value-type-button image-button16'
     });
     goog.events.listen(this.inputTypeButton_, goog.events.EventType.CLICK, this.switchInputType_, false, this);
-    goog.dom.appendChild(this.container_, this.inputTypeButton_);
+    return this.inputTypeButton_;
 };
 
 alephscanner.InputCondition.prototype.createRemoveButton_ = function() {
@@ -89,53 +95,25 @@ alephscanner.InputCondition.prototype.createRemoveButton_ = function() {
         "class" : 'remove-button image-button16'
     });
     goog.events.listen(removeButton, goog.events.EventType.CLICK, this.removeContainer_, false, this);
-    goog.dom.appendChild(this.container_, removeButton);
+    return removeButton;
 };
 
-alephscanner.InputCondition.prototype.createFieldInput_ = function() {
-    var fieldAttributes = {
-       // 'type' : "text",
-        'class' : "field-input"
-    };  
-    this.field_ = goog.dom.createDom("input", fieldAttributes);
 
+alephscanner.InputCondition.prototype.createFieldBox_ = function() {
+    var fieldBox = goog.dom.createDom("span");
+    this.fieldLabel_ = goog.dom.createDom("label", {'class' : "label"}, "Pole");   
+    this.field_ = goog.dom.createDom("input", {'class' : "field-input"});
     var dollar = goog.dom.createDom('div',{
         "class" : 'dollar-icon image-button16'
     });
-    goog.dom.appendChild(this.container_, this.field_);
-    goog.dom.appendChild(this.container_, dollar);
-    
+    this.subfield_ = goog.dom.createDom("input", {'class' : "subfield-input"});
+    goog.dom.appendChild(fieldBox, this.fieldLabel_);
+    goog.dom.appendChild(fieldBox, this.field_);
+    goog.dom.appendChild(fieldBox, dollar);
+    goog.dom.appendChild(fieldBox, this.subfield_);
+    return fieldBox;
 };
 
-
-alephscanner.InputCondition.prototype.createFiledLabel_ = function() {
-    var fieldAttributes = {
-        'class' : "label"
-    };  
-    this.fieldLabel_ = goog.dom.createDom("label", fieldAttributes);   
-    this.fieldLabel_.appendChild(document.createTextNode("pole"));
-    goog.dom.appendChild(this.container_, this.fieldLabel_);
-};
-
-
-alephscanner.InputCondition.prototype.createSubfieldInput_ = function() {
-    var fieldAttributes = {
-    //    'type' : "text",
-        'class' : "subfield-input"
-    };  
-    this.subfield_ = goog.dom.createDom("input", fieldAttributes);
-    goog.dom.appendChild(this.container_, this.subfield_);
-};
-
-
-alephscanner.InputCondition.prototype.createNegationButton_ = function() {
-    this.negationButton_ = goog.dom.createDom('div',{
-        "class" : 'image-button16'
-    });
-    this.negationButton_.style.backgroundImage = "url(ok-icon.png)";
-    goog.events.listen(this.negationButton_, goog.events.EventType.CLICK, this.changeNegation_, false, this);
-    goog.dom.appendChild(this.container_, this.negationButton_);
-};
 
 alephscanner.InputCondition.prototype.createRelationComboBox_ = function() {
     this.relationSelect_ = goog.dom.createDom('select');
@@ -193,8 +171,7 @@ alephscanner.InputCondition.prototype.createRelationComboBox_ = function() {
     this.relationSelect_.appendChild(regexOption);   
         this.relationSelect_.appendChild(negRegexOption);        
 
-    //goog.events.listen(this.negationButton_, goog.events.EventType.CHANGE, this.changeNegation_, false, this);
-    goog.dom.appendChild(this.container_, this.relationSelect_);
+    return this.relationSelect_;
 };
 
 
@@ -223,12 +200,15 @@ alephscanner.InputCondition.prototype.createQuantifierComboBox_ = function() {
     this.quantifierSelect_.appendChild(ltOption);
     this.quantifierSelect_.appendChild(eqOption);
     goog.events.listen(this.quantifierSelect_, goog.events.EventType.CHANGE, this.onQuantifierChange_, false, this);
-    goog.dom.appendChild(this.container_, this.quantifierSelect_);
+    return this.quantifierSelect_;
 };
 
 
 alephscanner.InputCondition.prototype.createQuantityComboBox_ = function() {
     this.quantitySelect_ = goog.dom.createDom('select', {'class' : 'quantity-selector-hidden'});
+    this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
+        'value':'0'
+    },"0"));
     this.quantitySelect_.appendChild(new goog.dom.createDom('option', {
         'value':'1',
         'selected':'selected'
@@ -259,32 +239,27 @@ alephscanner.InputCondition.prototype.createQuantityComboBox_ = function() {
     },"9"));
 
     goog.events.listen(this.quantitySelect_, goog.events.EventType.CHANGE, this.onQuantityChange_, false, this);
-    goog.dom.appendChild(this.container_, this.quantitySelect_);
+    return this.quantitySelect_;
 };
 
 
 
 
-alephscanner.InputCondition.prototype.createExpressionInput_ = function() {
-    var attributes = {
-        //'type' : "text",
-        'class' : "expression-input"
-    };  
-    this.expression_ = goog.dom.createDom("input", attributes);
-    goog.dom.appendChild(this.container_, this.expression_);
+alephscanner.InputCondition.prototype.createExpressionInput_ = function() { 
+    this.expression_ = goog.dom.createDom("input", {"class" : "expression-input"});
+    var expressionContainer = goog.dom.createDom("span", {'class' : "expression-container"}, this.expression_);
+    return expressionContainer;
 };
 
 
 alephscanner.InputCondition.prototype.createListInputTextArea_ = function() {
     var attributes = {
         'wrap' : "off",
-        'class' : "input-text-area input-text-area-hidden"
-        
+        'class' : "input-text-area input-text-area-hidden"        
     };  
     this.expressionList_ = goog.dom.createDom("textarea", attributes);
-    goog.dom.appendChild(this.container_, this.expressionList_);
+    return this.expressionList_;
 };
-
 
 
 alephscanner.InputCondition.prototype.insert = function(container) {

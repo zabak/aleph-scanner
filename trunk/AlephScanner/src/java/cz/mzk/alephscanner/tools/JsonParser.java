@@ -50,14 +50,21 @@ public class JsonParser {
         for (int i = 0; i < conditionsCFArray.length(); i++) {
             JSONObject conditionObject = (JSONObject) conditionsCFArray.get(i);
             ConditionCF condition = new ConditionCF();
-            condition.setField(conditionObject.getString("field"));
-            condition.setNegation(conditionObject.getBoolean("negation"));
-            condition.setRelation(conditionObject.getString("relation"));
+            condition.setField(conditionObject.getString("field"));            
+            String relation = conditionObject.getString("relation");
+            if (relation.startsWith("not")) {
+                condition.setRelation(relation.replaceFirst("not", ""));
+                condition.setNegation(true);
+            } else {
+                condition.setRelation(relation);
+                condition.setNegation(false);
+            }
+            condition.setFrom(conditionObject.getInt("from"));        
+            condition.setTo(conditionObject.getInt("to")); 
             condition.setExpression(conditionObject.getString("expression"));
-            condition.setFrom(conditionObject.getInt("from"));
-            condition.setTo(conditionObject.getInt("to"));
             request.addControlFieldCondition(condition);
         }
+
 
         JSONArray outputsArray = requestObject.getJSONArray("outputs");
         for (int i = 0; i < outputsArray.length(); i++) {

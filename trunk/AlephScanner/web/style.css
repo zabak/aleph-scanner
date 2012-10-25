@@ -22,8 +22,6 @@ body,input {
 
 
 
-
-
 #header {
     height: 60px;
     padding: 30px;
@@ -121,12 +119,19 @@ body,input {
 }
 
 
-
 .output-item-container {    
+    /*
     background-color: #e2e5fe;
     color: #0d1b0b;
     border: #666 solid 2px;
-    padding: 0px 0px 1px 3px;        
+    padding: 0px 0px 1px 3px;   
+    */
+    background-color: #92a5ba;
+    color: #223;
+    border: #666 solid 2px;
+    padding: 0px 3px 2px 3px; 
+
+    
 }
 
 
@@ -190,11 +195,14 @@ select {
     height: 18px;    
 }
 .input-condition-container {
-    background-color: #e2e5fe;
-    color: #0d1b0b;
+    /*background-color: #e2e5fe;*/
+    background-color: #92a5ba;
+    color: #223;
     border: #666 solid 2px;
-    padding: 0px 0px 1px 3px; 
+    padding: 0px 3px 2px 3px; 
+    width:490px;
 }
+
 
 input {
     margin: 0 2px 0 2px;
@@ -215,7 +223,27 @@ input {
 
 
 .input-condition-container .expression-input {
-    width: 104px;
+    width: 100%;
+}
+
+.input-condition-container .expression-cf-input {
+    width: 100%;
+}
+
+.no-expression-container {    
+    padding-top: 0px;
+    float: left;
+}
+
+.expression-container {
+    padding-top: 1px;
+    display: block;
+    overflow: hidden;
+}
+
+
+.input-condition-container .range-input {
+    width: 25px;
 }
 
 .image-button16 {
@@ -225,7 +253,6 @@ input {
       vertical-align: middle;
       display: inline-block;   
 }
-
 
 .image-button24 {
       height: 24px;
@@ -247,16 +274,17 @@ input {
       background-image: url(delete-icon.png);
 }
 
+
 .input-condition-container .value-type-button {
-     margin-top:2px;
+     margin-top:1px;
      float:right;
      background-image: url(right_arrow-icon.png);
 }
 
 .input-condition-container .list-type-button {
-    margin-top:2px;
+    margin-top:1px;
     float:right; 
-    background-image: url(left_arrow-icon.png);
+    background-image: url(down_arrow-icon.png);
 }
 
 
@@ -280,10 +308,10 @@ input {
 }
 
 .create-export-button {
-      background-image: url(plus-green-icon.png);
+      background-image: url(new_export-icon.png);
       float: right;     
-      height: 16px;
-      width: 16px;
+      height: 22px;
+      width: 22px;
       margin-right: 5px;
       background-repeat: no-repeat;
       vertical-align: middle;
