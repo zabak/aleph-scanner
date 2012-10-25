@@ -191,7 +191,7 @@ public class RequestHandler {
                 return checkSingleDataSubfield(condition, content.substring(condition.getFrom(), condition.getTo() + 1));
             }
         }
-        return condition.isNegation();
+        return false;
     }
 
     private static boolean checkSingleDataSubfield(Condition condition, String content) {

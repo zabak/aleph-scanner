@@ -1,11 +1,13 @@
 goog.provide('alephscanner.ConditionsHolder');
 
 goog.require('alephscanner.InputCondition');
+goog.require('alephscanner.ControlCondition');
 goog.require('goog.ui.Prompt');
 
 alephscanner.ConditionsHolder = function(requestHandler) {
     this.requestHandler_ = requestHandler;
     this.conditions_ = []; 
+    this.conditionsCF_ = []; 
     this.container_ = null;
     this.baseChooser_ = null; 
     this.conditionsList_ = null;  
@@ -19,8 +21,7 @@ alephscanner.ConditionsHolder.prototype.createContainer_ = function() {
     });          
     this.createBaseChooser_();    
     this.createConditionList_();
-    this.createControllPanel_();
-    
+    this.createControllPanel_();    
     this.addConditionDF_();
 
 };
@@ -32,6 +33,7 @@ alephscanner.ConditionsHolder.prototype.createConditionList_ = function() {
     });              
     goog.dom.appendChild(this.container_, this.conditionsList_);
 };
+
 
 
 alephscanner.ConditionsHolder.prototype.createControllPanel_ = function() {
@@ -48,16 +50,8 @@ alephscanner.ConditionsHolder.prototype.createControllPanel_ = function() {
     var addControlFieldButton = goog.dom.createDom('div',{
         "class" : 'image-button16 add-cf-button'
     });
-    //goog.events.listen(addDataFieldButton, goog.events.EventType.CLICK, this.removeContainer_, false, this);
+    goog.events.listen(addControlFieldButton, goog.events.EventType.CLICK, this.addConditionCF_, false, this);
     goog.dom.appendChild(controllPanelDiv, addControlFieldButton);
-
-
-    var createExportButton = goog.dom.createDom('div',{
-        "class" : 'create-export-button'
-    });
-    goog.dom.appendChild(controllPanelDiv, createExportButton);
-    goog.events.listen(createExportButton, goog.events.EventType.CLICK, this.onCreateExport_, false, this);
-
 
     var searchButton = goog.dom.createDom('div',{
         "class" : 'search-button'
@@ -104,6 +98,15 @@ alephscanner.ConditionsHolder.prototype.createBaseChooser_ = function() {
 
     this.baseChooser_ = goog.dom.createDom('select');    
     goog.dom.appendChild(baseDiv, this.baseChooser_);
+
+    var createExportButton = goog.dom.createDom('div',{
+        "class" : 'create-export-button'
+    });
+    goog.dom.appendChild(baseDiv, createExportButton);
+    goog.events.listen(createExportButton, goog.events.EventType.CLICK, this.onCreateExport_, false, this);
+    goog.dom.appendChild(baseDiv, this.baseChooser_)
+
+
     goog.dom.appendChild(this.container_, baseDiv);
 };
 
@@ -111,6 +114,13 @@ alephscanner.ConditionsHolder.prototype.addConditionDF_ = function() {
     var inputCondition = new alephscanner.InputCondition();    
     inputCondition.insert(this.conditionsList_);    
     goog.array.insert(this.conditions_, inputCondition);
+};
+
+
+alephscanner.ConditionsHolder.prototype.addConditionCF_ = function() {  
+    var controlCondition = new alephscanner.ControlCondition();    
+    controlCondition.insert(this.conditionsList_);    
+    goog.array.insert(this.conditionsCF_, controlCondition);
 };
 
 
@@ -126,15 +136,6 @@ alephscanner.ConditionsHolder.prototype.onCreateExport_ = function() {
     );
 prompt.setVisible(true);
 };
-
-
-
-//alephscanner.ConditionsHolder.prototype.createExport_ = function(response) {  
-//    console.log(this.requestHandler_);
-//    if (response != null && response != '') {
-//        this.requestHandler_.handleRequestWithNewExport(response);
-//    }
-//};
 
 
   
@@ -154,9 +155,17 @@ alephscanner.ConditionsHolder.prototype.getConditionSpecArray = function() {
     return conditions;   
 };  
 
+alephscanner.ConditionsHolder.prototype.getConditionCFSpecArray = function() {
+    var conditions = [];
+    goog.array.forEach(this.conditionsCF_,
+        function(condition) {
+            if(condition.isActive()) {
+                goog.array.insert(conditions, condition.getJsonObject());
+            }
+        });
+    return conditions;   
+};  
+
 alephscanner.ConditionsHolder.prototype.getBaseValue = function() {
     return this.baseChooser_.options[this.baseChooser_.selectedIndex].value;
 };  
-
-
-

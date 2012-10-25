@@ -15,7 +15,6 @@ alephscanner.OutputItem = function() {
     this.insideSeparator_ = null;
     this.field_ = null;    
     this.subfield_ = null;    
-    //this.repeatableRadio_ = null;  
     this.multipleFieldMode_ = null;  
     this.createContainer_();    
 
@@ -34,7 +33,7 @@ alephscanner.OutputItem.prototype.createContainer_ = function() {
     });          
     this.createRemoveButton_();    
     this.createLeftSeparatorInput_();
-    this.createLabel_("Pole:");
+    //this.createLabel_("Pole");
     this.createFieldInput_();
     this.createSubfieldInput_();
     this.createRightSeparatorInput_();    

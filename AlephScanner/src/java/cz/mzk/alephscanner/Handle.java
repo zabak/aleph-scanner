@@ -55,7 +55,7 @@ public class Handle extends HttpServlet {
         } catch (JSONException ex) {            
             Logger.getLogger(Handle.class.getName()).log(Level.SEVERE, null, ex);
         }                
-
+        System.out.println(sb.toString());
         response.setHeader("Content-Disposition", "attachment;filename=response.json");
         response.setHeader("Content-Type", "application/json; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
