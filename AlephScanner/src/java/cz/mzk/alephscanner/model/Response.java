@@ -5,11 +5,13 @@
 package cz.mzk.alephscanner.model;
 
 import cz.mzk.alephscanner.tools.Tools;
+import cz.mzk.alephscanner.tools.ValueComparator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
@@ -17,18 +19,17 @@ import java.util.TreeSet;
  * @author hanis
  */
 public class Response {
-       
+
     private Request request;
     private int allRecordsCount;
     private int wrongRecordsCount;
     private int matchedRecordsCount;
-    
-    
-    public Response() {        
+
+    public Response() {
     }
 
-    public List<String> getResultList() {    
-        List<String> resultList = new ArrayList<String>();    
+    public List<String> getResultList() {
+        List<String> resultList = new ArrayList<String>();
         for (int i = 0; i < matchedRecordsCount; i++) {
             Output multipleOutput = request.getMultirowOutput();
             if (multipleOutput != null) {
@@ -64,17 +65,20 @@ public class Response {
             Map<String, Integer> map = new HashMap<String, Integer>();
             for (String string : resultList) {
                 int oldValue = 0;
-                if(map.containsKey(string)) {
-                    oldValue = map.get(string);                    
+                if (map.containsKey(string)) {
+                    oldValue = map.get(string);
                 }
-                map.put(string, oldValue + 1);                
-            }   
+                map.put(string, oldValue + 1);
+            }
+            ValueComparator valueComparator = new ValueComparator(map);
+            TreeMap<String, Integer> valueSortedMap = new TreeMap<String, Integer>(valueComparator);
+            valueSortedMap.putAll(map);
             resultList.clear();
-            for (String string : map.keySet()) {
-                resultList.add("#:" + map.get(string) + ", " + string);
+            for (String string : valueSortedMap.keySet()) {
+                resultList.add("#" + map.get(string) + ", " + string);
             }
         }
-    return resultList;
+        return resultList;
     }
 
     /**
@@ -139,7 +143,4 @@ public class Response {
     public void setMatchedRecordsCount(int matchedRecordsCount) {
         this.matchedRecordsCount = matchedRecordsCount;
     }
-
-
-    
 }

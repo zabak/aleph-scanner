@@ -173,6 +173,10 @@ alephscanner.InputCondition.prototype.createRelationComboBox_ = function() {
     var regexOption = goog.dom.createDom('option', {
         'value':'regex'
     },"RegEx");
+    var negRegexOption = goog.dom.createDom('option', {
+        'value':'notregex'
+    },"NegRegEx");
+                    
                 
     this.relationSelect_.appendChild(equalsOption);
     this.relationSelect_.appendChild(containsOption);
@@ -186,7 +190,9 @@ alephscanner.InputCondition.prototype.createRelationComboBox_ = function() {
     this.relationSelect_.appendChild(notEndsOption);
     this.relationSelect_.appendChild(notExistsOption);    
     
-    this.relationSelect_.appendChild(regexOption);        
+    this.relationSelect_.appendChild(regexOption);   
+        this.relationSelect_.appendChild(negRegexOption);        
+
     //goog.events.listen(this.negationButton_, goog.events.EventType.CHANGE, this.changeNegation_, false, this);
     goog.dom.appendChild(this.container_, this.relationSelect_);
 };
