@@ -127,7 +127,7 @@ body,input {
     padding: 0px 0px 1px 3px;   
     */
     background-color: #92a5ba;
-    color: #223;
+    color: #111;
     border: #666 solid 2px;
     padding: 0px 3px 2px 3px; 
 
@@ -197,7 +197,7 @@ select {
 .input-condition-container {
     /*background-color: #e2e5fe;*/
     background-color: #92a5ba;
-    color: #223;
+    color: #111;
     border: #666 solid 2px;
     padding: 0px 3px 2px 3px; 
     width:490px;
@@ -263,11 +263,26 @@ input {
       display: inline-block;   
 }
 
+.image-button22 {
+      height: 22px;
+      width: 22px;
+      margin-right: 5px;
+      background-repeat: no-repeat;
+      vertical-align: middle;
+      display: inline-block;   
+}
+
 
 .download-button {
       float:right;
       background-image: url(download-icon.png);      
 }
+
+.csv-button {
+      margin-left: 10px;
+      background-image: url(csv-icon.png);      
+}
+
 
 .remove-button {
       margin-right: 5px;
@@ -293,7 +308,8 @@ input {
 }
 
 .add-cf-button {
-     background-image: url(control-icon.png);
+     margin-left: 5px;
+     background-image: url(control_add-icon.png);
 }
 
 .search-button {

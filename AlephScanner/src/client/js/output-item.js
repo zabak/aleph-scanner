@@ -178,7 +178,7 @@ alephscanner.OutputItem.prototype.getInsideSeparatorValue = function() {
     return this.insideSeparator_.value
 }
 
-alephscanner.OutputItem.prototype.getMultipleFieldModeValue_ = function() {
+alephscanner.OutputItem.prototype.getMultipleFieldModeValue = function() {
     return this.multipleFieldMode_.options[this.multipleFieldMode_.selectedIndex].value;
 };
 
@@ -193,7 +193,7 @@ alephscanner.OutputItem.prototype.getJsonObject = function() {
         "left_separator" : this.getLeftSeparatorValue(),
         "right_separator" : this.getRightSeparatorValue(),
         //"multiple": this.isRepeatable_(),
-        "type": this.getMultipleFieldModeValue_(),
+        "type": this.getMultipleFieldModeValue(),
         "inside_separator": this.getInsideSeparatorValue()
     };
     return output;
@@ -224,7 +224,7 @@ alephscanner.OutputItem.prototype.createMultipleFieldMode_ = function() {
 };
 
 alephscanner.OutputItem.prototype.onMultipleFieldModeChange_ = function() {
-    var q = this.getMultipleFieldModeValue_();
+    var q = this.getMultipleFieldModeValue();
     if(q == 'first' || q == 'multiRow') {
         this.insideSeparator_.style.visibility = 'hidden';       
     } else {
