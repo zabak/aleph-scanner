@@ -13,13 +13,7 @@ import java.util.Date;
  * @author hanis
  */
 public class Tools {
-    
-    
-    
-    
-    
-    
-    
+
     public static String getFileLastModifiedDate(String path) {
         File file = new File(path);
         Long lastModified = file.lastModified();

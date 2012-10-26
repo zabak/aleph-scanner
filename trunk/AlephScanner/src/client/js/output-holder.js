@@ -82,10 +82,15 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
 //    goog.events.listen(this.repeatableCheckBox_, goog.events.EventType.CLICK, this.onRepeatFieldChange_, false, this);      
 //      
     var downloadButton = goog.dom.createDom('div',{
-        "class" : 'download-button image-button16'
+        "class" : 'download-button image-button22'
     });
     goog.events.listen(downloadButton, goog.events.EventType.CLICK, this.downloadOutput_, false, this);    
 
+
+    var csvButton = goog.dom.createDom('div',{
+        "class" : 'csv-button image-button22'
+    });
+    goog.events.listen(csvButton, goog.events.EventType.CLICK, this.setCsvOutput_, false, this);    
 
     
     this.resultMode_ = goog.dom.createDom('select');
@@ -110,6 +115,7 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
    // goog.dom.appendChild(headerDiv, this.repeatableCheckBox_);
     goog.dom.appendChild(headerDiv, goog.dom.createDom("label", null, goog.dom.createTextNode("Výsledky: ")));
     goog.dom.appendChild(headerDiv, this.resultMode_);
+    goog.dom.appendChild(headerDiv, csvButton);
     goog.dom.appendChild(headerDiv, downloadButton);
     
     
@@ -208,8 +214,34 @@ alephscanner.OutputHolder.prototype.showLoader = function() {
 
 alephscanner.OutputHolder.prototype.downloadOutput_ = function() {
     var data = this.outputTextArea_.value;
-    location.href='data:application/download,' + encodeURIComponent(data);
+    //location.href='data:application/download,' + encodeURIComponent(data);
+    location.href='data:text/csv;charset=UTF-8,' + encodeURIComponent(data);
 }
+
+
+alephscanner.OutputHolder.prototype.setCsvOutput_ = function() {
+    var lastOutput;
+    goog.array.forEach(this.outputItems_,
+        function(output) {
+            if(output.isActive()) {
+                lastOutput = output;
+                output.setRightSeparatorValue('",');
+                output.setLeftSeparatorValue('"');
+                var mode = output.getMultipleFieldModeValue();
+                if(mode == 'single') {
+                    output.setInsideSeparatorValue(', ');                                        
+                } else if(mode == 'multi') {
+                    output.setInsideSeparatorValue('","');        
+                }    
+            }
+        });
+    if(lastOutput) {
+         lastOutput.setRightSeparatorValue('"');        
+    }      
+}
+
+
+
 
 
 //alephscanner.OutputHolder.prototype.setRepeatableRadioVisibility_ = function(visible) {
