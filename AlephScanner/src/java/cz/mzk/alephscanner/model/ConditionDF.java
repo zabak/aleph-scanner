@@ -14,6 +14,8 @@ public class ConditionDF extends Condition {
     private String subfield;
     private String quantifier;
     private int quantity;
+    private String indicator1;
+    private String indicator2;
             
             
     public ConditionDF() {
@@ -74,6 +76,34 @@ public class ConditionDF extends Condition {
      */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    /**
+     * @return the indicator1
+     */
+    public String getIndicator1() {
+        return indicator1;
+    }
+
+    /**
+     * @param indicator1 the indicator1 to set
+     */
+    public void setIndicator1(String indicator1) {
+        this.indicator1 = indicator1;
+    }
+
+    /**
+     * @return the indicator2
+     */
+    public String getIndicator2() {
+        return indicator2;
+    }
+
+    /**
+     * @param indicator2 the indicator2 to set
+     */
+    public void setIndicator2(String indicator2) {
+        this.indicator2 = indicator2;
     }
 
 }

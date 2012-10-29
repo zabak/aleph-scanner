@@ -17,6 +17,8 @@ alephscanner.InputCondition = function() {
     this.field_ = null;  
     this.fieldLabel_ = null;
     this.subfield_ = null;    
+    this.indicator1_ = null;
+    this.indicator2_ = null;
     this.asInputList_ = false;
     this.negation_ = false;
     this.negationButton_ = null;
@@ -107,10 +109,16 @@ alephscanner.InputCondition.prototype.createFieldBox_ = function() {
         "class" : 'dollar-icon image-button16'
     });
     this.subfield_ = goog.dom.createDom("input", {'class' : "subfield-input"});
+    
+    
+    this.indicator1_ = this.createIndicatorComboBox_();
+    this.indicator2_ = this.createIndicatorComboBox_();
     goog.dom.appendChild(fieldBox, this.fieldLabel_);
     goog.dom.appendChild(fieldBox, this.field_);
     goog.dom.appendChild(fieldBox, dollar);
     goog.dom.appendChild(fieldBox, this.subfield_);
+    goog.dom.appendChild(fieldBox, this.indicator1_);
+    goog.dom.appendChild(fieldBox, this.indicator2_);
     return fieldBox;
 };
 
@@ -243,6 +251,30 @@ alephscanner.InputCondition.prototype.createQuantityComboBox_ = function() {
 };
 
 
+alephscanner.InputCondition.prototype.createIndicatorComboBox_ = function() {
+    var indicatorSelect = goog.dom.createDom('select');
+
+    indicatorSelect.appendChild(new goog.dom.createDom('option', {
+        'value':'any',
+        'selected':'selected'
+    },"-"));
+    indicatorSelect.appendChild(new goog.dom.createDom('option', {
+        'value':' '
+    },"#"));    
+    for (var i = 0; i < 10; i++) {
+        indicatorSelect.appendChild(new goog.dom.createDom('option', {
+            'value':''+i
+        },""+i));        
+    }    
+    return indicatorSelect;
+};
+
+
+
+
+
+
+
 
 
 alephscanner.InputCondition.prototype.createExpressionInput_ = function() { 
@@ -294,6 +326,14 @@ alephscanner.InputCondition.prototype.getQuantityValue = function() {
     return parseInt(this.quantitySelect_.options[this.quantitySelect_.selectedIndex].value);
 };
 
+alephscanner.InputCondition.prototype.getIndicator1Value = function() {
+    return this.indicator1_.options[this.indicator1_.selectedIndex].value;
+};
+
+alephscanner.InputCondition.prototype.getIndicator2Value = function() {
+    return this.indicator2_.options[this.indicator2_.selectedIndex].value;
+};
+
 alephscanner.InputCondition.prototype.isActive = function() {
     return this.active_;
 };
@@ -313,7 +353,9 @@ alephscanner.InputCondition.prototype.getExpressionValue = function() {
 alephscanner.InputCondition.prototype.getJsonObject = function() {
     var condition = {
         "field":  this.getFieldValue(),
-        "subfield": this.getSubfieldValue(),
+        "subfield": this.getSubfieldValue(),      
+        "indicator1": this.getIndicator1Value(),
+        "indicator2": this.getIndicator2Value(),
         "negation": this.negation_,
         "relation": this.getRelationValue(),
         "expression" : this.getExpressionValue(),
