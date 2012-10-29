@@ -100,6 +100,7 @@ public class RequestHandler {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
+            System.out.println(request);
             try {
                 if(request.createNewExport()) {
                     os.close();
@@ -148,14 +149,34 @@ public class RequestHandler {
         }
         return list;
     }
+    
+    
+    private static boolean checkConditions(ConditionDF condition, DataField dataField) {                
+        String recordIndicator1 = String.valueOf(dataField.getIndicator1());
+        String recordIndicator2 = String.valueOf(dataField.getIndicator2());
+        String conditionIndicator1 = condition.getIndicator1();
+        String conditionIndicator2 = condition.getIndicator2(); 
+        if(!conditionIndicator1.equals("any") && !recordIndicator1.equals(conditionIndicator1)) {
+            return false;
+        }
+        if(!conditionIndicator2.equals("any") && !recordIndicator2.equals(conditionIndicator2)) {
+            return false;
+        }
+        return true;
+    }
 
     private static boolean checkDataFieldCondition(Record record, ConditionDF condition) {
         List outDataFields = record.getVariableFields(condition.getField());
         int correct = 0;
-        int all = 0;
+        int all = 0;     
+        
         for (Object object : outDataFields) {
             DataField outDataField = (DataField) object;
             if (outDataField != null) {
+                if(!checkConditions(condition, outDataField)) {
+                    continue;
+                }
+                
                 Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
                 if (outDataSubfield != null) {
                     all++;
@@ -167,6 +188,7 @@ public class RequestHandler {
                         correct++;                        
                     } 
                 }
+                
             }
         }        
         if(condition.getQuantifier().equals(Condition.AT_LEAST_ONE)) {

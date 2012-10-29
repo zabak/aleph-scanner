@@ -41,6 +41,8 @@ public class JsonParser {
                 condition.setRelation(relation);
                 condition.setNegation(false);
             }
+            condition.setIndicator1(conditionObject.getString("indicator1"));
+            condition.setIndicator2(conditionObject.getString("indicator2"));
             condition.setExpression(conditionObject.getString("expression"));
             condition.setQuantifier(conditionObject.getString("quantifier"));
             condition.setQuantity(conditionObject.getInt("quantity"));
