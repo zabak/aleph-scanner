@@ -77,6 +77,7 @@ public class JsonParser {
             output.setLeftSeparator(outputObject.getString("left_separator"));
             output.setRightSeparator(outputObject.getString("right_separator"));
             output.setType(outputObject.getString("type"));
+            output.setContentMode(outputObject.getString("content"));
             output.setInsideSeparator(outputObject.getString("inside_separator"));
             request.addOutput(output);
         }        

@@ -127,8 +127,8 @@ public class RequestHandler {
     
 
     private static List<String> getMultipleOutputs(Record record, Output output) {
-        List<String> list = new ArrayList<String>();
-        if (output.getSubfield().isEmpty()) {
+        List<String> list = new ArrayList<String>();        
+        if (output.getSubfield().isEmpty() && output.getContentMode().equals(Output.CONTENT_FIELD)) {
             if (!output.getField().isEmpty()) {
                 ControlField cField = (ControlField) record.getVariableField(output.getField());
                 if (cField != null) {
@@ -140,9 +140,17 @@ public class RequestHandler {
             for (Object object : outDataFields) {
                 DataField outDataField = (DataField) object;
                 if (outDataField != null) {
-                    Subfield outDataSubfield = outDataField.getSubfield(output.getSubfield().charAt(0));
-                    if (outDataSubfield != null) {
-                        list.add(outDataSubfield.getData());
+                    if (output.getContentMode().equals(Output.CONTENT_INDICATOR1)) {
+                        String indicator = String.valueOf(outDataField.getIndicator1());
+                        list.add(indicator.replace(' ', '#'));
+                    } else if (output.getContentMode().equals(Output.CONTENT_INDICATOR2)) {
+                        String indicator = String.valueOf(outDataField.getIndicator2());
+                        list.add(indicator.replace(' ', '#'));
+                    } else {
+                        Subfield outDataSubfield = outDataField.getSubfield(output.getSubfield().charAt(0));
+                        if (outDataSubfield != null) {
+                            list.add(outDataSubfield.getData());
+                        }
                     }
                 }
             }

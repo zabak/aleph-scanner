@@ -16,6 +16,7 @@ alephscanner.OutputItem = function() {
     this.field_ = null;    
     this.subfield_ = null;    
     this.multipleFieldMode_ = null;  
+    this.contentMode_ = null;
     this.createContainer_();    
 
 };
@@ -39,6 +40,7 @@ alephscanner.OutputItem.prototype.createContainer_ = function() {
     this.createRightSeparatorInput_();    
     this.createMultipleFieldMode_();
     this.createInsideSeparatorInput_();
+    this.createContentMode_();
     
   //  this.createRepeatableRadio_();                   
 };
@@ -99,6 +101,7 @@ alephscanner.OutputItem.prototype.createLeftSeparatorInput_ = function() {
 alephscanner.OutputItem.prototype.createInsideSeparatorInput_ = function() {
     this.insideSeparator_ = goog.dom.createDom("input", {'class' : 'output-separator'});
     this.insideSeparator_.style.visibility = 'hidden';
+    this.insideSeparator_.style.display = 'none';
     goog.dom.appendChild(this.container_, this.insideSeparator_);
 };
 
@@ -182,6 +185,10 @@ alephscanner.OutputItem.prototype.getMultipleFieldModeValue = function() {
     return this.multipleFieldMode_.options[this.multipleFieldMode_.selectedIndex].value;
 };
 
+alephscanner.OutputItem.prototype.getContentModeValue = function() {
+    return this.contentMode_.options[this.contentMode_.selectedIndex].value;
+};
+
 alephscanner.OutputItem.prototype.isActive = function() {
     return this.active_;
 };
@@ -192,7 +199,7 @@ alephscanner.OutputItem.prototype.getJsonObject = function() {
         "subfield": this.getSubfieldValue(),
         "left_separator" : this.getLeftSeparatorValue(),
         "right_separator" : this.getRightSeparatorValue(),
-        //"multiple": this.isRepeatable_(),
+        "content": this.getContentModeValue(),
         "type": this.getMultipleFieldModeValue(),
         "inside_separator": this.getInsideSeparatorValue()
     };
@@ -223,13 +230,36 @@ alephscanner.OutputItem.prototype.createMultipleFieldMode_ = function() {
     goog.dom.appendChild(this.container_, this.multipleFieldMode_);
 };
 
+alephscanner.OutputItem.prototype.createContentMode_ = function() {
+    this.contentMode_ = goog.dom.createDom('select');
+    var fieldOption = goog.dom.createDom('option', {
+        'selected':'selected',
+        'value':'field'
+    },"Obsah");    
+    var indicator1Option = goog.dom.createDom('option', {
+        'value':'indicator1'
+    },"1. indikátor");
+    var indicator2Option = goog.dom.createDom('option', {
+        'value':'indicator2'
+    },"2. indikátor");   
+    this.contentMode_.appendChild(fieldOption);
+    this.contentMode_.appendChild(indicator1Option);
+    this.contentMode_.appendChild(indicator2Option);
+    goog.dom.appendChild(this.container_, this.contentMode_);
+};
+
+
+
 alephscanner.OutputItem.prototype.onMultipleFieldModeChange_ = function() {
     var q = this.getMultipleFieldModeValue();
     if(q == 'first' || q == 'multiRow') {
-        this.insideSeparator_.style.visibility = 'hidden';       
+        this.insideSeparator_.style.visibility = 'hidden';  
+        this.insideSeparator_.style.display = 'none';
+        
     } else {
         this.insideSeparator_.style.visibility = 'visible'; 
-    }
+        this.insideSeparator_.style.display = 'inline-block';
+    }    
 }
 
 
