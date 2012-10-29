@@ -18,6 +18,12 @@ public class Output {
     public static final String TYPE_SINGLE_CELL = "single";
     public static final String TYPE_MULTI_CELL = "multi";
     public static final String TYPE_MULTI_ROW = "multiRow";    
+    
+    
+    public static final String CONTENT_FIELD = "field";        
+    public static final String CONTENT_INDICATOR1 = "indicator1";        
+    public static final String CONTENT_INDICATOR2 = "indicator2";        
+    
    
     private Map<Integer, List<String>> data;
     
@@ -27,6 +33,7 @@ public class Output {
     private String rightSeparator;
     private String insideSeparator;
     private String type;
+    private String contentMode;
     
     private int recordCounter;
     private int dataCounter;
@@ -208,6 +215,20 @@ public class Output {
 
     public boolean isMultirowOutput() {
         return TYPE_MULTI_ROW.equals(type);
+    }
+
+    /**
+     * @return the contentMode
+     */
+    public String getContentMode() {
+        return contentMode;
+    }
+
+    /**
+     * @param contentMode the contentMode to set
+     */
+    public void setContentMode(String contentMode) {
+        this.contentMode = contentMode;
     }
     
 }
