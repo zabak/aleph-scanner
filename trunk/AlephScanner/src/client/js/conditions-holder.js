@@ -119,12 +119,15 @@ alephscanner.ConditionsHolder.prototype.createBaseChooser_ = function() {
     });
     goog.events.listen(InportButton, goog.events.EventType.CLICK, this.showInputDialog_, false, this);
     
-    
+     var showJsonButton = goog.dom.createDom('div',{
+        "class" : 'show-json-button'
+    });
+    goog.events.listen(showJsonButton, goog.events.EventType.CLICK, this.showJsonDialog_, false, this);    
 
     goog.dom.appendChild(baseDiv, label);
     goog.dom.appendChild(baseDiv, this.baseChooser_)
     goog.dom.appendChild(baseDiv, InportButton);
-    
+    goog.dom.appendChild(baseDiv, showJsonButton);
     
     goog.dom.appendChild(baseDiv, createExportButton);
     goog.dom.appendChild(this.container_, baseDiv);
@@ -182,7 +185,7 @@ alephscanner.ConditionsHolder.prototype.showInputDialog_ = function() {
     var context = this;
     var dialog = new goog.ui.Dialog();
     dialog.setContent('<h2>Zadejte importní JSON</h2>' +
-        '<textarea id="import-area" style="height: 500px;width: 490px;margin: 0px;"></textarea>');
+        '<textarea id="import-area" style="height: 500px;width: 600px;margin: 0px;"></textarea>');
     dialog.setTitle('Import');
     dialog.setButtonSet(goog.ui.Dialog.ButtonSet.OK_CANCEL);
     goog.events.listen(dialog, goog.ui.Dialog.EventType.SELECT, function(e) {
@@ -193,6 +196,17 @@ alephscanner.ConditionsHolder.prototype.showInputDialog_ = function() {
       } 
     });
     dialog.setVisible(true);
+};
+
+
+alephscanner.ConditionsHolder.prototype.showJsonDialog_ = function() {  
+    var dialog = new goog.ui.Dialog();
+    dialog.setContent('<h2>JSON export</h2>' +
+        '<textarea id="export-text-area" readonly style="height: 500px;width: 600px;margin: 0px;"></textarea>');
+    dialog.setTitle('Export');
+    dialog.setButtonSet(goog.ui.Dialog.ButtonSet.OK);           
+    dialog.setVisible(true);
+    goog.dom.getElement("export-text-area").innerHTML=goog.json.serialize(this.requestHandler_.createJsonObject_());    
 };
 
 
