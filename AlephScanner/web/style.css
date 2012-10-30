@@ -345,10 +345,20 @@ input {
       height: 24px;
       width: 24px;
       margin-right: 5px;
-      margin-left: 10px;
+      margin-left: 5px;
       vertical-align: middle;
       display: inline-block;        
 }
+
+.show-json-button {
+      background-image: url(show_json-icon.png);
+      height: 24px;
+      width: 24px;
+      margin-right: 5px;
+      vertical-align: middle;
+      display: inline-block;        
+}
+
 
 .dollar-icon {
      background-image: url(dollar-icon.png);
