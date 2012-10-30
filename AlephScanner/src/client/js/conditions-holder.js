@@ -3,6 +3,7 @@ goog.provide('alephscanner.ConditionsHolder');
 goog.require('alephscanner.InputCondition');
 goog.require('alephscanner.ControlCondition');
 goog.require('goog.ui.Prompt');
+goog.require('goog.ui.Dialog');
 
 alephscanner.ConditionsHolder = function(requestHandler) {
     this.requestHandler_ = requestHandler;
@@ -15,6 +16,14 @@ alephscanner.ConditionsHolder = function(requestHandler) {
 };
 
 
+alephscanner.ConditionsHolder.prototype.removeAllConditions = function() {
+goog.dom.removeChildren(this.conditionsList_);
+    this.conditions_ = []; 
+    this.conditionsCF_ = []; 
+};
+
+
+
 alephscanner.ConditionsHolder.prototype.createContainer_ = function() {    
     this.container_ = goog.dom.createDom("div", {
         'class' : 'input'
@@ -22,7 +31,7 @@ alephscanner.ConditionsHolder.prototype.createContainer_ = function() {
     this.createBaseChooser_();    
     this.createConditionList_();
     this.createControllPanel_();    
-    this.addConditionDF_();
+    this.addConditionDF();
 
 };
 
@@ -44,7 +53,7 @@ alephscanner.ConditionsHolder.prototype.createControllPanel_ = function() {
     var addDataFieldButton = goog.dom.createDom('div',{
         "class" : 'image-button16 add-df-button'
     });
-    goog.events.listen(addDataFieldButton, goog.events.EventType.CLICK, this.addConditionDF_, false, this);
+    goog.events.listen(addDataFieldButton, goog.events.EventType.CLICK, this.addConditionDF, false, this);
     goog.dom.appendChild(controllPanelDiv, addDataFieldButton);
     
     var addControlFieldButton = goog.dom.createDom('div',{
@@ -97,24 +106,50 @@ alephscanner.ConditionsHolder.prototype.createBaseChooser_ = function() {
     
 
     this.baseChooser_ = goog.dom.createDom('select');    
-    goog.dom.appendChild(baseDiv, this.baseChooser_);
+
+
 
     var createExportButton = goog.dom.createDom('div',{
         "class" : 'create-export-button'
     });
-    goog.dom.appendChild(baseDiv, createExportButton);
     goog.events.listen(createExportButton, goog.events.EventType.CLICK, this.onCreateExport_, false, this);
+    
+     var InportButton = goog.dom.createDom('div',{
+        "class" : 'import-button'
+    });
+    goog.events.listen(InportButton, goog.events.EventType.CLICK, this.showInputDialog_, false, this);
+    
+    
+
+    goog.dom.appendChild(baseDiv, label);
     goog.dom.appendChild(baseDiv, this.baseChooser_)
-
-
+    goog.dom.appendChild(baseDiv, InportButton);
+    
+    
+    goog.dom.appendChild(baseDiv, createExportButton);
     goog.dom.appendChild(this.container_, baseDiv);
 };
 
-alephscanner.ConditionsHolder.prototype.addConditionDF_ = function() {  
+alephscanner.ConditionsHolder.prototype.addConditionDF = function() {  
+    var inputCondition = new alephscanner.InputCondition();    
+    inputCondition.insert(this.conditionsList_);    
+    goog.array.insert(this.conditions_, inputCondition); 
+};
+
+alephscanner.ConditionsHolder.prototype.importConditionsDF = function(data) {  
     var inputCondition = new alephscanner.InputCondition();    
     inputCondition.insert(this.conditionsList_);    
     goog.array.insert(this.conditions_, inputCondition);
+    inputCondition.setAllValues(data);
 };
+
+alephscanner.ConditionsHolder.prototype.importConditionsCF = function(data) {  
+    var controlCondition = new alephscanner.ControlCondition();    
+    controlCondition.insert(this.conditionsList_);    
+    goog.array.insert(this.conditionsCF_, controlCondition);
+    controlCondition.setAllValues(data);
+};
+
 
 
 alephscanner.ConditionsHolder.prototype.addConditionCF_ = function() {  
@@ -130,7 +165,7 @@ alephscanner.ConditionsHolder.prototype.onCreateExport_ = function() {
         'Název',
         'Zadejte název pro nový export.', function(response) {
             if (response != null && response != '') {
-                context.requestHandler_.handleRequestWithNewExport(response);
+                context.requestHandler_.handleRequestWithNewExport(response);                
             }
         }
     );
@@ -138,7 +173,30 @@ prompt.setVisible(true);
 };
 
 
-  
+alephscanner.ConditionsHolder.prototype.setBaseValue = function(value) {    
+    this.baseChooser_.value = value;
+};
+
+
+alephscanner.ConditionsHolder.prototype.showInputDialog_ = function() {  
+    var context = this;
+    var dialog = new goog.ui.Dialog();
+    dialog.setContent('<h2>Zadejte importní JSON</h2>' +
+        '<textarea id="import-area" style="height: 500px;width: 490px;margin: 0px;"></textarea>');
+    dialog.setTitle('Import');
+    dialog.setButtonSet(goog.ui.Dialog.ButtonSet.OK_CANCEL);
+    goog.events.listen(dialog, goog.ui.Dialog.EventType.SELECT, function(e) {
+      if(e.key == 'ok') {
+          var data = goog.json.parse(goog.dom.getElement('import-area').value);
+          context.requestHandler_.setAllFromImport(data);
+          console.log(data);          
+      } 
+    });
+    dialog.setVisible(true);
+};
+
+
+
 alephscanner.ConditionsHolder.prototype.insert = function(container) {
     goog.dom.appendChild(container, this.container_);
 };  
@@ -169,3 +227,5 @@ alephscanner.ConditionsHolder.prototype.getConditionCFSpecArray = function() {
 alephscanner.ConditionsHolder.prototype.getBaseValue = function() {
     return this.baseChooser_.options[this.baseChooser_.selectedIndex].value;
 };  
+
+

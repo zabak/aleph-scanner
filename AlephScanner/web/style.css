@@ -168,6 +168,12 @@ body,input {
     margin: 0 0 0 0;
 }
 
+textarea {
+    background: #def;
+    color: #000;   
+}
+
+
 #input-panel {
     position: relative;
     float: left;
@@ -334,6 +340,15 @@ input {
       display: inline-block;        
 }
 
+.import-button {
+      background-image: url(import-icon.png);
+      height: 24px;
+      width: 24px;
+      margin-right: 5px;
+      margin-left: 10px;
+      vertical-align: middle;
+      display: inline-block;        
+}
 
 .dollar-icon {
      background-image: url(dollar-icon.png);
@@ -402,7 +417,7 @@ input {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 300px;
+    /*width: 300px;*/
     background-color: #AAF;
     border: 2px solid #99c0ff;
   }
