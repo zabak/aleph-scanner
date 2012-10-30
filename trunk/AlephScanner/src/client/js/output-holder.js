@@ -32,6 +32,13 @@ alephscanner.OutputHolder.prototype.createContainer_ = function() {
 };
 
 
+alephscanner.OutputHolder.prototype.removeAllOutputs = function() {
+    goog.dom.removeChildren(this.outputItemsPanel_);
+    this.outputItems_ = []; 
+    this.outputTextArea_.innerHTML="";
+};
+
+
 alephscanner.OutputHolder.prototype.createOutputItemsPanel_ = function() {
     this.outputItemsPanel_ = goog.dom.createDom("div", {
         'class' : 'output-items-container'
@@ -143,11 +150,10 @@ alephscanner.OutputHolder.prototype.createOutputPanel_ = function() {
     
     var attributes = {
         'wrap' : "off",
-        'class' : "output-text-area",
-        'readonly' : "readonly"
+        'class' : "output-text-area"
     };
-    this.outputTextArea_ = goog.dom.createDom("textarea", attributes);
-
+    this.outputTextArea_ = goog.dom.createDom("textarea", attributes);    
+    this.outputTextArea_.disabled="disabled";
     var loaderAttributes = {
         'id' : "loader",
         'src' : "loader.gif"
@@ -166,6 +172,13 @@ alephscanner.OutputHolder.prototype.addOutputItem_ = function() {
     var output = new alephscanner.OutputItem();//this.repeatField());
     output.insert(this.outputItemsPanel_);
     goog.array.insert(this.outputItems_, output);
+};
+
+alephscanner.OutputHolder.prototype.importOutputItem_ = function(data) {  
+    var output = new alephscanner.OutputItem();
+    output.insert(this.outputItemsPanel_);
+    goog.array.insert(this.outputItems_, output);
+    output.setAllValues(data);
 };
   
   
@@ -186,6 +199,10 @@ alephscanner.OutputHolder.prototype.showResult = function(response) {
     
 alephscanner.OutputHolder.prototype.getResultModeValue = function() {
     return this.resultMode_.options[this.resultMode_.selectedIndex].value;
+}; 
+
+alephscanner.OutputHolder.prototype.setResultModeValue = function(value) {
+    this.resultMode_.value = value;
 };    
  
 
@@ -239,6 +256,10 @@ alephscanner.OutputHolder.prototype.setCsvOutput_ = function() {
          lastOutput.setRightSeparatorValue('"');        
     }      
 }
+
+
+
+
 
 
 

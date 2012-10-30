@@ -189,6 +189,27 @@ alephscanner.OutputItem.prototype.getContentModeValue = function() {
     return this.contentMode_.options[this.contentMode_.selectedIndex].value;
 };
 
+alephscanner.OutputItem.prototype.setContentModeValue = function(value) {
+    this.contentMode_.value=value;
+};
+
+alephscanner.OutputItem.prototype.setMultipleFieldModeValue = function(value) {
+    this.multipleFieldMode_.value=value;
+};
+
+alephscanner.OutputItem.prototype.setAllValues = function(data) {
+    this.setLeftSeparatorValue(data.left_separator);
+    this.setRightSeparatorValue(data.right_separator);
+    this.setInsideSeparatorValue(data.inside_separator);
+    this.setContentModeValue(data.content);    
+    this.setMultipleFieldModeValue(data.type);
+    this.setFieldValue(data.field);
+    this.setSubfieldValue(data.subfield);
+    this.onMultipleFieldModeChange_();
+};
+
+
+
 alephscanner.OutputItem.prototype.isActive = function() {
     return this.active_;
 };
@@ -254,8 +275,7 @@ alephscanner.OutputItem.prototype.onMultipleFieldModeChange_ = function() {
     var q = this.getMultipleFieldModeValue();
     if(q == 'first' || q == 'multiRow') {
         this.insideSeparator_.style.visibility = 'hidden';  
-        this.insideSeparator_.style.display = 'none';
-        
+        this.insideSeparator_.style.display = 'none';        
     } else {
         this.insideSeparator_.style.visibility = 'visible'; 
         this.insideSeparator_.style.display = 'inline-block';

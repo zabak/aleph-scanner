@@ -136,6 +136,11 @@ alephscanner.ControlCondition.prototype.getRelationValue = function() {
     return this.relationSelect_.options[this.relationSelect_.selectedIndex].value;
 };
 
+alephscanner.ControlCondition.prototype.setRelationValue = function(value) {
+    this.relationSelect_.value = value;
+};
+
+
 
 alephscanner.ControlCondition.prototype.isActive = function() {
     return this.active_;
@@ -144,6 +149,10 @@ alephscanner.ControlCondition.prototype.isActive = function() {
 alephscanner.ControlCondition.prototype.getExpressionValue = function() {
         expression = this.expression_.value;    
     return expression.split('\n').join('@@');    
+};
+
+alephscanner.ControlCondition.prototype.setExpressionValue = function(value) {
+    this.expression_.value = value.split('@@').join('\n');    
 };
 
 
@@ -156,4 +165,13 @@ alephscanner.ControlCondition.prototype.getJsonObject = function() {
         "expression" : this.getExpressionValue()
     };
     return condition;
+};
+
+
+alephscanner.ControlCondition.prototype.setAllValues = function(data) {
+    this.setFieldValue(data.field);
+    this.setLetterFromValue(data.from);
+    this.setLetterToValue(data.to);
+    this.setRelationValue(data.relation);    
+    this.setExpressionValue(data.expression);  
 };

@@ -299,7 +299,7 @@ alephscanner.InputCondition.prototype.insert = function(container) {
 };
 
 alephscanner.InputCondition.prototype.setFieldValue = function(value) {
-    this.field_.value = vaule;
+    this.field_.value = value;
 };
 
 alephscanner.InputCondition.prototype.getFieldValue = function() {
@@ -307,7 +307,7 @@ alephscanner.InputCondition.prototype.getFieldValue = function() {
 };
 
 alephscanner.InputCondition.prototype.setSubfieldValue = function(value) {
-    this.subfield_.value = vaule;
+    this.subfield_.value = value;
 };
                                       
 alephscanner.InputCondition.prototype.getSubfieldValue = function() {
@@ -318,21 +318,44 @@ alephscanner.InputCondition.prototype.getRelationValue = function() {
     return this.relationSelect_.options[this.relationSelect_.selectedIndex].value;
 };
 
+alephscanner.InputCondition.prototype.setRelationValue = function(value) {
+    this.relationSelect_.value = value;
+};
+
 alephscanner.InputCondition.prototype.getQuantifierValue = function() {
     return this.quantifierSelect_.options[this.quantifierSelect_.selectedIndex].value;
+};
+
+alephscanner.InputCondition.prototype.setQuantifierValue = function(value) {
+    this.quantifierSelect_.value = value;
 };
 
 alephscanner.InputCondition.prototype.getQuantityValue = function() {
     return parseInt(this.quantitySelect_.options[this.quantitySelect_.selectedIndex].value);
 };
 
+alephscanner.InputCondition.prototype.setQuantityValue = function(value) {
+    this.quantitySelect_.value = value;
+};
+
 alephscanner.InputCondition.prototype.getIndicator1Value = function() {
     return this.indicator1_.options[this.indicator1_.selectedIndex].value;
+};
+
+alephscanner.InputCondition.prototype.setIndicator1Value = function(value) {
+    this.indicator1_.value = value;
 };
 
 alephscanner.InputCondition.prototype.getIndicator2Value = function() {
     return this.indicator2_.options[this.indicator2_.selectedIndex].value;
 };
+
+alephscanner.InputCondition.prototype.setIndicator2Value = function(value) {
+    this.indicator2_.value = value;
+};
+
+
+
 
 alephscanner.InputCondition.prototype.isActive = function() {
     return this.active_;
@@ -345,9 +368,20 @@ alephscanner.InputCondition.prototype.getExpressionValue = function() {
     } else {
         expression = this.expression_.value;
     }
-    return expression.split('\n').join('@@');
-    
+    return expression.split('\n').join('@@');    
 };
+
+
+alephscanner.InputCondition.prototype.setExpressionValue = function(value) {
+    if(this.asInputList_) {
+        this.expressionList_.value = value.split('@@').join('\n');
+    } else {
+        this.expression_.value = value;
+    }
+};
+
+
+
 
 
 alephscanner.InputCondition.prototype.getJsonObject = function() {
@@ -387,9 +421,23 @@ alephscanner.InputCondition.prototype.onQuantityChange_ = function() {
     } else {
         this.setFiledLabelValue_("pole");    
     }
-}
+};
 
 alephscanner.InputCondition.prototype.setFiledLabelValue_ = function(value) {
     goog.dom.removeChildren(this.fieldLabel_);
     this.fieldLabel_.appendChild(document.createTextNode(value));
-}
+};
+
+alephscanner.InputCondition.prototype.setAllValues = function(data) {
+    this.setFieldValue(data.field);
+    this.setSubfieldValue(data.subfield);
+    this.setRelationValue(data.relation);
+    this.setQuantifierValue(data.quantifier);    
+    this.setQuantityValue(data.quantity);
+    this.setIndicator1Value(data.indicator1);
+    this.setIndicator2Value(data.indicator2);
+    if (data.expression.indexOf("@@") != -1 && !this.asInputList_) {
+        this.switchInputType_();            
+    }
+    this.setExpressionValue(data.expression);    
+};

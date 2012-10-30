@@ -88,3 +88,25 @@ alephscanner.RequestHandler.prototype.setInitialData_ = function(url) {
       context.conditionsHolder_.setBasis_(response.basis);
   });     
 };
+
+
+alephscanner.RequestHandler.prototype.setAllFromImport = function(data) {    
+    this.conditionsHolder_.setBaseValue(data.base);
+    this.conditionsHolder_.removeAllConditions();
+    this.outputHolder_.removeAllOutputs();
+    this.outputHolder_.setResultModeValue(data.result_mode);
+    for(var i = 0; i < data.df_conditions.length; i++) {
+        this.conditionsHolder_.importConditionsDF(data.df_conditions[i]);      
+    }
+    for(var i = 0; i < data.cf_conditions.length; i++) {
+        this.conditionsHolder_.importConditionsCF(data.cf_conditions[i]);      
+    }  
+    for(var i = 0; i < data.outputs.length; i++) {
+        this.outputHolder_.importOutputItem_(data.outputs[i]);      
+    }    
+};
+
+
+
+
+
