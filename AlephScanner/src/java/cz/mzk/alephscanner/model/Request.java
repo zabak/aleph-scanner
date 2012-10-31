@@ -21,7 +21,7 @@ public class Request {
     public static final String MODE_ALL = "all";
     public static final String MODE_DISTINCT = "distinct";
     public static final String MODE_FREQUENCY = "frequency";
-    
+    public static final String MODE_RECORD = "record";
     
     private String base;
     private List<ConditionDF> dataFieldConditions;

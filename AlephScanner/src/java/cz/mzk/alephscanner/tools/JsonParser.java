@@ -11,7 +11,6 @@ import cz.mzk.alephscanner.model.Request;
 import cz.mzk.alephscanner.model.Response;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.dom4j.DocumentException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +25,9 @@ public class JsonParser {
         Request request = new Request();
 
         JSONObject requestObject = new JSONObject(json);
+        
+        //System.out.println(requestObject);
+        
         request.setBase(requestObject.getString("base"));
         JSONArray conditionsArray = requestObject.getJSONArray("df_conditions");
         for (int i = 0; i < conditionsArray.length(); i++) {
@@ -61,8 +63,16 @@ public class JsonParser {
                 condition.setRelation(relation);
                 condition.setNegation(false);
             }
-            condition.setFrom(conditionObject.getInt("from"));        
-            condition.setTo(conditionObject.getInt("to")); 
+            try {
+                condition.setFrom(conditionObject.getInt("from"));        
+            } catch (JSONException ex) {
+                condition.setFrom(-1);        
+            }
+            try {
+                condition.setTo(conditionObject.getInt("to")); 
+            } catch (JSONException ex) {
+                condition.setTo(-1);        
+            }             
             condition.setExpression(conditionObject.getString("expression"));
             request.addControlFieldCondition(condition);
         }
@@ -90,7 +100,12 @@ public class JsonParser {
 
     public static JSONObject getResponseJson(Response response) {
         JSONObject jsonObject = new JSONObject();
-        JSONArray resultListArray = new JSONArray(response.getResultList());
+        JSONArray resultListArray = null;
+        if(response.getRequest().getMode().equals(Request.MODE_RECORD)) {
+            resultListArray = new JSONArray(response.getFullRecordsList());
+        } else {
+            resultListArray = new JSONArray(response.getResultList());
+        }
         try {
             jsonObject.append("results", resultListArray);
             jsonObject.append("header", response.getRequest().writeOutputHeader());
