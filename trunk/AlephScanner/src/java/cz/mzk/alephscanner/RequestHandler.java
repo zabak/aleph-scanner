@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -82,13 +83,19 @@ public class RequestHandler {
                     if (!check) {
                         continue;
                     }
-                    for (Output output : request.getOutputs()) {
-                        List<String> list = getMultipleOutputs(record, output);
-                        output.addData(matchedRecordsCounter, list);
+                    if(request.getMode().equals(Request.MODE_RECORD)) {
+                        response.addToGullRecordsList(record.toString());
+                    } else {
+                        for (Output output : request.getOutputs()) {
+                            List<String> list = getMultipleOutputs(record, output);
+                            output.addData(matchedRecordsCounter, list);
+                        }
                     }
                     if(request.createNewExport()) {
                         writer.write(record);
                     }
+                    
+                   // System.out.println(record.toString());
                     
                     matchedRecordsCounter++;
                 } catch (MarcException e) {
@@ -212,12 +219,22 @@ public class RequestHandler {
         }
         return false;        
     }
+    
+    
+    private static String stripAccents(String s) {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        return s;
+    }
+    
 
     private static boolean checkControlFieldCondition(Record record, ConditionCF condition) {
-        ControlField cField = (ControlField) record.getVariableField(condition.getField());
+        ControlField cField = (ControlField) record.getVariableField(condition.getField());        
         if (cField != null) {
             String content = cField.getData();
-            if (content.length() >= condition.getTo()) {
+            if(condition.getFrom() == -1 || condition.getTo() == -1) {
+                return checkSingleDataSubfield(condition, content);
+            } else if (content.length() >= condition.getTo()) {
                 return checkSingleDataSubfield(condition, content.substring(condition.getFrom(), condition.getTo() + 1));
             }
         }
@@ -251,4 +268,22 @@ public class RequestHandler {
         }        
         return condition.isNegation();
     }
+    
+    
+    
+    
+    public static void main(String[] args) {
+        System.out.println(RequestHandler.stripAccents("+ěščřžýáíéůůús"));
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

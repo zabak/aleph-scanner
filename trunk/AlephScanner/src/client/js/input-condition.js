@@ -78,8 +78,10 @@ alephscanner.InputCondition.prototype.createContainer_ = function() {
     goog.dom.appendChild(noExpressionContainer, this.createRelationComboBox_());
     goog.dom.appendChild(noExpressionContainer, this.createSwitchInputTypeButton_());  
     
-    goog.dom.appendChild(this.container_, this.createExpressionInput_());    
-        
+    goog.dom.appendChild(this.container_, this.createExpressionInput_());  
+       // goog.dom.appendChild(this.container_, this.createAdvancedBox_());  
+
+    
     goog.dom.appendChild(this.container_, this.createListInputTextArea_());  
   //  this.createListInputTextArea_()  
 };
@@ -98,6 +100,31 @@ alephscanner.InputCondition.prototype.createRemoveButton_ = function() {
     });
     goog.events.listen(removeButton, goog.events.EventType.CLICK, this.removeContainer_, false, this);
     return removeButton;
+};
+
+
+
+alephscanner.InputCondition.prototype.createAdvancedBox_ = function() {
+    
+    var fieldBox = goog.dom.createDom("div",{"style": "clear:both; border-top: 2px solid #444; margin-top:3px;padding-left:25px"});
+    
+    this.fieldLabel_ = goog.dom.createDom("label", null, "Pole");   
+    this.field_ = goog.dom.createDom("input" );
+    var dollar = goog.dom.createDom('div',{
+        "class" : 'dollar-icon image-button16'
+    });
+    this.subfield_ = goog.dom.createDom("input");
+    
+    
+    this.indicator1_ = this.createIndicatorComboBox_();
+    this.indicator2_ = this.createIndicatorComboBox_();
+    goog.dom.appendChild(fieldBox, this.fieldLabel_);
+    goog.dom.appendChild(fieldBox, this.field_);
+    goog.dom.appendChild(fieldBox, dollar);
+    goog.dom.appendChild(fieldBox, this.subfield_);
+    goog.dom.appendChild(fieldBox, this.indicator1_);
+    goog.dom.appendChild(fieldBox, this.indicator2_);
+    return fieldBox;
 };
 
 
@@ -188,7 +215,7 @@ alephscanner.InputCondition.prototype.createQuantifierComboBox_ = function() {
     var exOption = goog.dom.createDom('option', {
         'selected':'selected',
         'value':'ex'
-    },"Alespoň jedno");
+    },"Alespoň jedno"); //Alespoň jedno
     var allOption = goog.dom.createDom('option', {
         'value':'all'
     },"Všechna");
@@ -432,7 +459,8 @@ alephscanner.InputCondition.prototype.setAllValues = function(data) {
     this.setFieldValue(data.field);
     this.setSubfieldValue(data.subfield);
     this.setRelationValue(data.relation);
-    this.setQuantifierValue(data.quantifier);    
+    this.setQuantifierValue(data.quantifier); 
+    this.onQuantifierChange_();
     this.setQuantityValue(data.quantity);
     this.setIndicator1Value(data.indicator1);
     this.setIndicator2Value(data.indicator2);

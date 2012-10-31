@@ -24,8 +24,10 @@ public class Response {
     private int allRecordsCount;
     private int wrongRecordsCount;
     private int matchedRecordsCount;
+    private List<String> fullRecordsList;
 
-    public Response() {
+    public Response() {   
+        fullRecordsList = new ArrayList<String>();
     }
 
     public List<String> getResultList() {
@@ -143,4 +145,17 @@ public class Response {
     public void setMatchedRecordsCount(int matchedRecordsCount) {
         this.matchedRecordsCount = matchedRecordsCount;
     }
+    
+    
+    public void addToGullRecordsList(String record) {
+        fullRecordsList.add(record);
+    }
+    
+    public List<String> getFullRecordsList() {
+        return fullRecordsList;
+    }
+    
 }
+
+
+

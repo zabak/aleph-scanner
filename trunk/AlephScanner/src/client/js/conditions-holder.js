@@ -12,7 +12,9 @@ alephscanner.ConditionsHolder = function(requestHandler) {
     this.container_ = null;
     this.baseChooser_ = null; 
     this.conditionsList_ = null;  
+    this.jsonDialog_ = null;  
     this.createContainer_();
+    
 };
 
 
@@ -200,12 +202,15 @@ alephscanner.ConditionsHolder.prototype.showInputDialog_ = function() {
 
 
 alephscanner.ConditionsHolder.prototype.showJsonDialog_ = function() {  
-    var dialog = new goog.ui.Dialog();
-    dialog.setContent('<h2>JSON export</h2>' +
-        '<textarea id="export-text-area" readonly style="height: 500px;width: 600px;margin: 0px;"></textarea>');
-    dialog.setTitle('Export');
-    dialog.setButtonSet(goog.ui.Dialog.ButtonSet.OK);           
-    dialog.setVisible(true);
+    if(!this.jsonDialog_) {
+        this.jsonDialog_= new goog.ui.Dialog();
+        this.jsonDialog_.setContent('<h2>JSON export</h2>' +
+            '<textarea id="export-text-area" readonly style="height: 500px;width: 600px;margin: 0px;"></textarea>');
+        this.jsonDialog_.setTitle('Export');
+        this.jsonDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.OK); 
+    }          
+    this.jsonDialog_.setVisible(true);
+    //console.log(goog.json.serialize(this.requestHandler_.createJsonObject_()));
     goog.dom.getElement("export-text-area").innerHTML=goog.json.serialize(this.requestHandler_.createJsonObject_());    
 };
 
