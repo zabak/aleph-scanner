@@ -243,10 +243,14 @@ alephscanner.OutputItem.prototype.createMultipleFieldMode_ = function() {
     var multiRowOption = goog.dom.createDom('option', {
         'value':'multiRow'
     },"Více řádků"); 
+//    var hackOption = goog.dom.createDom('option', {
+//        'value':'hack'
+//    },":)");     
     this.multipleFieldMode_.appendChild(firstOption);
     this.multipleFieldMode_.appendChild(singleOption);
     this.multipleFieldMode_.appendChild(multiOption);
     this.multipleFieldMode_.appendChild(multiRowOption);
+//    this.multipleFieldMode_.appendChild(hackOption);    
     goog.events.listen(this.multipleFieldMode_, goog.events.EventType.CHANGE, this.onMultipleFieldModeChange_, false, this);
     goog.dom.appendChild(this.container_, this.multipleFieldMode_);
 };

@@ -17,7 +17,8 @@ public class Output {
     public static final String TYPE_FIRST_ONLY = "first";
     public static final String TYPE_SINGLE_CELL = "single";
     public static final String TYPE_MULTI_CELL = "multi";
-    public static final String TYPE_MULTI_ROW = "multiRow";    
+    public static final String TYPE_MULTI_ROW = "multiRow";  
+    public static final String TYPE_HACK = "hack";  
     
     
     public static final String CONTENT_FIELD = "field";        
@@ -102,7 +103,19 @@ public class Output {
                     s+=getInsideSeparator();
                 }
                 return s;
-            }                                 
+            }
+            if(TYPE_HACK.equals(getType())) {
+                if(!list.isEmpty()) {
+                    int last = list.get(0).lastIndexOf(" ");
+                    if(last != -1) {
+                        return list.get(0).substring(last + 1);
+                    } else {
+                        return "";
+                    }
+                } else {
+                    return "";
+                }
+            }                                    
         return "";
     }
     
