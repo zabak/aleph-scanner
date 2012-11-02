@@ -63,7 +63,7 @@ public class RequestHandler {
             while (reader.hasNext()) {
                 allRecordscounter++;
                 try {
-                    Record record = reader.next();
+                    Record record = reader.next();                    
                     boolean check = true;
                     for (ConditionDF condition : request.getDataFiledConditions()) {
                         if (!checkDataFieldCondition(record, condition)) {
@@ -101,6 +101,7 @@ public class RequestHandler {
                 } catch (MarcException e) {
                     exceptionCounter++;
                 } catch (Exception e) {
+                    //System.out.println(e.getMessage());
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, e);
                 }
             }
@@ -188,29 +189,38 @@ public class RequestHandler {
         for (Object object : outDataFields) {
             DataField outDataField = (DataField) object;
             if (outDataField != null) {
-                if(!checkConditions(condition, outDataField)) {
+                if (!checkConditions(condition, outDataField)) {
                     continue;
                 }
-                
-                Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
-                if (outDataSubfield != null) {
-                    all++;
-                    if ("exists".equals(condition.getRelation())){
-                        if(!condition.isNegation()) {
-                            correct++;                   
-                        }
-                    } else if (checkSingleDataSubfield(condition, outDataSubfield.getData())) {
-                        correct++;                        
-                    } 
+                String content = "";
+                boolean hasContent = true;
+                if (condition.getSubfield().isEmpty()) {
+                    content = outDataField.toString();
+                } else {
+                    Subfield outDataSubfield = outDataField.getSubfield(condition.getSubfield().charAt(0));
+                    if (outDataSubfield == null) {
+                        hasContent = false;
+                    } else {
+                        content = outDataSubfield.getData();
+                    }
                 }
-                
+                if (hasContent) {
+                    all++;
+                    if ("exists".equals(condition.getRelation())) {
+                        if (!condition.isNegation()) {
+                            correct++;
+                        }
+                    } else if (checkSingleDataSubfield(condition, content)) {
+                        correct++;
+                    }
+                }
             }
-        }        
-        if(condition.getQuantifier().equals(Condition.AT_LEAST_ONE)) {
-            return correct > 0 ;
-        } else if(condition.getQuantifier().equals(Condition.ALL)) {
+        }
+        if (condition.getQuantifier().equals(Condition.AT_LEAST_ONE)) {
+            return correct > 0;
+        } else if (condition.getQuantifier().equals(Condition.ALL)) {
             return correct == all;
-        } else if(condition.getQuantifier().equals(Condition.EXACTLY)) {
+        } else if (condition.getQuantifier().equals(Condition.EXACTLY)) {
             return correct == condition.getQuantity();
         } else if(condition.getQuantifier().equals(Condition.LESS_THAN)) {
             return correct < condition.getQuantity();
