@@ -2,7 +2,6 @@ goog.provide('alephscanner.ConditionsHolder');
 
 goog.require('alephscanner.InputCondition');
 goog.require('alephscanner.ControlCondition');
-goog.require('goog.ui.Prompt');
 goog.require('goog.ui.Dialog');
 
 alephscanner.ConditionsHolder = function(requestHandler) {
@@ -165,16 +164,7 @@ alephscanner.ConditionsHolder.prototype.addConditionCF_ = function() {
 
 
 alephscanner.ConditionsHolder.prototype.onCreateExport_ = function() {  
-    var context = this;
-    var prompt = new goog.ui.Prompt(
-        'Název',
-        'Zadejte název pro nový export.', function(response) {
-            if (response != null && response != '') {
-                context.requestHandler_.handleRequestWithNewExport(response);                
-            }
-        }
-    );
-prompt.setVisible(true);
+    this.requestHandler_.handleRequestWithNewExport();                
 };
 
 

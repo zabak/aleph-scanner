@@ -6,8 +6,7 @@ goog.require('alephscanner.ConditionsHolder');
 goog.require('goog.json');
 goog.require('goog.net.XmlHttp');
 goog.require('goog.net.XhrIo');
-
-
+goog.require('goog.ui.Prompt');
 
 
 alephscanner.RequestHandler = function(url) {    
@@ -20,13 +19,11 @@ alephscanner.RequestHandler = function(url) {
     this.outputHolder_.insert(output); 
     this.url_ = url;    
     this.setInitialData_("GetInfo");
-
+    this.warningDialog_ = null;  
 };
 
 
-
-
-alephscanner.RequestHandler.prototype.createJsonObject_ = function(exportName) {
+alephscanner.RequestHandler.prototype.createJsonObject_ = function() {
     var resultJson = {
         "base" : this.conditionsHolder_.getBaseValue(),
         "df_conditions" : this.conditionsHolder_.getConditionSpecArray(),
@@ -35,22 +32,73 @@ alephscanner.RequestHandler.prototype.createJsonObject_ = function(exportName) {
         "result_mode" : this.outputHolder_.getResultModeValue(),
         "distinct" : false,
         "header" : false,
-        "new_export_name": exportName
+        "new_export_name": ''
     };
     return resultJson;
-}
+};
 
+alephscanner.RequestHandler.prototype.showWarningDialog_= function(message) { 
+    if(!this.warningDialog_) {
+        this.warningDialog_= new goog.ui.Dialog();
+        this.warningDialog_.setContent('<h2>Špatně zadaná vstupní data.</h2>' +
+            '<div id="message-div" style="height: 100%;width: 100%;margin: 0px;"></div>');
+        this.warningDialog_.setTitle('Varování');
+        this.warningDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.OK); 
+    }  
+    this.warningDialog_.setVisible(true);
+    goog.dom.getElement("message-div").innerHTML=message;                          
+};
+
+
+alephscanner.RequestHandler.prototype.validateJson_= function(jsonObejct) {       
+    for(var i = 0; i < jsonObejct.df_conditions.length; i++) {
+        if(jsonObejct.df_conditions[i].field == '') {
+            this.showWarningDialog_("U některého vstupního datového pole chybí název.");
+            return false;
+        }
+    }
+    for(var i = 0; i < jsonObejct.cf_conditions.length; i++) {
+        if(jsonObejct.cf_conditions[i].field == '') {
+            this.showWarningDialog_("U některého vstupního kontrolního pole chybí název.");
+            return false;
+        }
+    }    
+    for(var i = 0; i < jsonObejct.outputs.length; i++) {
+        if(jsonObejct.outputs[i].field == '') {
+            this.showWarningDialog_("U některého výstupního pole chybí název.");
+            return false;
+        }
+    }       
+  
+    return true;
+}
 
 alephscanner.RequestHandler.prototype.handleRequest= function() {  
-    console.log(this);
-    var data = goog.json.serialize(this.createJsonObject_(""));
-    this.request_(data);
+    console.log(this);    
+    var jsonObject = this.createJsonObject_();
+    if(this.validateJson_(jsonObject)) {
+        var data = goog.json.serialize(jsonObject);
+        this.request_(data);
+    }    
 }
 
-alephscanner.RequestHandler.prototype.handleRequestWithNewExport= function(name) {    
-    var data = goog.json.serialize(this.createJsonObject_(name));
-    this.request_(data);
-}
+alephscanner.RequestHandler.prototype.handleRequestWithNewExport= function() {        
+    var context = this;
+    var jsonObject = this.createJsonObject_();
+    if(this.validateJson_(jsonObject)) {
+        var prompt = new goog.ui.Prompt(
+            'Název',
+            'Zadejte název pro nový export.', function(response) {
+                if (response != null && response != '') {
+                    jsonObject.new_export_name=response;
+                    var data = goog.json.serialize(jsonObject);
+                    context.request_(data);               
+                }
+            });
+        prompt.setVisible(true);
+    }
+};
+        
 
 
 
@@ -73,7 +121,7 @@ alephscanner.RequestHandler.prototype.request_ = function(data) {
             console.log(
                 "Something went wrong in the ajax call. Error code: ", request.getLastErrorCode(),
                 " - message: ", request.getLastError()
-            );               
+                );               
         }                    
     });                
     request.send(this.url_, "POST", data);                
@@ -81,12 +129,12 @@ alephscanner.RequestHandler.prototype.request_ = function(data) {
 
 
 alephscanner.RequestHandler.prototype.setInitialData_ = function(url) {    
-  var context = this;
-  goog.net.XhrIo.send(url, function(e) {
-      var xhr = e.target;
-      response = xhr.getResponseJson();      
-      context.conditionsHolder_.setBasis_(response.basis);
-  });     
+    var context = this;
+    goog.net.XhrIo.send(url, function(e) {
+        var xhr = e.target;
+        response = xhr.getResponseJson();      
+        context.conditionsHolder_.setBasis_(response.basis);
+    });     
 };
 
 
