@@ -18,7 +18,7 @@ alephscanner.RequestHandler = function(url) {
     this.outputHolder_ = new alephscanner.OutputHolder();
     this.outputHolder_.insert(output); 
     this.url_ = url;    
-    this.setInitialData_("GetInfo");
+    this.setInitialData_();
     this.warningDialog_ = null;  
 };
 
@@ -37,12 +37,12 @@ alephscanner.RequestHandler.prototype.createJsonObject_ = function() {
     return resultJson;
 };
 
-alephscanner.RequestHandler.prototype.showWarningDialog_= function(message) { 
+alephscanner.RequestHandler.prototype.showWarningDialog= function(type, header, message) {
     if(!this.warningDialog_) {
         this.warningDialog_= new goog.ui.Dialog();
-        this.warningDialog_.setContent('<h2>Špatně zadaná vstupní data.</h2>' +
-            '<div id="message-div" style="height: 100%;width: 100%;margin: 0px;"></div>');
-        this.warningDialog_.setTitle('Varování');
+        this.warningDialog_.setContent('<h3>' + header + '</h3>' +
+            '<br/><div id="message-div" style="height: 100%;width: 100%;margin: 0px;"></div>');
+        this.warningDialog_.setTitle(type);
         this.warningDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.OK); 
     }  
     this.warningDialog_.setVisible(true);
@@ -53,19 +53,19 @@ alephscanner.RequestHandler.prototype.showWarningDialog_= function(message) {
 alephscanner.RequestHandler.prototype.validateJson_= function(jsonObejct) {       
     for(var i = 0; i < jsonObejct.df_conditions.length; i++) {
         if(jsonObejct.df_conditions[i].field == '') {
-            this.showWarningDialog_("U některého vstupního datového pole chybí název.");
+            this.showWarningDialog("Chyba", "Špatně zadaná vstupní data.", "U některého vstupního datového pole chybí název.");
             return false;
         }
     }
     for(var i = 0; i < jsonObejct.cf_conditions.length; i++) {
         if(jsonObejct.cf_conditions[i].field == '') {
-            this.showWarningDialog_("U některého vstupního kontrolního pole chybí název.");
+            this.showWarningDialog("Chyba", "Špatně zadaná vstupní data.", "U některého vstupního kontrolního pole chybí název.");
             return false;
         }
     }    
     for(var i = 0; i < jsonObejct.outputs.length; i++) {
         if(jsonObejct.outputs[i].field == '') {
-            this.showWarningDialog_("U některého výstupního pole chybí název.");
+            this.showWarningDialog("Chyba", "Špatně zadaná vstupní data.", "U některého výstupního pole chybí název.");
             return false;
         }
     }       
@@ -128,13 +128,28 @@ alephscanner.RequestHandler.prototype.request_ = function(data) {
 };
 
 
-alephscanner.RequestHandler.prototype.setInitialData_ = function(url) {    
+alephscanner.RequestHandler.prototype.setInitialData_ = function() {    
     var context = this;
-    goog.net.XhrIo.send(url, function(e) {
+    goog.net.XhrIo.send("GetInfo", function(e) {
         var xhr = e.target;
-        response = xhr.getResponseJson();      
+        var response = xhr.getResponseJson();
         context.conditionsHolder_.setBasis_(response.basis);
     });     
+};
+
+
+alephscanner.RequestHandler.prototype.removeExport = function(base) {
+    var context = this;
+    goog.net.XhrIo.send("RemoveExport?base=" + base, function(e) {
+        var xhr = e.target;
+        var response = xhr.getResponseJson();
+        if(response.result) {
+            context.conditionsHolder_.setBasis_(response.basis);
+            context.showWarningDialog("OK", "OK", "Export byl úspěšně smazaný.");
+        } else {
+            context.showWarningDialog("Chyba", "Chyba", "Vybraný export se nepodařilo smazat, smazat lze jen v aplikaci vytvořené exporty.");
+        }
+    });
 };
 
 

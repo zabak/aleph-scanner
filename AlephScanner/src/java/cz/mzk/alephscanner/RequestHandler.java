@@ -186,6 +186,7 @@ public class RequestHandler {
         int correct = 0;
         int all = 0;     
         
+        boolean match = false;
         for (Object object : outDataFields) {
             DataField outDataField = (DataField) object;
             if (outDataField != null) {
@@ -273,10 +274,12 @@ public class RequestHandler {
                 }
             }
             if (match) {
-                return !condition.isNegation();
+                //return !condition.isNegation();
+                return true;
             }
         }        
-        return condition.isNegation();
+        //return condition.isNegation();
+        return false;
     }
     
     
