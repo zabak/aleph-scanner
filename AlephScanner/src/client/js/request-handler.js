@@ -40,13 +40,16 @@ alephscanner.RequestHandler.prototype.createJsonObject_ = function() {
 alephscanner.RequestHandler.prototype.showWarningDialog= function(type, header, message) {
     if(!this.warningDialog_) {
         this.warningDialog_= new goog.ui.Dialog();
-        this.warningDialog_.setContent('<h3>' + header + '</h3>' +
+        this.warningDialog_.setContent('<div id="header-div"><h3>header</h3></div>' +
             '<br/><div id="message-div" style="height: 100%;width: 100%;margin: 0px;"></div>');
-        this.warningDialog_.setTitle(type);
+        
         this.warningDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.OK); 
-    }  
+    }
     this.warningDialog_.setVisible(true);
-    goog.dom.getElement("message-div").innerHTML=message;                          
+    this.warningDialog_.setTitle(type);
+    goog.dom.getElement("message-div").innerHTML=message;
+    goog.dom.getElement("header-div").innerHTML="<h3>" + header + "</h3>";
+    
 };
 
 
@@ -140,7 +143,7 @@ alephscanner.RequestHandler.prototype.setInitialData_ = function() {
 
 alephscanner.RequestHandler.prototype.removeExport = function(base) {
     var context = this;
-    goog.net.XhrIo.send("RemoveExport?base=" + base, function(e) {
+    goog.net.XhrIo.send("RemoveExport?base=" + encodeURIComponent(base), function(e) {
         var xhr = e.target;
         var response = xhr.getResponseJson();
         if(response.result) {
