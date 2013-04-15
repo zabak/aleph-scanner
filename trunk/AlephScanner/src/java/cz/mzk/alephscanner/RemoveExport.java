@@ -22,7 +22,7 @@ import org.json.JSONObject;
  *
  * @author hanis
  */
-@WebServlet(name="RemoveExport", urlPatterns={"/RemoveExport"})
+
 public class RemoveExport extends HttpServlet {
    
     /** 
@@ -34,12 +34,15 @@ public class RemoveExport extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition", "attachment;filename=response.json");
         response.setHeader("Content-Type", "application/json; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         PrintWriter out = response.getWriter();
-        JSONObject jsonObject = JsonParser.getRemoveExportData(request.getParameter("base"));
+        String base = request.getParameter("base");
+        System.out.println(base);
+        JSONObject jsonObject = JsonParser.getRemoveExportData(base);
         try {
             jsonObject.write(out);
         } catch (JSONException ex) {

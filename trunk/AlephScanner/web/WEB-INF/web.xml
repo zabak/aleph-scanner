@@ -12,6 +12,10 @@
         <servlet-name>GetInfo</servlet-name>
         <servlet-class>cz.mzk.alephscanner.GetInfo</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveExport</servlet-name>
+        <servlet-class>cz.mzk.alephscanner.RemoveExport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Handle</servlet-name>
         <url-pattern>/Handle</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>GetInfo</servlet-name>
         <url-pattern>/GetInfo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveExport</servlet-name>
+        <url-pattern>/RemoveExport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
