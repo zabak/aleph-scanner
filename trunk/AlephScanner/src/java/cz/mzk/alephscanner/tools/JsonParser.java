@@ -130,4 +130,15 @@ public class JsonParser {
             }
         return jsonObject;
     }
+
+    public static JSONObject getRemoveExportData(String name) {
+        JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("result", XmlParser.removeExport(name));
+                jsonObject.put("basis", XmlParser.getExportNames());
+            } catch (JSONException ex) {
+                Logger.getLogger(JsonParser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return jsonObject;
+    }
 }

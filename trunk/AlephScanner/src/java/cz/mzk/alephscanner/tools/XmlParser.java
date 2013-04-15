@@ -32,23 +32,6 @@ public class XmlParser {
         return document;
     }
 
-    public static List<String> getExportNames() {
-        List<String> nameList = new ArrayList<String>();
-        Document document = null;
-        try {
-            document = getDocument(PropertiesReader.getInstance().getConfigPath());
-        } catch (DocumentException ex) {
-            System.out.println("???");
-            Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
-        }                
-        List<Node> nodeList = document.selectNodes("//export");
-        for (Node node : nodeList) {
-            String name = node.selectSingleNode("name").getText();
-            nameList.add(name);
-        }
-        return nameList;
-    }
-
     public static String getExportPath(String exportName) {
         Document document;
         try {
@@ -66,12 +49,58 @@ public class XmlParser {
         return null;
     }
 
+    public static List<String> getExportNames() {
+        List<String> nameList = new ArrayList<String>();
+        Document document = null;
+        try {
+            document = getDocument(PropertiesReader.getInstance().getConfigPath());
+        } catch (DocumentException ex) {
+            System.out.println("???");
+            Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        List<Node> nodeList = document.selectNodes("//export");
+        for (Node node : nodeList) {
+            String name = node.selectSingleNode("name").getText();
+            nameList.add(name);
+        }
+        return nameList;
+    }
+
+    public static boolean removeExport(String exportName) {
+        Document document;
+        String configPath = PropertiesReader.getInstance().getConfigPath();
+        try {
+            document = getDocument(configPath);
+            List<Node> nodeList = document.selectNodes("//created/export");
+            Node nodeToRemove = null;
+            for (Node node : nodeList) {
+                String name = node.selectSingleNode("name").getText();
+                if (exportName.equals(name)) {
+                    nodeToRemove = node;
+                    break;
+                }
+            }
+            if (nodeToRemove == null) {
+                return false;
+            } else {
+                nodeToRemove.getParent().remove(nodeToRemove);
+                writeDocument(document, configPath);
+                return true;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DocumentException ex) {
+            Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public static void addNewExport(String name) throws DocumentException, IOException {
         String configPath = PropertiesReader.getInstance().getConfigPath();
         Document document = getDocument(configPath);
         Element element = (Element) document.selectSingleNode("//created");
         Element exportElement = element.addElement("export");
-        exportElement.addElement("name").addText(name);        
+        exportElement.addElement("name").addText(name);
         String path = PropertiesReader.getInstance().getTemporaryExportDirectory() + name + ".m21";
         exportElement.addElement("path").addText(path);
         writeDocument(document, configPath);

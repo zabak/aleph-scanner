@@ -13,12 +13,13 @@ alephscanner.ConditionsHolder = function(requestHandler) {
     this.conditionsList_ = null;  
     this.jsonDialog_ = null;  
     this.createContainer_();
+    this.removeDialog_ = null;
     
 };
 
 
 alephscanner.ConditionsHolder.prototype.removeAllConditions = function() {
-goog.dom.removeChildren(this.conditionsList_);
+    goog.dom.removeChildren(this.conditionsList_);
     this.conditions_ = []; 
     this.conditionsCF_ = []; 
 };
@@ -74,7 +75,8 @@ alephscanner.ConditionsHolder.prototype.createControllPanel_ = function() {
 };
 
 
-alephscanner.ConditionsHolder.prototype.setBasis_ = function(basis) {    
+alephscanner.ConditionsHolder.prototype.setBasis_ = function(basis) {
+    goog.dom.removeChildren(this.baseChooser_);
     goog.array.forEach(basis,
         function(base) {
             var baseOption = goog.dom.createDom('option', {
@@ -113,14 +115,20 @@ alephscanner.ConditionsHolder.prototype.createBaseChooser_ = function() {
     var createExportButton = goog.dom.createDom('div',{
         "class" : 'create-export-button'
     });
+
+    var removeExportButton = goog.dom.createDom('div',{
+        "class" : 'remove-export-button'
+    });
+
     goog.events.listen(createExportButton, goog.events.EventType.CLICK, this.onCreateExport_, false, this);
-    
-     var InportButton = goog.dom.createDom('div',{
+    goog.events.listen(removeExportButton, goog.events.EventType.CLICK, this.onRemoveExport_, false, this);
+
+    var InportButton = goog.dom.createDom('div',{
         "class" : 'import-button'
     });
     goog.events.listen(InportButton, goog.events.EventType.CLICK, this.showInputDialog_, false, this);
     
-     var showJsonButton = goog.dom.createDom('div',{
+    var showJsonButton = goog.dom.createDom('div',{
         "class" : 'show-json-button'
     });
     goog.events.listen(showJsonButton, goog.events.EventType.CLICK, this.showJsonDialog_, false, this);    
@@ -129,7 +137,8 @@ alephscanner.ConditionsHolder.prototype.createBaseChooser_ = function() {
     goog.dom.appendChild(baseDiv, this.baseChooser_)
     goog.dom.appendChild(baseDiv, InportButton);
     goog.dom.appendChild(baseDiv, showJsonButton);
-    
+
+    goog.dom.appendChild(baseDiv, removeExportButton);
     goog.dom.appendChild(baseDiv, createExportButton);
     goog.dom.appendChild(this.container_, baseDiv);
 };
@@ -167,6 +176,35 @@ alephscanner.ConditionsHolder.prototype.onCreateExport_ = function() {
     this.requestHandler_.handleRequestWithNewExport();                
 };
 
+alephscanner.ConditionsHolder.prototype.onRemoveExport_ = function() {  
+    //this.requestHandler_.handleRequestWithNewExport();
+    var context = this;
+    var base = this.getBaseValue();
+    if(this.removeDialog_ == null) {
+        this.removeDialog_ = new goog.ui.Dialog();
+    }
+    this.removeDialog_.setContent('<h3>Smazání exportu ' + base + '</h3>' +
+        '</br>Zadejte kód: <input type="password" name="remove-export-pass" id="remove-export-pass"></input>');
+    this.removeDialog_.setTitle('Smazat export');
+    this.removeDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.OK_CANCEL);
+    goog.events.listenOnce(this.removeDialog_, goog.ui.Dialog.EventType.SELECT, function(e) {
+        if(e.key == 'ok') {
+            var pass = goog.dom.getElement('remove-export-pass').value;
+            //context.requestHandler_.setAllFromImport(data);
+            console.log(pass + " , " + base);
+            if(pass == 'mzkmzk') {
+                context.requestHandler_.removeExport(base);
+            } else {
+                context.requestHandler_.showWarningDialog("Chyba", "Nesprávný kód", "Byl zadán nesprávný kód.");
+            }
+
+        }
+    });
+    
+    this.removeDialog_.setVisible(true);
+    
+    
+};
 
 alephscanner.ConditionsHolder.prototype.setBaseValue = function(value) {    
     this.baseChooser_.value = value;
@@ -175,17 +213,17 @@ alephscanner.ConditionsHolder.prototype.setBaseValue = function(value) {
 
 alephscanner.ConditionsHolder.prototype.showInputDialog_ = function() {  
     var context = this;
-    var dialog = new goog.ui.Dialog();
+    this.myDialog_ = new goog.ui.Dialog();
     dialog.setContent('<h2>Zadejte importní JSON</h2>' +
         '<textarea id="import-area" style="height: 500px;width: 600px;margin: 0px;"></textarea>');
     dialog.setTitle('Import');
     dialog.setButtonSet(goog.ui.Dialog.ButtonSet.OK_CANCEL);
     goog.events.listen(dialog, goog.ui.Dialog.EventType.SELECT, function(e) {
-      if(e.key == 'ok') {
-          var data = goog.json.parse(goog.dom.getElement('import-area').value);
-          context.requestHandler_.setAllFromImport(data);
-          console.log(data);          
-      } 
+        if(e.key == 'ok') {
+            var data = goog.json.parse(goog.dom.getElement('import-area').value);
+            context.requestHandler_.setAllFromImport(data);
+            console.log(data);
+        }
     });
     dialog.setVisible(true);
 };
