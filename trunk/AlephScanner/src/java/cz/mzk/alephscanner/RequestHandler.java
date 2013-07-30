@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +49,7 @@ public class RequestHandler {
         response.setRequest(request);        
         InputStream in = null;
         OutputStream os = null;
+        Map<String, Integer> fieldFrequencyMap = new HashMap<String, Integer>();
         int allRecordscounter = 0;
         int exceptionCounter = 0;
         int matchedRecordsCounter = 0;        
@@ -63,7 +66,7 @@ public class RequestHandler {
             while (reader.hasNext()) {
                 allRecordscounter++;
                 try {
-                    Record record = reader.next();                    
+                    Record record = reader.next();         
                     boolean check = true;
                     for (ConditionDF condition : request.getDataFiledConditions()) {
                         if (!checkDataFieldCondition(record, condition)) {
@@ -85,6 +88,19 @@ public class RequestHandler {
                     }
                     if(request.getMode().equals(Request.MODE_RECORD)) {
                         response.addToGullRecordsList(record.toString());
+                    } else if (request.getMode().equals(Request.MODE_FIELD_FREQUENCY)) {
+                        for(Object object : record.getVariableFields()) {
+                            String fieldString = object.toString();
+                            String field = "";
+                            if(fieldString.length() >= 3) {
+                                field = fieldString.substring(0, 3);
+                            }
+                            if(fieldFrequencyMap.containsKey(field)) {
+                                fieldFrequencyMap.put(field, fieldFrequencyMap.get(field) + 1);
+                            } else {
+                                fieldFrequencyMap.put(field, 1);
+                            }
+                        }
                     } else {
                         for (Output output : request.getOutputs()) {
                             List<String> list = getMultipleOutputs(record, output);
@@ -127,6 +143,10 @@ public class RequestHandler {
         } catch (IOException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if(request.getMode().equals(Request.MODE_FIELD_FREQUENCY)) {
+           response.createFieldFrequencyList(fieldFrequencyMap);
+        }
+
         response.setMatchedRecordsCount(matchedRecordsCounter);
         response.setAllRecordsCount(allRecordscounter);
         response.setWrongRecordsCount(exceptionCounter);

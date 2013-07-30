@@ -103,7 +103,9 @@ public class JsonParser {
         JSONArray resultListArray = null;
         if(response.getRequest().getMode().equals(Request.MODE_RECORD)) {
             resultListArray = new JSONArray(response.getFullRecordsList());
-        } else {
+        } else if(response.getRequest().getMode().equals(Request.MODE_FIELD_FREQUENCY)) {
+            resultListArray = new JSONArray(response.getFieldFrequencyList());
+        }else {
             resultListArray = new JSONArray(response.getResultList());
         }
         try {

@@ -4,12 +4,14 @@
  */
 package cz.mzk.alephscanner.model;
 
+import cz.mzk.alephscanner.tools.MapByValueComparator;
 import cz.mzk.alephscanner.tools.Tools;
 import cz.mzk.alephscanner.tools.ValueComparator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -25,9 +27,11 @@ public class Response {
     private int wrongRecordsCount;
     private int matchedRecordsCount;
     private List<String> fullRecordsList;
+    private List<String> fieldFrequencyList;
 
     public Response() {   
         fullRecordsList = new ArrayList<String>();
+        fieldFrequencyList = new ArrayList<String>();
     }
 
     public List<String> getResultList() {
@@ -154,7 +158,22 @@ public class Response {
     public List<String> getFullRecordsList() {
         return fullRecordsList;
     }
-    
+
+
+    public List<String> getFieldFrequencyList() {
+        return fieldFrequencyList;
+    }
+
+    public void createFieldFrequencyList(Map<String, Integer> map) {
+        MapByValueComparator comparator = new MapByValueComparator(map);
+        TreeMap<String,Integer> sortedMap = new TreeMap<String,Integer>(comparator);
+        sortedMap.putAll(map);
+        for(String field : sortedMap.keySet()) {
+            fieldFrequencyList.add(field + ", " + map.get(field));
+        }
+    }
+
+
 }
 
 
