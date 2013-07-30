@@ -114,12 +114,15 @@ alephscanner.OutputHolder.prototype.createHeaderPanel_ = function() {
     var recordOption = goog.dom.createDom('option', {
         'value':'record'
     },"Záznamy");  
-    
+    var fieldFrequencyOption = goog.dom.createDom('option', {
+        'value':'fieldFrequency'
+    },"Počty polí");
     
     this.resultMode_.appendChild(allOption);
     this.resultMode_.appendChild(distinctOption);
     this.resultMode_.appendChild(frequencyOption);
     this.resultMode_.appendChild(recordOption);
+    this.resultMode_.appendChild(fieldFrequencyOption);
     goog.events.listen(this.resultMode_, goog.events.EventType.CHANGE, this.onResultModeChange_, false, this);
     
 
