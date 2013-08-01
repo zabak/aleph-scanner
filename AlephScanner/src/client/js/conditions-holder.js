@@ -214,18 +214,18 @@ alephscanner.ConditionsHolder.prototype.setBaseValue = function(value) {
 alephscanner.ConditionsHolder.prototype.showInputDialog_ = function() {  
     var context = this;
     this.myDialog_ = new goog.ui.Dialog();
-    dialog.setContent('<h2>Zadejte importní JSON</h2>' +
+    this.myDialog_.setContent('<h2>Zadejte importní JSON</h2>' +
         '<textarea id="import-area" style="height: 500px;width: 600px;margin: 0px;"></textarea>');
-    dialog.setTitle('Import');
-    dialog.setButtonSet(goog.ui.Dialog.ButtonSet.OK_CANCEL);
-    goog.events.listen(dialog, goog.ui.Dialog.EventType.SELECT, function(e) {
+    this.myDialog_.setTitle('Import');
+    this.myDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.OK_CANCEL);
+    goog.events.listen(this.myDialog_, goog.ui.Dialog.EventType.SELECT, function(e) {
         if(e.key == 'ok') {
             var data = goog.json.parse(goog.dom.getElement('import-area').value);
             context.requestHandler_.setAllFromImport(data);
             console.log(data);
         }
     });
-    dialog.setVisible(true);
+    this.myDialog_.setVisible(true);
 };
 
 
