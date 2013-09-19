@@ -78,7 +78,7 @@ public class RequestHandler {
                         continue;
                     }
                     for (ConditionCF condition : request.getControlFieldConditions()) {
-                        if (!checkControlFieldCondition(record, condition)) {
+                        if (checkControlFieldCondition(record, condition) == condition.isNegation()) {
                             check = false;
                             break;
                         }
@@ -231,7 +231,7 @@ public class RequestHandler {
                         if (!condition.isNegation()) {
                             correct++;
                         }
-                    } else if (checkSingleDataSubfield(condition, content)) {
+                    } else if (checkSingleDataSubfield(condition, content) == !condition.isNegation()) {
                         correct++;
                     }
                 }
